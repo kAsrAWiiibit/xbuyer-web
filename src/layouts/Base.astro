@@ -1,0 +1,67 @@
+---
+import '@fontsource/barlow-condensed/latin-700.css';
+import '@fontsource/barlow/latin-400.css';
+import '@fontsource/barlow/latin-500.css';
+import '../styles/global.css';
+
+import Pie from '../components/Pie.astro';
+import { t, type Idioma } from '../i18n/ui';
+
+interface Props {
+  titulo: string;
+  descripcion: string;
+  idioma?: Idioma;
+  /** Color de la barra del navegador en móvil */
+  colorTema?: string;
+}
+const { titulo, descripcion, idioma = 'es', colorTema = '#1863B8' } = Astro.props;
+const canonica = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : undefined;
+const favicon = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/favicon.svg`;
+---
+<!doctype html>
+<html lang={idioma}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{titulo}</title>
+    <meta name="description" content={descripcion} />
+    {canonica && <link rel="canonical" href={canonica} />}
+    <meta name="theme-color" content={colorTema} />
+    <link rel="icon" href={favicon} type="image/svg+xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={titulo} />
+    <meta property="og:description" content={descripcion} />
+    <meta property="og:locale" content="es_ES" />
+  </head>
+  <body>
+    <a class="saltar" href="#contenido">{t(idioma, 'saltar')}</a>
+    <slot name="cabecera" />
+    <main id="contenido">
+      <slot />
+    </main>
+    <Pie idioma={idioma} />
+
+    <script>
+      // Entradas: las partes de cada sección suben un poco y aparecen, en orden y una sola vez.
+      // Sin este script (o con movimiento reducido) todo se ve desde el principio.
+      if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const secciones = document.querySelectorAll<HTMLElement>('main > section:not(:first-child)');
+        const observador = new IntersectionObserver(
+          (vistas) => {
+            for (const v of vistas) {
+              if (!v.isIntersecting) continue;
+              v.target.classList.add('visto');
+              observador.unobserve(v.target);
+            }
+          },
+          { rootMargin: '0px 0px -10% 0px' },
+        );
+        for (const seccion of secciones) {
+          seccion.querySelectorAll<HTMLElement>(':scope > *').forEach((el, i) => el.style.setProperty('--i', String(Math.min(i, 4))));
+          observador.observe(seccion);
+        }
+        document.documentElement.classList.add('mov');
+      }
+    </script>
+  </body>
+</html>

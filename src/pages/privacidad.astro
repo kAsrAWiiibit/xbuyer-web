@@ -1,0 +1,21 @@
+---
+import { textosLegales as legal } from '../lib/legal';
+import Legal from '../layouts/Legal.astro';
+const [titulo] = legal.privacy.title.split(' · ');
+const slug = (t: string) => t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+const secciones = legal.privacy.sections.map((s) => ({ ...s, id: s.id ?? slug(s.title) }));
+const indice = [...secciones.map((s) => ({ id: s.id, titulo: s.title })), { id: 'contacto', titulo: 'Contacto' }];
+---
+<Legal titulo={titulo} tituloPagina={legal.privacy.title} descripcion={`Política de privacidad de la app ${legal.tournament}.`} subtitulo={`De la app ${legal.tournament}.`} aviso={legal.draft} indice={indice}>
+  {secciones.map((s) => (
+    <section id={s.id}>
+      <h2>{s.title}</h2>
+      {s.paragraphs.map((p) => <p>{p}</p>)}
+    </section>
+  ))}
+  <section class="legal__contacto" id="contacto">
+    <h2>Contacto</h2>
+    <p>Escríbenos a <a href={`mailto:${legal.contact.email}`}>{legal.contact.email}</a>{legal.contact.phone && ` o llama al ${legal.contact.phone}`}.</p>
+    {legal.contact.instagram && <p><a href={`https://www.instagram.com/${legal.contact.instagram}/`} rel="noopener">@{legal.contact.instagram}</a></p>}
+  </section>
+</Legal>

@@ -1,0 +1,42 @@
+{
+  "_ayuda": "Huecos de foto. Para poner una foto: cópiala optimizada y sin metadatos en src/fotos/ y rellena su hueco con { \"archivo\": \"palmares/costa-daurada-01.jpg\", \"alt\": \"qué se ve\", \"autor\": \"L8 Sport Murcia\", \"origen\": \"Donosti Cup\" }. Mientras un hueco sea null se ve el monograma XB. Nada de primeros planos de menores reconocibles sin autorización (van a contenido/fotos/revisar/).",
+  "huecos": {
+    "cup-portada": {
+      "archivo": "cup/celebracion-trofeo.jpg",
+      "alt": "Un equipo de rojo celebra con el trofeo y las medallas detrás del cartel de la Xbuyer Cup",
+      "autor": "Eric Leiro",
+      "origen": "Xbuyer Cup Madrid 2025"
+    },
+    "cup-galeria-1": {
+      "archivo": "cup/accion-luz-dorada.jpg",
+      "alt": "Dos jugadores, uno de rojo y otro de azul, disputan el balón con la luz dorada de la tarde",
+      "autor": "Eric Leiro",
+      "origen": "Xbuyer Cup Madrid 2025"
+    },
+    "cup-galeria-2": {
+      "archivo": "cup/pasillo-de-honor.jpg",
+      "alt": "Pasillo de honor: un equipo aplaude al paso de los jugadores de rosa sobre la pista",
+      "autor": "Eric Leiro",
+      "origen": "Xbuyer Cup Madrid 2025"
+    },
+    "cup-galeria-3": {
+      "archivo": "cup/partido-carpa-xb.jpg",
+      "alt": "Jugada junto al banquillo con la carpa y las banderas de la Xbuyer Cup al fondo",
+      "autor": "Eric Leiro",
+      "origen": "Xbuyer Cup Madrid 2025"
+    },
+    "cup-galeria-4": {
+      "archivo": "cup/equipo-cartel-xbuyer-cup.jpg",
+      "alt": "Un equipo de rosa posa con sus medallas detrás del cartel de la Xbuyer Cup",
+      "autor": "Eric Leiro",
+      "origen": "Xbuyer Cup Madrid 2025"
+    },
+    "palmares-costa-daurada-cup": null,
+    "palmares-copa-uniq-andorra": null,
+    "palmares-madcup": null,
+    "palmares-central-cup-torrent": null,
+    "palmares-medcup": null,
+    "palmares-swit-cup": null,
+    "palmares-donosti-cup": null
+  }
+}

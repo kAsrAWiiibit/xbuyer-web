@@ -1,0 +1,77 @@
+---
+/** Aviso legal de la web (Ley 34/2002, LSSI-CE, art. 10). Solo datos reales de la asociación. */
+import Dato from '../components/Dato.astro';
+import SiCompleto from '../components/SiCompleto.astro';
+import { academy, cup, entidad as asociacion } from '../data/contenido';
+import Legal from '../layouts/Legal.astro';
+import { ruta } from '../lib/ruta';
+
+const indice = [
+  { id: 'titular-de-la-web', titulo: 'Titular de la web' },
+  { id: 'para-que-es-esta-web', titulo: 'Para qué es esta web' },
+  { id: 'uso-de-la-web', titulo: 'Uso de la web' },
+  { id: 'datos-personales-y-cookies', titulo: 'Datos personales y cookies' },
+  { id: 'fotos', titulo: 'Fotos' },
+  { id: 'propiedad-intelectual', titulo: 'Propiedad intelectual' },
+  { id: 'enlaces-a-otras-webs', titulo: 'Enlaces a otras webs' },
+  { id: 'legislacion', titulo: 'Legislación' },
+];
+---
+<Legal titulo="Aviso legal" tituloPagina={`Aviso legal · ${academy.nombre}`} subtitulo={`De la web de ${academy.nombre} y la ${cup.nombre}.`} descripcion={`Aviso legal de la web de ${academy.nombre}.`} indice={indice}>
+  <section id="titular-de-la-web">
+    <h2>Titular de la web</h2>
+    <p>
+      {asociacion.nombre}, con NIF {asociacion.nif} y domicilio en {asociacion.direccion}, {asociacion.ciudad}.
+      Email de contacto: <a href={`mailto:${asociacion.email}`}>{asociacion.email}</a>.
+    </p>
+    <SiCompleto datos={[asociacion.registro]} donde="aviso legal: registro de asociaciones">
+      <p>Inscripción registral: <Dato v={asociacion.registro} donde="aviso legal: registro de asociaciones" />.</p>
+    </SiCompleto>
+  </section>
+
+  <section id="para-que-es-esta-web">
+    <h2>Para qué es esta web</h2>
+    <p>Es la web de {academy.nombre} y de la {cup.nombre}, el torneo de fútbol base que organiza la academia.</p>
+  </section>
+
+  <section id="uso-de-la-web">
+    <h2>Uso de la web</h2>
+    <p>El acceso es libre y gratuito. Quien la visita se compromete a usarla de acuerdo con la ley y con este aviso.</p>
+    <p>Las fechas, sedes y horarios pueden cambiar; manda la información oficial de la organización.</p>
+  </section>
+
+  <section id="datos-personales-y-cookies">
+    <h2>Datos personales y cookies</h2>
+    <p>
+      Esta web no usa cookies, no tiene estadísticas de visitas y no guarda ningún dato. El formulario de contacto no envía
+      nada a ningún servidor: abre tu programa de correo con el mensaje preparado para {asociacion.email}, y eres tú quien lo envía.
+    </p>
+    <p>El tratamiento de datos de la app del torneo se explica en su <a href={ruta('/privacidad/')}>política de privacidad</a>.</p>
+  </section>
+
+  <section id="fotos">
+    <h2>Fotos</h2>
+    <p>
+      Las fotos de los torneos son de la organización y de sus fotógrafos, que firman cada una. Si apareces tú o tu hijo/a en una
+      foto de esta web y quieres que se retire, escríbenos a <a href={`mailto:${asociacion.email}`}>{asociacion.email}</a>.
+    </p>
+  </section>
+
+  <section id="propiedad-intelectual">
+    <h2>Propiedad intelectual</h2>
+    <p>
+      Los logotipos y nombres {academy.nombre} y {cup.nombre}, los textos y las fotos no se pueden reproducir sin autorización.
+      El autor de cada foto figura en la propia foto y en el pie de la página.
+    </p>
+  </section>
+
+  <section id="enlaces-a-otras-webs">
+    <h2>Enlaces a otras webs</h2>
+    <p>Esta web enlaza con servicios de terceros (Instagram, Google Maps, las tiendas de aplicaciones). La asociación no responde de su contenido.</p>
+  </section>
+
+  <section id="legislacion">
+    <h2>Legislación</h2>
+    <p>Este aviso se rige por la legislación española, en particular la Ley 34/2002, de servicios de la sociedad de la información y de comercio electrónico.</p>
+  </section>
+</Legal>

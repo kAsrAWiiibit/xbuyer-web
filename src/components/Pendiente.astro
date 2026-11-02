@@ -1,0 +1,9 @@
+---
+/** [pendiente: …] en desarrollo; en producción no se muestra y se apunta (src/lib/pendiente.ts) */
+import { MOSTRAR_PENDIENTES, ocultado } from '../lib/pendiente';
+
+interface Props { nota: string; donde?: string }
+const { nota, donde = nota } = Astro.props;
+if (!MOSTRAR_PENDIENTES) ocultado(Astro.url.pathname, donde, nota);
+---
+{MOSTRAR_PENDIENTES && <mark class="pendiente">[pendiente: {nota}]</mark>}

@@ -1,0 +1,10 @@
+node_modules/
+dist/
+dist-borradores/
+.astro/
+.DS_Store
+.taste-skill/
+.pendientes.jsonl
+# Fotos originales y por revisar: nunca al repositorio (es público en GitHub Pages)
+contenido/fotos/
+contenido/.DS_Store

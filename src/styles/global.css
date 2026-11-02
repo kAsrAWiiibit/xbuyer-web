@@ -1,0 +1,234 @@
+/* Xbuyer · cartel plano y ruidoso. Tokens de marca y capítulos de color. */
+
+:root {
+  --azul: #1863b8;
+  --amarillo: #ffed00;
+  --marino: #0c0433;
+  --blanco: #ffffff;
+  /* Un paso de tono por color, para separar superficies sin líneas ni sombras */
+  --amarillo-claro: #fff7a6;
+  --azul-hondo: #0f4f99;
+
+  --fuente-display: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+  --fuente-texto: 'Barlow', system-ui, sans-serif;
+
+  /* Cinco tamaños en toda la web */
+  --step-small: clamp(0.8125rem, 0.79rem + 0.1vw, 0.875rem);
+  --step-body: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
+  --step-lead: clamp(1.375rem, 1.1rem + 0.9vw, 1.875rem);
+  --step-head: clamp(2.5rem, 1.2rem + 5vw, 5.5rem);
+  --step-display: clamp(6rem, 1rem + 21vw, 21rem);
+
+  --margen: clamp(16px, 2.4vw, 32px);
+  --entre-secciones: clamp(80px, 10vw, 160px);
+  --cabecera: 64px;
+
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+/* Capítulos: cada sección es un campo de un color; la tinta va siempre con su fondo */
+[data-capitulo='azul'] { --fondo: var(--azul); --tinta: var(--blanco); --tinta-2: var(--marino); --acento: var(--amarillo); --sobre-acento: var(--marino); }
+[data-capitulo='marino'] { --fondo: var(--marino); --tinta: var(--blanco); --tinta-2: var(--amarillo); --acento: var(--amarillo); --sobre-acento: var(--marino); }
+[data-capitulo='amarillo'] { --fondo: var(--amarillo); --tinta: var(--marino); --tinta-2: var(--azul); --acento: var(--marino); --sobre-acento: var(--amarillo); }
+[data-capitulo='blanco'] { --fondo: var(--blanco); --tinta: var(--marino); --tinta-2: var(--azul); --acento: var(--azul); --sobre-acento: var(--blanco); }
+
+[data-capitulo] {
+  background-color: var(--fondo);
+  color: var(--tinta);
+}
+
+/* Base */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: calc(var(--cabecera) + 16px);
+  background: var(--marino);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
+body {
+  margin: 0;
+  font-family: var(--fuente-texto);
+  font-size: var(--step-body);
+  line-height: 1.5;
+  background: var(--blanco);
+  color: var(--marino);
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: 'tnum' 0;
+}
+
+img,
+svg { display: block; max-width: 100%; }
+
+h1, h2, h3, p, ul, ol, figure, blockquote, dl, dd { margin: 0; }
+ul[role='list'], ol[role='list'] { list-style: none; padding: 0; }
+
+h1, h2, h3 {
+  font-family: var(--fuente-display);
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+p { text-wrap: pretty; max-width: 75ch; }
+
+a { color: inherit; text-decoration-thickness: 2px; text-underline-offset: 0.18em; }
+
+::selection { background: var(--amarillo); color: var(--marino); }
+[data-capitulo='amarillo'] ::selection { background: var(--marino); color: var(--amarillo); }
+
+:focus-visible {
+  outline: 3px solid var(--acento, var(--azul));
+  outline-offset: 3px;
+}
+
+input, textarea, button, select { font: inherit; color: inherit; }
+
+.solo-lector {
+  position: absolute !important;
+  width: 1px; height: 1px; /* taste-skill-ignore: texto solo para lectores de pantalla */
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0);
+  white-space: nowrap; border: 0;
+}
+
+.saltar {
+  position: absolute;
+  left: var(--margen);
+  top: -100px;
+  z-index: 100;
+  padding: 12px 18px;
+  background: var(--amarillo);
+  color: var(--marino);
+  font-weight: 500;
+}
+.saltar:focus { top: 8px; }
+
+/* Marcas de desarrollo: nunca llegan a producción */
+.pendiente {
+  background: #ff2d87;
+  color: #fff;
+  padding: 0.05em 0.3em;
+  font-family: var(--fuente-texto);
+  font-size: var(--step-small);
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.4;
+  text-transform: none;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* Marco: un par de márgenes para todo */
+.marco { padding-inline: var(--margen); }
+
+/* Bloque: una idea por sección, con aire */
+.bloque { padding: var(--entre-secciones) var(--margen); }
+.bloque__titulo { font-size: var(--step-head); text-transform: uppercase; }
+.bloque__intro { margin-top: 20px; font-size: var(--step-lead); line-height: 1.35; max-width: 40ch; }
+
+/* Botón: plano, esquinas rectas, un color */
+.boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  min-height: 56px;
+  padding: 0 28px;
+  border: 0;
+  border-radius: 0;
+  background: var(--acento);
+  color: var(--sobre-acento);
+  font-family: var(--fuente-display);
+  font-size: var(--step-lead);
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+  text-decoration: none;
+  letter-spacing: 0;
+  cursor: pointer;
+  transition: transform 160ms var(--ease-out), background-color 200ms ease, color 200ms ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.boton:active { transform: scale(0.97); }
+@media (hover: hover) and (pointer: fine) {
+  .boton:hover { background: var(--tinta); color: var(--fondo); }
+}
+
+.enlace {
+  font-weight: 500;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.2em;
+  transition: text-decoration-color 200ms ease, color 200ms ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .enlace:hover { text-decoration-color: var(--acento); }
+}
+
+/* Hueco de foto: corte diagonal con el ángulo de la X del monograma */
+.foto {
+  --corte: clamp(28px, 14%, 120px);
+  position: relative;
+  aspect-ratio: var(--proporcion);
+  overflow: hidden;
+  background: var(--foto-fondo);
+  color: var(--foto-tinta);
+  clip-path: polygon(var(--corte) 0, 100% 0, 100% calc(100% - var(--corte) * 1.39), calc(100% - var(--corte)) 100%, 0 100%, 0 calc(var(--corte) * 1.39));
+}
+.foto--azul { --foto-fondo: var(--azul); --foto-tinta: var(--azul-hondo); }
+.foto--marino { --foto-fondo: var(--marino); --foto-tinta: var(--azul); }
+.foto--amarillo { --foto-fondo: var(--amarillo); --foto-tinta: var(--amarillo-claro); }
+.foto--blanco { --foto-fondo: var(--blanco); --foto-tinta: var(--amarillo); }
+.foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.foto__monograma {
+  position: absolute;
+  width: 64%;
+  left: 18%;
+  top: 50%;
+  translate: 0 -50%;
+}
+.foto figcaption {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  max-width: calc(100% - var(--corte));
+  padding: 6px 10px;
+  background: var(--marino);
+  color: var(--blanco);
+  font-size: var(--step-small);
+  line-height: 1.3;
+}
+
+.imagen-abierta { width: 100%; height: 100%; object-fit: cover; }
+
+@media (prefers-reduced-motion: reduce) {
+  /* Sin animaciones de recorrido; las transiciones de color y opacidad se quedan */
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
+}
+
+/* ── Movimiento ───────────────────────────────────────────────────────────
+   Poco y tranquilo: las partes de cada sección entran una vez, en orden, al asomar. Solo se ocultan
+   cuando el script ya corre (.mov en <html>); sin él, o con movimiento reducido, todo está quieto. */
+:root { --ease-expo: cubic-bezier(0.16, 1, 0.3, 1); }
+
+.mov main > section:not(:first-child) > * {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 500ms var(--ease-out), transform 700ms var(--ease-expo);
+  transition-delay: calc(var(--i, 0) * 70ms);
+}
+.mov main > section.visto > * { opacity: 1; transform: none; }

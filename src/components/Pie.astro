@@ -1,0 +1,103 @@
+---
+/**
+ * Pie compacto, igual en todas las páginas: logo, contacto, Instagram de cada marca, enlaces
+ * legales, la entidad titular (lo que pide Apple) y los créditos de las fotos.
+ */
+import { academy, cup, entidad } from '../data/contenido';
+import { creditos } from '../lib/fotos';
+import { ruta } from '../lib/ruta';
+import { t, type Idioma } from '../i18n/ui';
+import Dato from './Dato.astro';
+import Monograma from './Monograma.astro';
+import SiCompleto from './SiCompleto.astro';
+
+interface Props { idioma?: Idioma }
+const { idioma = 'es' } = Astro.props;
+const fotografos = creditos();
+---
+<footer class="pie" data-capitulo="marino">
+  <div class="pie__marca">
+    <Monograma class="pie__xb" />
+    <p>{academy.nombre}</p>
+  </div>
+
+  <div class="pie__col">
+    <h2>{t(idioma, 'pie.contacto')}</h2>
+    <p><a href={`mailto:${entidad.email}`}>{entidad.email}</a></p>
+  </div>
+
+  <div class="pie__col">
+    <h2>{t(idioma, 'pie.instagram')}</h2>
+    <ul role="list">
+      <li>{academy.nombre}: <a href={`https://www.instagram.com/${academy.instagram}/`} rel="noopener">@{academy.instagram}</a></li>
+      <li>{cup.nombre}: <a href={`https://www.instagram.com/${cup.instagram}/`} rel="noopener">@{cup.instagram}</a></li>
+    </ul>
+  </div>
+
+  <div class="pie__col">
+    <h2>{t(idioma, 'pie.legal')}</h2>
+    <ul role="list">
+      <li><a href={ruta('/aviso-legal/')}>{t(idioma, 'pie.avisoLegal')}</a></li>
+      <li><a href={ruta('/privacidad/')}>{t(idioma, 'pie.privacidad')}</a></li>
+      <li><a href={ruta('/soporte/')}>{t(idioma, 'pie.soporte')}</a></li>
+    </ul>
+  </div>
+
+  <div class="pie__base">
+    <address>
+      {entidad.nombre} · NIF {entidad.nif} · {entidad.direccion}, {entidad.ciudad}
+      <SiCompleto datos={[entidad.registro]} donde="pie: registro de asociaciones">
+        · <Dato v={entidad.registro} donde="pie: registro de asociaciones" />
+      </SiCompleto>
+    </address>
+    {fotografos.length > 0 && <p>{t(idioma, 'pie.fotos')}: {fotografos.join('; ')}.</p>}
+  </div>
+</footer>
+
+<style>
+  .pie {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr 1fr;
+    gap: 40px 32px;
+    padding: 56px var(--margen) 32px;
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+  .pie__marca { display: grid; justify-items: start; align-content: start; gap: 12px; }
+  .pie__xb { width: 56px; color: var(--amarillo); }
+  .pie__marca p {
+    font-family: var(--fuente-display);
+    font-size: var(--step-lead);
+    font-weight: 700;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+  .pie h2 {
+    margin-bottom: 8px;
+    font-family: var(--fuente-texto);
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    line-height: 1.6;
+    color: var(--amarillo);
+  }
+  .pie ul { margin: 0; }
+  .pie a {
+    display: inline-block;
+    padding-block: 4px;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+    overflow-wrap: break-word;
+    transition: color 180ms ease;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .pie a:hover { color: var(--amarillo); }
+  }
+  .pie__base { grid-column: 1 / -1; display: grid; gap: 4px; max-width: 75ch; }
+  .pie__base address { font-style: normal; }
+
+  @media (max-width: 899px) {
+    .pie { grid-template-columns: 1fr; gap: 28px; }
+  }
+</style>

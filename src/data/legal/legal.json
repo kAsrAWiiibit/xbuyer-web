@@ -1,0 +1,150 @@
+{
+  "tournament": "Xbuyer Cup",
+  "draft": "Borrador pendiente de revisión legal: este texto todavía no es definitivo.",
+  "contact": {
+    "controller": "Associació Esportiva Xbuyer 2026",
+    "email": "aexbuyer2026@gmail.com",
+    "phone": null,
+    "instagram": "xbuyercup"
+  },
+  "privacy": {
+    "title": "Política de privacidad · Xbuyer Cup",
+    "sections": [
+      {
+        "title": "Responsable",
+        "paragraphs": [
+          "Associació Esportiva Xbuyer 2026 (NIF G27654011), C/ Rosa Luxemburgo, 11, 1º 3ª, 08840 Viladecans, Barcelona. Contacto para cualquier tema de privacidad: aexbuyer2026@gmail.com."
+        ]
+      },
+      {
+        "title": "Qué datos tratamos",
+        "paragraphs": [
+          "La app no pide registrarse. Cada móvil tiene una sesión anónima, sin nombre ni email, para contar un voto al MVP por persona y partido y para que veas tus incidencias y lo que has subido.",
+          "Fotos y vídeos de los partidos que suben las familias. La organización revisa cada foto y vídeo antes de publicarlo.",
+          "Incidencias: tipo, partido o campo, descripción, foto opcional y tu nombre si lo indicas. Las de lesiones solo las ve la organización (no los responsables de campo).",
+          "Avisos, solo si los activas: el identificador de notificaciones del móvil y tus equipos favoritos, para avisarte de sus partidos (inicio, goles y votación del MVP). Se quitan en Más → Avisos o en los ajustes del móvil.",
+          "De los jugadores solo se publican el nombre abreviado (nombre e inicial del primer apellido) y el dorsal, que facilitan los clubes, junto con los resultados, goles, tarjetas y MVP.",
+          "Los datos de las hojas de inscripción (DNI, fecha de nacimiento, teléfonos y responsables) solo los tiene la organización: no se guardan en la app ni se publican."
+        ]
+      },
+      {
+        "title": "Menores",
+        "paragraphs": [
+          "Muchos participantes son menores. No se publican fotos de los jugadores en sus fichas, solo el nombre abreviado (nombre e inicial del primer apellido) y el dorsal.",
+          "Antes de subir una foto o un vídeo confirmas que tienes permiso de los padres o tutores de los menores que aparecen.",
+          "Si sales tú o tu hijo/a en una foto o un vídeo y quieres que se retire, ábrelo y pulsa \"Denunciar\" → \"Salgo yo o mi hijo/a\" (deja de verse al momento y la organización lo borra), o escribe a aexbuyer2026@gmail.com."
+        ]
+      },
+      {
+        "title": "Para qué y por qué",
+        "paragraphs": [
+          "Para organizar y seguir el torneo Xbuyer Cup: calendario, resultados, clasificaciones, incidencias y galería.",
+          "Base legal: el consentimiento (fotos, vídeos, votos y avisos) y el interés legítimo de la organización en el desarrollo del torneo (resultados e incidencias)."
+        ]
+      },
+      {
+        "title": "Cuánto tiempo",
+        "paragraphs": [
+          "Las fotos, los vídeos, las incidencias y los móviles apuntados a los avisos se borran el domingo 7 de marzo de 2027 (90 días después del torneo). Los resultados y las clasificaciones se conservan como historial del torneo."
+        ]
+      },
+      {
+        "title": "Quién más los trata",
+        "paragraphs": [
+          "Los datos se guardan en Supabase (servidores en la Unión Europea), que actúa como encargado del tratamiento. No se venden ni se ceden a terceros.",
+          "Para enviarte los avisos, el identificador de notificaciones y el texto del aviso pasan por Expo (servicio de envío de notificaciones, con sede en Estados Unidos) y por Apple o Google, según tu móvil."
+        ]
+      },
+      {
+        "title": "Tus derechos",
+        "paragraphs": [
+          "Puedes pedir acceso, rectificación, supresión, oposición, limitación y portabilidad escribiendo a aexbuyer2026@gmail.com. Si no te atendemos bien, puedes reclamar ante la Agencia Española de Protección de Datos (aepd.es)."
+        ]
+      },
+      {
+        "title": "Aviso legal",
+        "paragraphs": [
+          "Esta app es del torneo Xbuyer Cup, organizado por Associació Esportiva Xbuyer 2026 (NIF G27654011), C/ Rosa Luxemburgo, 11, 1º 3ª, 08840 Viladecans, Barcelona.",
+          "Los horarios y resultados pueden cambiar; manda la información oficial de la organización.",
+          "Quien sube una foto o un vídeo es responsable de tener permiso para hacerlo. Está prohibido subir contenido ofensivo o ajeno al torneo."
+        ]
+      }
+    ]
+  },
+  "support": {
+    "title": "Ayuda · Xbuyer Cup",
+    "sections": [
+      {
+        "title": "¿Tengo que registrarme?",
+        "paragraphs": [
+          "No. La app funciona sin cuenta: horarios, resultados en directo, clasificaciones y cuadros se ven nada más abrirla."
+        ]
+      },
+      {
+        "title": "¿Cómo voto al MVP?",
+        "paragraphs": [
+          "Al acabar cada partido se abre la votación durante 10 minutos: entra en el partido y elige al jugador. Se puede votar una vez por partido desde cada móvil. Si sale \"Ya has votado\", tu voto ya está contado."
+        ]
+      },
+      {
+        "title": "¿Cómo subo fotos o vídeos?",
+        "paragraphs": [
+          "En el partido, pulsa \"Subir\" (hasta 10 a la vez; vídeos de hasta 60 segundos). La primera vez hay que confirmar que tienes permiso de los padres o tutores de los menores que aparecen.",
+          "La organización revisa cada foto y vídeo antes de publicarlo: mientras tanto, solo lo ves tú."
+        ]
+      },
+      {
+        "title": "Salgo yo o mi hijo/a en una foto y quiero que se retire",
+        "paragraphs": [
+          "Abre la foto o el vídeo y pulsa \"Denunciar\" → \"Salgo yo o mi hijo/a\": deja de verse al momento y la organización lo borra. También puedes escribirnos."
+        ]
+      },
+      {
+        "title": "¿Cómo aviso de un problema en el campo?",
+        "paragraphs": [
+          "En Más → \"Notificar una incidencia\" avisas a la organización (con foto si quieres) y en \"Mis incidencias\" sigues su estado."
+        ]
+      },
+      {
+        "title": "¿Cómo se desempata en la clasificación?",
+        "paragraphs": [
+          "Victoria: 3 puntos. Empate: 1 punto. Si dos o más equipos empatan a puntos en el grupo, se desempata en este orden:",
+          "1. Enfrentamiento directo: puntos, diferencia de goles y goles a favor en los partidos entre los empatados (si empatan tres o más, una miniclasificación solo con ellos).",
+          "2. Diferencia de goles en el grupo.",
+          "3. Goles a favor en el grupo.",
+          "4. Juego limpio: pasa el que tenga menos puntos de tarjetas (amarilla 1 punto, roja 3 puntos; una doble amarilla cuenta como roja: 3 puntos).",
+          "5. Sorteo: si sigue el empate, lo hace la organización; hasta entonces la app pone \"Pendiente de sorteo\".",
+          "Para elegir a los mejores clasificados de distintos grupos (p. ej. los mejores terceros): puntos, diferencia de goles, goles a favor, juego limpio y sorteo."
+        ]
+      },
+      {
+        "title": "Un horario o un resultado no es correcto",
+        "paragraphs": [
+          "La organización actualiza horarios, campos y resultados en directo, sin que tengas que actualizar la app. Si ves un error, escríbenos."
+        ]
+      },
+      {
+        "title": "¿Cuánto tiempo se guardan las fotos?",
+        "paragraphs": [
+          "Las fotos, los vídeos y las incidencias se borran el domingo 7 de marzo de 2027. Más detalles en la política de privacidad."
+        ]
+      },
+      {
+        "id": "eliminar-datos",
+        "title": "Eliminar mis datos",
+        "paragraphs": [
+          "La app no tiene cuentas para las familias: al abrirla se crea una sesión anónima, sin nombre ni email. Lo que se guarda con ella son las fotos y vídeos que subas, las incidencias que notifiques y tus votos al MVP.",
+          "Para borrarlos, escríbenos a aexbuyer2026@gmail.com indicando qué quieres eliminar (por ejemplo, el partido y la foto, o la incidencia). Lo borramos en un máximo de 30 días y te lo confirmamos. Una foto o un vídeo en el que sales tú o tu hijo/a se retira al momento desde la app (\"Denunciar\" → \"Salgo yo o mi hijo/a\").",
+          "Aunque no lo pidas, las fotos, los vídeos y las incidencias se borran el domingo 7 de marzo de 2027. Los votos no guardan ningún dato personal y se conservan solo para el recuento. Al desinstalar la app se borran del móvil los favoritos y los ajustes.",
+          "Las cuentas de gestión las crea la organización: para eliminar la tuya, pídenoslo por email."
+        ]
+      },
+      {
+        "title": "Gestión del torneo",
+        "paragraphs": [
+          "El acceso de gestión (administradores y responsables de campo) lo da la organización. Los responsables de campo entran con el usuario y la contraseña de su campo, que les entrega la organización. Sin acceso o con la contraseña olvidada, pídelo a la organización."
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "xbuyer-web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "borradores": "BORRADORES=1 astro build --outDir dist-borradores"
+  },
+  "dependencies": {
+    "@fontsource/barlow": "^5.2.6",
+    "@fontsource/barlow-condensed": "^5.2.6",
+    "astro": "^7.4.4"
+  }
+}

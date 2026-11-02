@@ -1,0 +1,9 @@
+---
+/** Un dato de contenido: su valor, o la marca de pendiente */
+import { esPendiente, type Dato } from '../lib/pendiente';
+import Pendiente from './Pendiente.astro';
+
+interface Props { v: Dato<string | number>; donde: string }
+const { v, donde } = Astro.props;
+---
+{esPendiente(v) ? <Pendiente nota={v.pendiente} donde={donde} /> : v}

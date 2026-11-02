@@ -1,0 +1,93 @@
+---
+/** Páginas legales: banda azul con el título y texto de lectura sobre blanco */
+import Cabecera from '../components/Cabecera.astro';
+import { academy, cup } from '../data/contenido';
+import { ruta } from '../lib/ruta';
+import Base from './Base.astro';
+
+interface Props {
+  titulo: string;
+  /** Qué es y de quién, bajo el título */
+  subtitulo: string;
+  tituloPagina?: string;
+  descripcion: string;
+  aviso?: string | null;
+  indice: { id: string; titulo: string }[];
+}
+const { titulo, subtitulo, tituloPagina = titulo, descripcion, aviso, indice } = Astro.props;
+---
+<Base titulo={tituloPagina} descripcion={descripcion} colorTema="#1863B8">
+  <Cabecera slot="cabecera" marca={academy.nombre} capitulo="marino" otra={{ href: ruta('/cup/'), texto: cup.nombre }} />
+  <section class="legal-cabeza marco" data-capitulo="azul">
+    <h1>{titulo}</h1>
+    <p class="legal-cabeza__sub">{subtitulo}</p>
+  </section>
+  <div class="legal marco" data-capitulo="blanco">
+    <div class="legal__texto">
+      {aviso && <p class="legal__borrador">{aviso}</p>}
+      <slot />
+    </div>
+    <nav class="legal__indice" aria-label="En esta página">
+      <h2>En esta página</h2>
+      <ol role="list">
+        {indice.map((s) => <li><a href={`#${s.id}`}>{s.titulo}</a></li>)}
+      </ol>
+    </nav>
+  </div>
+</Base>
+
+<style>
+  .legal-cabeza { padding-block: clamp(48px, 10vh, 120px) clamp(32px, 6vh, 64px); }
+  .legal-cabeza h1 { font-size: var(--step-head); text-transform: uppercase; max-width: 20ch; }
+  .legal-cabeza__sub { margin-top: 16px; font-size: var(--step-lead); line-height: 1.3; }
+  .legal {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    column-gap: 16px;
+    align-items: start;
+    padding-block: clamp(48px, 8vh, 96px) var(--entre-secciones);
+  }
+  .legal__texto { grid-column: 1 / 8; max-width: 68ch; }
+  .legal__indice {
+    grid-column: 9 / 13;
+    position: sticky;
+    top: calc(var(--cabecera) + 32px);
+    padding: 28px;
+    background: var(--amarillo);
+  }
+  .legal__indice h2 { color: var(--marino) !important; }
+  .legal__indice ol { margin: 0; display: grid; gap: 2px; }
+  .legal__indice a {
+    display: block;
+    padding-block: 6px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 180ms ease;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .legal__indice a:hover { color: var(--azul); text-decoration: underline; }
+  }
+  @media (max-width: 899px) {
+    .legal__texto, .legal__indice { grid-column: 1 / -1; }
+    .legal__indice { position: static; grid-row: 1; margin-bottom: 40px; }
+  }
+  .legal__borrador {
+    margin-bottom: 40px;
+    padding: 16px 20px;
+    background: var(--amarillo);
+    color: var(--marino);
+    font-weight: 500;
+  }
+  .legal :global(section + section) { margin-top: 40px; }
+  .legal :global(h2) {
+    font-size: var(--step-lead);
+    text-transform: uppercase;
+    line-height: 1;
+    margin-bottom: 12px;
+    color: var(--azul);
+  }
+  .legal :global(p + p) { margin-top: 12px; }
+  .legal :global(a) { font-weight: 500; text-decoration-thickness: 2px; }
+  .legal :global(.legal__contacto) { margin-top: 48px; padding: 28px; background: var(--amarillo-claro); }
+  .legal :global(.legal__contacto h2) { color: var(--marino); }
+</style>

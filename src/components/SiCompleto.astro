@@ -1,0 +1,14 @@
+---
+/**
+ * Muestra su contenido solo si ningún dato está pendiente. En desarrollo lo muestra siempre (con
+ * las marcas [pendiente]); en producción lo oculta entero y lo apunta.
+ */
+import { esPendiente, MOSTRAR_PENDIENTES, ocultado } from '../lib/pendiente';
+
+interface Props { datos: unknown[]; donde: string }
+const { datos, donde } = Astro.props;
+const faltan = datos.filter(esPendiente).map((d) => d.pendiente);
+const mostrar = !faltan.length || MOSTRAR_PENDIENTES;
+if (!mostrar) ocultado(Astro.url.pathname, donde, faltan.join(', '));
+---
+{mostrar && <slot />}

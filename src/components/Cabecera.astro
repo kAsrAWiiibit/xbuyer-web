@@ -1,0 +1,104 @@
+---
+/**
+ * Barra fija y sencilla: monograma y marca de la página (vuelve al inicio), los apartados de la
+ * página en escritorio y, siempre a la vista, el enlace a la otra marca.
+ */
+import { ruta } from '../lib/ruta';
+import { t, type Idioma } from '../i18n/ui';
+import Monograma from './Monograma.astro';
+
+interface Enlace { href: string; texto: string }
+interface Props {
+  marca: string;
+  /** Color de la barra: el de la marca de la página */
+  capitulo: 'azul' | 'amarillo' | 'marino';
+  /** Apartados de esta página (solo en escritorio) */
+  enlaces?: Enlace[];
+  /** La otra marca */
+  otra: Enlace;
+  idioma?: Idioma;
+}
+const { marca, capitulo, enlaces = [], otra, idioma = 'es' } = Astro.props;
+---
+<header class="cabecera" data-capitulo={capitulo}>
+  <a class="cabecera__marca" href={ruta('/')}>
+    <Monograma class="cabecera__xb" />
+    <span>{marca}</span>
+    <span class="solo-lector">({t(idioma, 'nav.inicio')})</span>
+  </a>
+  {enlaces.length > 0 && (
+    <nav class="cabecera__nav" aria-label="En esta página">
+      <ul role="list">
+        {enlaces.map((e) => <li><a href={e.href}>{e.texto}</a></li>)}
+      </ul>
+    </nav>
+  )}
+  <a class="cabecera__otra" href={otra.href}>{otra.texto}</a>
+</header>
+
+<style>
+  .cabecera {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    height: var(--cabecera);
+    padding-inline: var(--margen);
+  }
+  .cabecera__marca {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-right: auto;
+    min-height: 44px;
+    font-family: var(--fuente-display);
+    font-size: var(--step-lead);
+    font-weight: 700;
+    line-height: 1;
+    text-transform: uppercase;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .cabecera__xb { width: 40px; height: auto; }
+  .cabecera__nav ul { display: flex; gap: 28px; margin: 0; }
+  .cabecera__nav a {
+    display: inline-block;
+    padding-block: 10px;
+    font-weight: 500;
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.3em;
+    transition: text-decoration-color 180ms ease;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .cabecera__nav a:hover { text-decoration-color: currentColor; }
+  }
+  /* La otra marca: siempre visible, como un botón en la tinta de la barra */
+  .cabecera__otra {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 16px;
+    font-family: var(--fuente-display);
+    font-size: var(--step-body);
+    font-weight: 700;
+    text-transform: uppercase;
+    text-decoration: none;
+    white-space: nowrap;
+    background: var(--tinta);
+    color: var(--fondo);
+    transition: transform 160ms var(--ease-out);
+  }
+  .cabecera__otra:active { transform: scale(0.97); }
+
+  @media (max-width: 899px) {
+    .cabecera { gap: 12px; }
+    .cabecera__nav { display: none; }
+    .cabecera__marca { font-size: var(--step-body); }
+    .cabecera__xb { width: 32px; }
+    .cabecera__otra { padding: 0 12px; font-size: var(--step-small); }
+  }
+</style>
