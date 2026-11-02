@@ -1,10 +1,12 @@
 ---
 /**
  * Xbuyer Team Academy: la selección que compite en torneos y organiza la Xbuyer Cup. Quiénes son,
- * su palmarés (con huecos para las fotos de cada torneo) y contacto. Todo sale de contenido/textos.md.
+ * su palmarés (con huecos para las fotos de cada torneo), la equipación de la temporada y contacto.
+ * Todo sale de contenido/textos.md.
  */
 import Cabecera from '../../components/Cabecera.astro';
 import Cupon from '../../components/Cupon.astro';
+import Dato from '../../components/Dato.astro';
 import Foto from '../../components/Foto.astro';
 import Monograma from '../../components/Monograma.astro';
 import Pendiente from '../../components/Pendiente.astro';
@@ -19,10 +21,23 @@ import { ruta } from '../../lib/ruta';
 const palmares = academy.palmares.map((p) => ({ ...p, foto: fotoDe(p.hueco) }));
 for (const p of palmares) if (!p.foto && !MOSTRAR_PENDIENTES) ocultado(Astro.url.pathname, `academy: fotos de ${p.torneo}`, 'fotos de L8 Sport Murcia');
 const conFotos = MOSTRAR_PENDIENTES || palmares.some((p) => p.foto);
+/** «2025 · B12»; si hay más de un título, solo es uno de ellos */
+const detalle = (p: (typeof palmares)[number]) => {
+  const texto = [p.anio, p.categoria].filter(Boolean).join(' · ');
+  return texto && p.titulos > 1 ? t('es', 'academy.palmares.entreEllos', { detalle: texto }) : texto;
+};
+
+// Cada pieza con su foto; si hay foto de la espalda, se le puede dar la vuelta
+const { equipacion } = academy;
+const piezas = equipacion.piezas.map((p) => ({ ...p, espalda: fotoDe(`${p.hueco}-espalda`) ? `${p.hueco}-espalda` : null }));
+// «Temporada 26/27, con Adidas como…»: la marca va en negrita
+const frase = t('es', 'academy.equipacion.frase', { temporada: equipacion.temporada, marca: '\u0000' }).split('\u0000');
+for (const p of piezas) if (!fotoDe(p.hueco)) throw new Error(`fotos.json: falta la foto de la equipación «${p.nombre}» (hueco ${p.hueco})`);
 
 const enlaces = [
   { href: '#quienes', texto: t('es', 'nav.quienes') },
   { href: '#palmares', texto: t('es', 'nav.palmares') },
+  { href: '#equipacion', texto: t('es', 'nav.equipacion') },
   { href: '#contacto', texto: t('es', 'nav.contacto') },
 ];
 ---
@@ -56,6 +71,12 @@ const enlaces = [
           <div class="torneo__texto">
             <h3 class="torneo__nombre">{p.torneo}</h3>
             <p class="torneo__resultado">{p.resultado}</p>
+            {(detalle(p) || p.faltaDetalle) && (
+              <p class="torneo__detalle">
+                {detalle(p)}
+                {p.faltaDetalle && <Dato v={p.faltaDetalle} donde={`academy: ${p.torneo}, año y categoría`} />}
+              </p>
+            )}
           </div>
           {(p.foto || MOSTRAR_PENDIENTES) && (
             <div class="torneo__foto">
@@ -68,10 +89,48 @@ const enlaces = [
     </ol>
   </section>
 
+  <section class="bloque equipacion" id="equipacion" data-capitulo="amarillo" aria-labelledby="equipacion-titulo">
+    <div class="equipacion__cabeza">
+      <h2 id="equipacion-titulo" class="equipacion__titulo">{equipacion.nombre}</h2>
+      <p class="equipacion__frase">{frase[0]}<strong>{equipacion.patrocinadorTecnico}</strong>{frase[1]}</p>
+    </div>
+    <ul role="list" class="equipacion__piezas">
+      {piezas.map((p) => (
+        <li class="pieza">
+          <div class="pieza__fotos" data-lado="frente">
+            <Foto hueco={p.hueco as Hueco} proporcion="1 / 1" fondo="marino" sizes="(min-width: 900px) 31vw, 82vw" class="pieza__frente" />
+            {p.espalda && <Foto hueco={p.espalda as Hueco} proporcion="1 / 1" fondo="marino" sizes="(min-width: 900px) 31vw, 82vw" class="pieza__espalda" />}
+          </div>
+          <div class="pieza__pie">
+            <h3 class="pieza__nombre">{p.nombre}</h3>
+            {p.espalda && (
+              <button type="button" class="pieza__vuelta" hidden data-vuelta={t('es', 'academy.equipacion.vuelta')} data-frente={t('es', 'academy.equipacion.frente')}>
+                {t('es', 'academy.equipacion.vuelta')}
+              </button>
+            )}
+          </div>
+        </li>
+      ))}
+    </ul>
+  </section>
+
   <section class="bloque contacto" id="contacto" data-capitulo="blanco" aria-labelledby="contacto-titulo">
     <Cupon marca="Xbuyer Team Academy" tituloId="contacto-titulo" instagram={academy.instagram} />
   </section>
 </Base>
+
+<script>
+  // Dar la vuelta a una camiseta: cambia el frente por la espalda. Sin script, solo se ve el frente.
+  for (const boton of document.querySelectorAll<HTMLButtonElement>('.pieza__vuelta')) {
+    const fotos = boton.closest('.pieza')!.querySelector<HTMLElement>('.pieza__fotos')!;
+    boton.hidden = false;
+    boton.addEventListener('click', () => {
+      const espalda = fotos.dataset.lado !== 'espalda';
+      boton.textContent = espalda ? boton.dataset.frente! : boton.dataset.vuelta!;
+      fotos.dataset.lado = espalda ? 'espalda' : 'frente';
+    });
+  }
+</script>
 
 <style>
   .portada {
@@ -119,7 +178,74 @@ const enlaces = [
   /* Una participación no es un título: mismo orden de lectura, menos peso */
   .torneo--participacion .torneo__nombre { color: var(--blanco); font-size: var(--step-lead); }
   .torneo--participacion .torneo__resultado { font-size: var(--step-body); font-weight: 400; }
+  .torneo__detalle {
+    margin-top: 4px;
+    font-size: var(--step-body);
+    font-variant-numeric: tabular-nums;
+    color: var(--tinta-2);
+  }
   .torneo__foto { display: grid; gap: 12px; justify-items: start; }
+
+  /* Nueva piel: cabecera de cartel y las tres piezas en fila */
+  .equipacion__cabeza {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    column-gap: 16px;
+    align-items: end;
+  }
+  .equipacion__titulo {
+    grid-column: 1 / 9;
+    font-size: min(var(--step-display), 15vw);
+    line-height: 0.85;
+    text-transform: uppercase;
+  }
+  .equipacion__frase {
+    grid-column: 9 / 13;
+    padding-bottom: 0.4em;
+    font-size: var(--step-lead);
+    line-height: 1.25;
+  }
+  .equipacion__frase strong { font-weight: 500; color: var(--tinta-2); }
+
+  .equipacion__piezas {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: clamp(40px, 6vw, 80px);
+  }
+  /* La del medio baja un poco: fila de cartel, no de catálogo */
+  .pieza:nth-child(2) { margin-top: clamp(32px, 5vw, 72px); }
+  .pieza__fotos { display: grid; }
+  .pieza__fotos > :global(.foto) {
+    grid-area: 1 / 1;
+    transition: opacity 220ms var(--ease-out), visibility 0s linear 220ms;
+  }
+  .pieza__fotos > :global(.pieza__espalda),
+  .pieza__fotos[data-lado='espalda'] > :global(.pieza__frente) { opacity: 0; visibility: hidden; }
+  .pieza__fotos[data-lado='espalda'] > :global(.pieza__espalda) { opacity: 1; visibility: visible; transition-delay: 0s; }
+  .pieza__pie {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px 16px;
+    margin-top: 14px;
+  }
+  .pieza__nombre { font-size: var(--step-lead); text-transform: uppercase; }
+  .pieza__vuelta {
+    min-height: 44px;
+    padding: 0 4px;
+    border: 0;
+    background: none;
+    font-weight: 500;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.2em;
+    cursor: pointer;
+    transition: transform 160ms var(--ease-out);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .pieza__vuelta:active { transform: scale(0.97); }
 
   .contacto { display: grid; --fondo-seccion: var(--blanco); }
   .contacto :global(.cupon) { width: min(100%, 1120px); justify-self: center; }
@@ -133,5 +259,12 @@ const enlaces = [
     .quienes .bloque__titulo, .quienes__texto { grid-column: 1 / -1; }
     .quienes__texto { margin-top: 32px; }
     .palmares__lista--fotos .torneo { grid-template-columns: 1fr; gap: 16px; }
+    .equipacion__titulo { grid-column: 1 / -1; font-size: 21vw; }
+    .equipacion__frase { grid-column: 1 / -1; margin-top: 20px; padding: 0; }
+    /* En el móvil, una debajo de otra, alternando lado */
+    .equipacion__piezas { grid-template-columns: 1fr; gap: 40px; }
+    .pieza { width: 84%; }
+    .pieza:nth-child(even) { justify-self: end; }
+    .pieza:nth-child(2) { margin-top: 0; }
   }
 </style>

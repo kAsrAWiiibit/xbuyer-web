@@ -11,6 +11,7 @@ const es = {
   'nav.contacto': 'Contacto',
   'nav.quienes': 'Quiénes somos',
   'nav.palmares': 'Palmarés',
+  'nav.equipacion': 'Equipación',
   'nav.torrent': 'Torrent',
   'nav.ediciones': 'Ediciones',
   // Frases propuestas para la portada y la cabecera de la academia (pendientes de aprobar)
@@ -22,6 +23,10 @@ const es = {
   'academy.quienes': 'Quiénes somos',
   'academy.palmares': 'Palmarés',
   'academy.faseOro': 'Resultados en {fase}.',
+  'academy.palmares.entreEllos': 'Entre ellos, {detalle}',
+  'academy.equipacion.frase': '{temporada}, con {marca} como patrocinador técnico.',
+  'academy.equipacion.vuelta': 'Ver la espalda',
+  'academy.equipacion.frente': 'Ver el frente',
   'cup.ver': 'Ver categorías y sedes',
   'cup.app': 'Descargar la app',
   'cup.faltan.uno': 'Falta 1 día',

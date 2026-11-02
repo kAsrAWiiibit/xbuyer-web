@@ -27,7 +27,10 @@ npm run preview      # sirve dist/ en local
   `src/data/contenido.ts`. Para cambiar un texto, una fecha, el palmarés o una edición, se cambia ahí.
 - Respeta su forma: títulos `#`/`##` y viñetas `- Etiqueta: valor`. Si algo no se entiende (una fecha
   sin formato, un resultado del palmarés distinto de «N veces campeones», «campeones»,
-  «subcampeones» o «participación»), la build falla diciendo qué no encuentra.
+  «subcampeones» o «participación»), la build falla diciendo qué no encuentra. Tras el resultado van el
+  año y la categoría que figuran en el trofeo: `- MEDCUP: campeones. 2025, S12.`
+- La equipación sale de «## Equipación (temporada …)»: cada pieza de «Piezas» tiene su hueco de foto
+  `equipacion-<pieza>` y, si existe, `equipacion-<pieza>-espalda` (con botón para darle la vuelta).
 - La primera viñeta de «Próximas ediciones» es la edición principal de `/cup/`; las demás salen como
   próximas. El palmarés se ordena solo, de más a menos títulos.
 - `[pendiente]` o `[pendiente: …]` en un valor: en producción no se muestra y `npm run build` lo lista.

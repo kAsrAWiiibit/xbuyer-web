@@ -8,13 +8,18 @@
 - Instagram: @xbuyerteam_academy
 
 ## Palmarés (fase oro)
-- Costa Daurada Cup: 15 veces campeones.
-- Copa UNIQ Andorra: 3 veces campeones.
-- MADCUP: subcampeones.
-- Central Cup (Torrent): campeones.
-- MEDCUP: campeones.
-- Swit Cup: campeones.
-- Donosti Cup: participación.
+- Costa Daurada Cup: 15 veces campeones. 2025, B12. [pendiente: año y categoría de los otros títulos]
+- Copa UNIQ Andorra: 3 veces campeones. 2026. [pendiente: categoría y años de los otros títulos]
+- MADCUP: subcampeones. 2025, masculino. [pendiente: categoría]
+- Central Cup (Torrent): campeones. 2025, S10.
+- MEDCUP: campeones. 2025, S12.
+- Swit Cup: campeones. 2025, U14.
+- Donosti Cup: participación. [pendiente: año y categoría]
+
+## Equipación (temporada 26/27)
+- Nombre: Nueva piel.
+- Patrocinador técnico: Adidas.
+- Piezas: jugador, portero y paseo.
 
 # Xbuyer Cup (organizada por Xbuyer Team Academy)
 - Qué la hace diferente: la presencia de los hermanos Buyer, retransmisión en directo y contenido en redes, premios y trofeos especiales, y ambiente y actividades para las familias.

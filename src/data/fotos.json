@@ -37,6 +37,36 @@
     "palmares-central-cup-torrent": null,
     "palmares-medcup": null,
     "palmares-swit-cup": null,
-    "palmares-donosti-cup": null
+    "palmares-donosti-cup": null,
+    "equipacion-jugador": {
+      "archivo": "equipacion/jugador.jpg",
+      "alt": "Camiseta de jugador amarilla con el monograma XB y mangas azules con dos franjas amarillas, colgada en un vestuario",
+      "autor": "Xbuyer Team Academy",
+      "origen": "Presentación Nueva piel 26/27"
+    },
+    "equipacion-jugador-espalda": {
+      "archivo": "equipacion/jugador-espalda.jpg",
+      "alt": "Espalda de la camiseta de jugador amarilla con el dorsal 10 en azul",
+      "autor": "Xbuyer Team Academy",
+      "origen": "Presentación Nueva piel 26/27"
+    },
+    "equipacion-portero": {
+      "archivo": "equipacion/portero.jpg",
+      "alt": "Camiseta de portero rosa con cuello y puños blancos y el monograma XB, colgada en un vestuario",
+      "autor": "Xbuyer Team Academy",
+      "origen": "Presentación Nueva piel 26/27"
+    },
+    "equipacion-portero-espalda": {
+      "archivo": "equipacion/portero-espalda.jpg",
+      "alt": "Espalda de la camiseta de portero rosa con el dorsal 1 en blanco",
+      "autor": "Xbuyer Team Academy",
+      "origen": "Presentación Nueva piel 26/27"
+    },
+    "equipacion-paseo": {
+      "archivo": "equipacion/paseo.jpg",
+      "alt": "Polo azul marino de paseo con el monograma XB en blanco, flotando sobre una calle",
+      "autor": "Xbuyer Team Academy",
+      "origen": "Presentación Nueva piel 26/27"
+    }
   }
 }

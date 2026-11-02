@@ -9,6 +9,7 @@ export { entidad } from './entidad';
 
 const ACADEMY = 'Xbuyer Team Academy';
 const CUP = 'Xbuyer Cup';
+const EQUIPACION = 'Equipación';
 
 const usuario = (instagram: string) => instagram.replace(/^@/, '');
 const dato = (texto: string): Dato<string> => {
@@ -42,6 +43,11 @@ const lugar = (etiqueta: string) => {
 
 // ── Xbuyer Team Academy ──────────────────────────────────────────────────────────────
 const RESULTADO = /^(?:(\d+) veces campeones|(campeones)|(subcampeones)|(participación))$/i;
+/** «2025, B12» o «2026»: el año y la categoría que figuran en el trofeo */
+const ANIO_CATEGORIA = /^(\d{4})(?:, (.+))?$/;
+
+const slug = (s: string) =>
+  s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
 export const academy = {
   nombre: ACADEMY,
@@ -55,18 +61,33 @@ export const academy = {
   /** Palmarés de más a menos títulos; una participación va al final y no cuenta como título */
   palmares: pares('Palmarés')
     .map(({ etiqueta, valor }, i) => {
-      const m = sinPunto(valor).match(RESULTADO) ?? falta(`un resultado reconocible para «${etiqueta}» (${valor})`);
+      // «15 veces campeones. 2025, B12. [pendiente: …]»: resultado, y luego año y categoría
+      const { texto, pendiente: faltaDetalle } = sinPendiente(valor);
+      const [resultado, ...resto] = sinPunto(texto).split(/\.\s+/);
+      const m = resultado.match(RESULTADO) ?? falta(`un resultado reconocible para «${etiqueta}» (${valor})`);
+      const d = resto.length ? (resto.join('. ').match(ANIO_CATEGORIA) ?? falta(`año y categoría («2025, B12») para «${etiqueta}» (${valor})`)) : null;
       const titulos = m[1] ? Number(m[1]) : m[2] ? 1 : m[3] ? 0.5 : 0;
       return {
         torneo: etiqueta,
-        resultado: mayuscula(sinPunto(valor)),
+        resultado: mayuscula(resultado),
         titulos,
         participacion: Boolean(m[4]),
-        hueco: `palmares-${etiqueta.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}`,
+        anio: d ? Number(d[1]) : null,
+        categoria: d?.[2] ? mayuscula(d[2]) : null,
+        /** Lo que falta de año y categoría (no se muestra en producción) */
+        faltaDetalle: faltaDetalle ? pendiente(faltaDetalle) : null,
+        hueco: `palmares-${slug(etiqueta)}`,
         i,
       };
     })
     .sort((a, b) => b.titulos - a.titulos || a.i - b.i),
+  /** «Nueva piel», temporada 26/27: cada pieza tiene su hueco de foto (equipacion-jugador…) */
+  equipacion: {
+    nombre: sinPunto(campo(EQUIPACION, 'Nombre')),
+    temporada: mayuscula(nota(EQUIPACION) ?? falta('la temporada en el título de «Equipación (…)»')),
+    patrocinadorTecnico: sinPunto(campo(EQUIPACION, 'Patrocinador técnico')),
+    piezas: lista(campo(EQUIPACION, 'Piezas')).map((pieza) => ({ nombre: mayuscula(pieza), hueco: `equipacion-${slug(pieza)}` })),
+  },
 };
 
 // ── Xbuyer Cup ──────────────────────────────────────────────────────────────────────
@@ -124,3 +145,4 @@ export const general = {
 // Comprobación: las secciones que la web usa existen
 seccion(ACADEMY);
 seccion(CUP);
+seccion(EQUIPACION);

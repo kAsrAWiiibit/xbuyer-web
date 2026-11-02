@@ -36,15 +36,19 @@ diagonal XB. Skills del proyecto: `design-taste-frontend`, `impeccable`, `emil-d
 
 - [x] **a) Contenido real.** `contenido/textos.md` con la academia como selección, palmarés, ediciones
   de la Cup y qué incluye la inscripción; `/academy/` y `/cup/` adaptadas.
-- [ ] **b) Palmarés y equipación.** Palmarés con año y categoría de cada título (de las imágenes de
-  `contenido/fotos/palmares/`) y sección «Nueva piel · Temporada 26/27» con las imágenes de
-  `contenido/fotos/equipacion/` y Adidas como patrocinador técnico, solo en texto.
+- [x] **b) Palmarés y equipación.** Año y categoría de cada título en `textos.md`, sacados de las
+  placas de `contenido/fotos/palmares/` (lo que no figura queda `[pendiente]`). Sección «Nueva piel»
+  en `/academy/#equipacion`: jugador, portero (con espalda) y paseo, de
+  `contenido/fotos/equipacion/` recortadas sin el rótulo impreso; Adidas solo en texto. Sin usar:
+  `IMG_2696` (lámina «New technical partner», lleva un dibujo de corona).
 - [ ] **c) Animaciones de fútbol.** Prototipo del túnel al campo en 3D en `/cup/` (enseñarlo antes de
   integrarlo), marcador en el palmarés y líneas del campo en SVG, con condiciones de rendimiento y
   movimiento reducido.
 
 ## Pendiente de la organización
 
-Sedes de Madrid y Barcelona 2027, cifras de ediciones anteriores, fechas exactas de Barcelona 2025,
+Año y categoría de los demás títulos de Costa Daurada y Copa UNIQ, categoría de la MADCUP, año y
+categoría de la Donosti Cup, autoría de las imágenes de equipación (se acreditan a Xbuyer Team
+Academy), sedes de Madrid y Barcelona 2027, cifras de ediciones anteriores, fechas exactas de Barcelona 2025,
 enlaces de la app en las tiendas, patrocinador oficial, número del registro de asociaciones,
 fotos de los torneos de la academia (L8 Sport Murcia) y dominio.
