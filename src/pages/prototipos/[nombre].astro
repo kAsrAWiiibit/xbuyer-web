@@ -1,0 +1,27 @@
+---
+/**
+ * Prototipos para revisar antes de integrarlos. Solo existen en desarrollo y en `npm run
+ * borradores`; en producción no se genera ninguno.
+ */
+import Cabecera from '../../components/Cabecera.astro';
+import Tunel from '../../components/Tunel.astro';
+import { academy, cup } from '../../data/contenido';
+import { t } from '../../i18n/ui';
+import Base from '../../layouts/Base.astro';
+import { MOSTRAR_PENDIENTES } from '../../lib/pendiente';
+import { ruta } from '../../lib/ruta';
+
+export const getStaticPaths = () => (MOSTRAR_PENDIENTES ? [{ params: { nombre: 'tunel' } }] : []);
+
+const ed = cup.edicion;
+---
+<Base titulo={`Prototipo · túnel · ${cup.nombre}`} descripcion="Prototipo: del túnel al campo.">
+  <Cabecera slot="cabecera" marca={cup.nombre} capitulo="azul" otra={{ href: ruta('/academy/'), texto: academy.nombre }} />
+
+  <Tunel titulo={cup.nombre} linea={`${ed.ciudad} · ${ed.fechas.toLowerCase()} · ${t('es', 'cup.equipos', { n: ed.equipos }).replace(/\.$/, '')}`} pancarta={cup.nombre.toUpperCase()} />
+
+  <section class="bloque" data-capitulo="azul" aria-labelledby="sigue">
+    <h2 id="sigue" class="bloque__titulo">{t('es', 'cup.edicion')}</h2>
+    <p class="bloque__intro">{ed.etiqueta}. {ed.sedes.join(' · ')}.</p>
+  </section>
+</Base>

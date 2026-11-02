@@ -39,11 +39,22 @@ diagonal XB. Skills del proyecto: `design-taste-frontend`, `impeccable`, `emil-d
 - [x] **b) Palmarés y equipación.** Año y categoría de cada título en `textos.md`, sacados de las
   placas de `contenido/fotos/palmares/` (lo que no figura queda `[pendiente]`). Sección «Nueva piel»
   en `/academy/#equipacion`: jugador, portero (con espalda) y paseo, de
-  `contenido/fotos/equipacion/` recortadas sin el rótulo impreso; Adidas solo en texto. Sin usar:
-  `IMG_2696` (lámina «New technical partner», lleva un dibujo de corona).
+  `contenido/fotos/equipacion/` recortadas sin el rótulo impreso; Adidas solo en texto. Crédito
+  provisional «Xbuyer Team Academy» hasta que la organización confirme la autoría.
+  **`IMG_2696` («New technical partner») no se usa**: pone «XBUYER TEAM» y lleva la corona, que son
+  del equipo de la Kings League, no de la academia. Fuera hasta que la organización confirme que esa
+  equipación es de la academia.
 - [ ] **c) Animaciones de fútbol.** Prototipo del túnel al campo en 3D en `/cup/` (enseñarlo antes de
   integrarlo), marcador en el palmarés y líneas del campo en SVG, con condiciones de rendimiento y
   movimiento reducido.
+  - [~] Túnel 3D: **prototipo listo, pendiente de revisión.** `/prototipos/tunel/` (solo en desarrollo
+    y borradores, nunca en producción). Componente `src/components/Tunel.astro` y escena
+    `src/lib/tunel/escena.ts` (three.js, importado dinámicamente tras la carga: 129 KB gzip). Cartel
+    SVG estático con «Reducir movimiento», ahorro de datos, red 2G/3G, menos de 4 GB o 4 núcleos, sin
+    WebGL2 o si los primeros fotogramas van lentos. Scroll nativo: sección de 320svh con escenario fijo.
+    No integrado en `/cup/` todavía.
+  - [ ] Marcador en el palmarés.
+  - [ ] Líneas del campo en SVG.
 
 ## Pendiente de la organización
 

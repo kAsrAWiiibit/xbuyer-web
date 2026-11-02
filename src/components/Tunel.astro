@@ -1,0 +1,224 @@
+---
+/**
+ * Del túnel de vestuarios al campo. De base, un cartel SVG quieto con la vista desde la boca del
+ * túnel. Si el dispositivo puede (sin «Reducir movimiento», sin ahorro de datos ni red lenta, con
+ * memoria y núcleos de sobra y WebGL), la sección se alarga y, ya cargada la página, se trae
+ * three.js y la escena 3D, que avanza con el scroll: el scroll es el del navegador, no se toca.
+ * Si los primeros fotogramas van lentos, vuelve al cartel.
+ */
+interface Props {
+  titulo: string;
+  /** Línea bajo el título, p. ej. «Torrent · 5, 6 y 7 de diciembre de 2026 · 60 equipos» */
+  linea: string;
+  /** Texto de la pancarta de la grada */
+  pancarta: string;
+}
+const { titulo, linea, pancarta } = Astro.props;
+
+// Cartel: perspectiva con el punto de fuga en (800, 200); la línea de banda del fondo, en y = 430
+const FUGA = { x: 800, y: 200 };
+const LEJOS = { y: 430, izq: 260, der: 1340 };
+const CERCA = 900;
+const k = (CERCA - FUGA.y) / (LEJOS.y - FUGA.y);
+const cerca = (x: number) => FUGA.x + (x - FUGA.x) * k;
+const franjas = Array.from({ length: 12 }, (_, i) => {
+  const a = LEJOS.izq + (i * (LEJOS.der - LEJOS.izq)) / 12;
+  const b = LEJOS.izq + ((i + 1) * (LEJOS.der - LEJOS.izq)) / 12;
+  return { puntos: `${a},${LEJOS.y} ${b},${LEJOS.y} ${cerca(b)},${CERCA} ${cerca(a)},${CERCA}`, hondo: i % 2 === 1 };
+});
+---
+<script is:inline>
+  // Antes de pintar: ¿se anima? Así la sección tiene su altura desde el principio
+  (function () {
+    var n = navigator, c = n.connection, ok = matchMedia('(prefers-reduced-motion: no-preference)').matches;
+    if (c && (c.saveData || /2g|3g/.test(c.effectiveType || ''))) ok = false;
+    if (n.deviceMemory && n.deviceMemory < 4) ok = false;
+    if (n.hardwareConcurrency && n.hardwareConcurrency < 4) ok = false;
+    try { ok = ok && !!document.createElement('canvas').getContext('webgl2'); } catch (e) { ok = false; }
+    if (ok) document.documentElement.dataset.tunel = '3d';
+  })();
+</script>
+
+<section class="tunel" data-capitulo="marino" data-pancarta={pancarta} aria-labelledby="tunel-titulo">
+  <div class="tunel__escenario">
+    <svg class="tunel__cartel" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+      <rect width="1600" height="900" fill="#ffed00" />
+      <rect y="250" width="1600" height="60" fill="#1e1463" />
+      <rect y="310" width="1600" height="120" fill="#0c0433" />
+      <rect y="400" width="1600" height="30" fill="#ffed00" />
+      <text x="800" y="422" fill="#0c0433" text-anchor="middle" style="font: 700 24px var(--fuente-display); letter-spacing: 2px">
+        {Array(14).fill(pancarta).join('   ')}
+      </text>
+      <polygon points={`-2000,${LEJOS.y} 3600,${LEJOS.y} 3600,900 -2000,900`} fill="#0f4f99" />
+      {franjas.map((f) => <polygon points={f.puntos} fill={f.hondo ? '#0f4f99' : '#1863b8'} />)}
+      <g fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round">
+        <line x1={LEJOS.izq} y1={LEJOS.y} x2={LEJOS.der} y2={LEJOS.y} />
+        <line x1={LEJOS.izq} y1={LEJOS.y} x2={cerca(LEJOS.izq)} y2={CERCA} />
+        <line x1={LEJOS.der} y1={LEJOS.y} x2={cerca(LEJOS.der)} y2={CERCA} />
+        <line x1={FUGA.x} y1={LEJOS.y} x2={FUGA.x} y2={CERCA} />
+        <ellipse cx={FUGA.x} cy="610" rx="230" ry="70" />
+      </g>
+      <circle cx={FUGA.x} cy="610" r="6" fill="#fff" />
+      <!-- Boca del túnel: techo, paredes con su franja azul y un foco -->
+      <polygon points="0,0 1600,0 1270,120 330,120" fill="#07021f" />
+      <polygon points="0,0 330,120 330,900 0,900" fill="#0c0433" />
+      <polygon points="1600,0 1270,120 1270,900 1600,900" fill="#0c0433" />
+      <polygon points="0,640 330,559 330,620 0,800" fill="#1863b8" />
+      <polygon points="1600,640 1270,559 1270,620 1600,800" fill="#1863b8" />
+      <polygon points="640,30 960,30 920,48 680,48" fill="#fff7a6" />
+      <rect x="318" y="108" width="964" height="16" fill="#1e1463" />
+    </svg>
+    <canvas class="tunel__lienzo" aria-hidden="true"></canvas>
+    <div class="tunel__rotulo">
+      <h1 id="tunel-titulo" class="tunel__titulo">{titulo}</h1>
+      <p class="tunel__linea">{linea}</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .tunel { position: relative; }
+  .tunel__escenario {
+    position: relative;
+    height: calc(100svh - var(--cabecera));
+    min-height: 420px;
+    overflow: hidden;
+    background: var(--marino);
+  }
+  .tunel__cartel,
+  .tunel__lienzo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .tunel__lienzo { opacity: 0; transition: opacity 400ms var(--ease-out); }
+  .tunel__rotulo {
+    position: absolute;
+    left: var(--margen);
+    bottom: var(--margen);
+    max-width: calc(100% - 2 * var(--margen));
+    padding: 20px 24px 22px;
+    background: var(--marino);
+    color: var(--blanco);
+  }
+  .tunel__titulo {
+    font-size: clamp(3.5rem, 1rem + 9vw, 10rem);
+    line-height: 0.85;
+    text-transform: uppercase;
+  }
+  .tunel__linea {
+    margin-top: 12px;
+    font-size: var(--step-lead);
+    line-height: 1.2;
+    color: var(--amarillo);
+  }
+
+  /* Con 3D: la sección se alarga y el escenario se queda fijo mientras se recorre */
+  :global(html[data-tunel='3d']) .tunel { height: 320svh; }
+  :global(html[data-tunel='3d']) .tunel__escenario { position: sticky; top: var(--cabecera); }
+  :global(html[data-tunel='3d']) .tunel__lienzo.listo { opacity: 1; }
+  /* El rótulo se aparta mientras se recorre el túnel */
+  :global(html[data-tunel='3d']) .tunel__rotulo.oculto { opacity: 0; transform: translateY(12px); }
+  .tunel__rotulo { transition: opacity 300ms var(--ease-out), transform 400ms var(--ease-out); }
+
+  @media (max-width: 599px) {
+    .tunel__rotulo { padding: 16px 18px 18px; }
+  }
+</style>
+
+<script>
+  const raiz = document.documentElement;
+  const seccion = document.querySelector<HTMLElement>('.tunel')!;
+  const lienzo = seccion.querySelector<HTMLCanvasElement>('.tunel__lienzo')!;
+  const rotulo = seccion.querySelector<HTMLElement>('.tunel__rotulo')!;
+  const pancarta = seccion.dataset.pancarta ?? '';
+
+  /** Vuelve al cartel quieto (y suelta la escena si la había) */
+  let quitar = () => {};
+  const alCartel = () => {
+    quitar();
+    delete raiz.dataset.tunel;
+  };
+
+  async function animar() {
+    let escena: import('../lib/tunel/escena').Escena;
+    try {
+      const { crearEscena } = await import('../lib/tunel/escena');
+      if (raiz.dataset.tunel !== '3d') return;
+      escena = crearEscena(lienzo, { pancarta });
+    } catch {
+      return alCartel();
+    }
+
+    const avance = () => {
+      const r = seccion.getBoundingClientRect();
+      const recorrido = r.height - lienzo.clientHeight;
+      return Math.min(1, Math.max(0, -r.top / recorrido));
+    };
+    let pendiente = false;
+    let visible = true;
+    const pintar = () => {
+      pendiente = false;
+      const p = avance();
+      escena.dibujar(p);
+      // El rótulo está al principio, se aparta en el túnel y vuelve sobre el campo
+      rotulo.classList.toggle('oculto', p > 0.06 && p < 0.85);
+    };
+    const pedir = () => {
+      if (!pendiente && visible) {
+        pendiente = true;
+        requestAnimationFrame(pintar);
+      }
+    };
+    const medir = () => {
+      escena.medir(lienzo.clientWidth, lienzo.clientHeight);
+      pedir();
+    };
+
+    // Prueba: ocho fotogramas seguidos. Si van por debajo de unos 30 por segundo, mejor el cartel.
+    medir();
+    const tiempos: number[] = [];
+    await new Promise<void>((listo) => {
+      const paso = () => {
+        const t0 = performance.now();
+        escena.dibujar(avance());
+        tiempos.push(performance.now() - t0);
+        tiempos.length < 8 ? requestAnimationFrame(paso) : listo();
+      };
+      requestAnimationFrame(paso);
+    });
+    tiempos.sort((a, b) => a - b);
+    if (tiempos[4] > 30) {
+      escena.destruir();
+      return alCartel();
+    }
+
+    const tam = new ResizeObserver(medir);
+    tam.observe(lienzo);
+    const vista = new IntersectionObserver(([e]) => {
+      visible = e.isIntersecting;
+      pedir();
+    });
+    vista.observe(seccion);
+    addEventListener('scroll', pedir, { passive: true });
+    const movimiento = matchMedia('(prefers-reduced-motion: reduce)');
+    movimiento.addEventListener('change', alCartel, { once: true });
+    quitar = () => {
+      removeEventListener('scroll', pedir);
+      tam.disconnect();
+      vista.disconnect();
+      lienzo.classList.remove('listo');
+      rotulo.classList.remove('oculto');
+      escena.destruir();
+    };
+    pintar();
+    lienzo.classList.add('listo');
+  }
+
+  if (raiz.dataset.tunel === '3d') {
+    // Después de la carga y cuando el navegador esté libre: la escena no compite con lo primero
+    const despues = () => ('requestIdleCallback' in window ? requestIdleCallback(() => animar(), { timeout: 1500 }) : setTimeout(animar, 200));
+    document.readyState === 'complete' ? despues() : addEventListener('load', despues, { once: true });
+  }
+</script>
