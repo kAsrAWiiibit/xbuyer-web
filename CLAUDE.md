@@ -47,11 +47,14 @@ diagonal XB. Skills del proyecto: `design-taste-frontend`, `impeccable`, `emil-d
 - [ ] **c) Animaciones de fútbol.** Prototipo del túnel al campo en 3D en `/cup/` (enseñarlo antes de
   integrarlo), marcador en el palmarés y líneas del campo en SVG, con condiciones de rendimiento y
   movimiento reducido.
-  - [~] Túnel 3D: **prototipo listo, pendiente de revisión.** `/prototipos/tunel/` (solo en desarrollo
-    y borradores, nunca en producción). Componente `src/components/Tunel.astro` y escena
-    `src/lib/tunel/escena.ts` (three.js, importado dinámicamente tras la carga: 129 KB gzip). Cartel
-    SVG estático con «Reducir movimiento», ahorro de datos, red 2G/3G, menos de 4 GB o 4 núcleos, sin
-    WebGL2 o si los primeros fotogramas van lentos. Scroll nativo: sección de 320svh con escenario fijo.
+  - [~] Túnel: **prototipo con imágenes, pendiente de revisión.** `/prototipos/tunel/` (solo en
+    desarrollo y borradores, nunca en producción), componente `src/components/Tunel.astro`. Zoom hacia
+    la luz del túnel y fundido con el campo al hacer scroll (sección de 260svh con escenario fijo,
+    scroll nativo, sin librerías; three.js se quitó). Rótulo visible desde el principio. Quieto (solo
+    el campo; el túnel ni se descarga) con «Reducir movimiento», ahorro de datos, red 2G/3G, menos de
+    4 GB o 4 núcleos, o sin JavaScript. Imágenes generadas con IA en `src/fotos/tunel/` (crédito
+    «Imagen generada con IA» sobre la imagen), AVIF/WebP por tamaño y orientación. **Faltan las 9:16
+    de verdad**: las de `-movil` son recortes provisionales de las 16:9 (528 px de ancho).
     No integrado en `/cup/` todavía.
   - [ ] Marcador en el palmarés.
   - [ ] Líneas del campo en SVG.

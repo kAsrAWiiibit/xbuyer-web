@@ -18,7 +18,7 @@ const ed = cup.edicion;
 <Base titulo={`Prototipo · túnel · ${cup.nombre}`} descripcion="Prototipo: del túnel al campo.">
   <Cabecera slot="cabecera" marca={cup.nombre} capitulo="azul" otra={{ href: ruta('/academy/'), texto: academy.nombre }} />
 
-  <Tunel titulo={cup.nombre} linea={`${ed.ciudad} · ${ed.fechas.toLowerCase()} · ${t('es', 'cup.equipos', { n: ed.equipos }).replace(/\.$/, '')}`} pancarta={cup.nombre.toUpperCase()} />
+  <Tunel titulo={cup.nombre} linea={`${ed.ciudad} · ${ed.fechas.toLowerCase()} · ${t('es', 'cup.equipos', { n: ed.equipos }).replace(/\.$/, '')}`} />
 
   <section class="bloque" data-capitulo="azul" aria-labelledby="sigue">
     <h2 id="sigue" class="bloque__titulo">{t('es', 'cup.edicion')}</h2>
