@@ -6,8 +6,10 @@ Trabajo autónomo de 02:40 a la mañana. Todo está en `main` con un commit por 
 ## Resumen
 
 - **Web publicada:** https://kasrawiiibit.github.io/xbuyer-web/ (GitHub Pages con Actions, repositorio público).
-- **Dominio xbuyerteamacademy.com:** <!--ESTADO-DNS-->todavía no. El DNS de Namecheap sigue en la página de aparcamiento
-  (`@ → 162.255.119.220`, `www → parkingpage.namecheap.com`). Lo he comprobado cada hora; ver «DNS que falta».
+- **Dominio xbuyerteamacademy.com:** todavía no. El DNS de Namecheap sigue en la página de aparcamiento
+  (`@ → 162.255.119.220`, `www → parkingpage.namecheap.com`). Comprobado a las 02:57 y a las 14:09, con
+  Cloudflare (1.1.1.1) y Google (8.8.8.8). **No hubo comprobaciones entre medias:** el Mac se suspendió durante la
+  noche y la espera de una hora se quedó parada hasta las 14:09. Ver «DNS que falta».
   Todo lo demás está listo para pasar al dominio en cuanto apunte.
 - **Lighthouse (móvil, web publicada):** 98–100 en rendimiento, 100 en accesibilidad, 100 en buenas prácticas y
   100 en SEO en todas las páginas (tabla abajo).
@@ -128,7 +130,7 @@ fallaría).
 
 ## Lo que no he podido hacer y por qué
 
-- **Dominio y HTTPS:** <!--ESTADO-HTTPS-->el DNS no apunta a GitHub, así que no se puede poner el dominio en Pages,
+- **Dominio y HTTPS:** el DNS no apunta a GitHub, así que no se puede poner el dominio en Pages,
   pedir el certificado ni activar «Enforce HTTPS». Está todo preparado para hacerlo en unos minutos.
 - **Redirecciones de las URL antiguas:** preparadas, pero sin publicar hasta que el dominio funcione, como pediste.
 - **Verificación del dominio en GitHub:** GitHub no tiene API para esto, así que tiene que iniciarla el titular de
@@ -138,7 +140,7 @@ fallaría).
 
 ## DNS que falta (Namecheap → Domain List → xbuyerteamacademy.com → Advanced DNS)
 
-<!--DNS-->Primero, borrar los registros de aparcamiento: el `CNAME www → parkingpage.namecheap.com` y el
+Primero, borrar los registros de aparcamiento: el `CNAME www → parkingpage.namecheap.com` y el
 «URL Redirect» de `@`, si lo hay. Después, añadir:
 
 | Tipo | Host | Valor |
@@ -162,7 +164,7 @@ Opcional, para IPv6: cuatro `AAAA` de `@` a `2606:50c0:8000::153`, `2606:50c0:80
    - **TTL:** Automatic
 3. Esperar unos minutos y pulsar **Verify** en GitHub. El registro TXT tiene que quedarse en el DNS para siempre.
 
-## Cuando el DNS apunte (lo hago yo si sigo en marcha; si no, son estos pasos)
+## Cuando el DNS apunte (no ha pasado esta noche; son estos pasos)
 
 ```bash
 gh api -X PUT repos/kAsrAWiiibit/xbuyer-web/pages -f cname=xbuyerteamacademy.com
