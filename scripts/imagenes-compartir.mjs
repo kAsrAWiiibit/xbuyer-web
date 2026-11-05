@@ -6,7 +6,8 @@
  *
  *   CHROME_PATH=/ruta/a/chrome node scripts/imagenes-compartir.mjs
  *
- * Escribe public/compartir/{inicio,academy,cup}.png y public/apple-touch-icon.png.
+ * Escribe public/compartir/{inicio,academy,cup}.png y public/apple-touch-icon.png. El logo de la Cup
+ * (LogoCup.astro) va en la tarjeta de /cup/ y en la mitad azul de inicio; el monograma XB, en lo demás.
  */
 import { readFileSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
 import { join, resolve } from 'node:path';
@@ -17,6 +18,8 @@ const raiz = resolve(import.meta.dirname, '..');
 const textos = readFileSync(join(raiz, 'contenido/textos.md'), 'utf8');
 const ui = readFileSync(join(raiz, 'src/i18n/ui.ts'), 'utf8');
 const xb = readFileSync(join(raiz, 'src/components/Monograma.astro'), 'utf8').match(/ d="([^"]+)"/)[1];
+// Logo de la Cup («XB / CUP»): en la tarjeta de /cup/ y en la mitad azul de la portada
+const xbCup = readFileSync(join(raiz, 'src/components/LogoCup.astro'), 'utf8').match(/ d="([^"]+)"/)[1];
 
 // Edición principal: la primera de «Próximas ediciones» → «Torrent (Valencia): 5, 6 y 7 de diciembre de 2026.»
 const [, ciudad, fechas] = textos.split('## Próximas ediciones')[1].match(/^- ([^(:]+?)(?: \([^)]*\))?: (.+? de \d{4})/m);
@@ -33,6 +36,7 @@ const base = `
   svg { display: block; }
 `;
 const logo = (color, ancho) => `<svg viewBox="66 206 870 586" width="${ancho}" fill="${color}"><path fill-rule="evenodd" d="${xb}"/></svg>`;
+const logoCup = (color, ancho) => `<svg viewBox="0 0 1944 1495" width="${ancho}" fill="${color}"><path fill-rule="evenodd" d="${xbCup}"/></svg>`;
 
 const tarjetas = {
   inicio: `<style>${base}
@@ -42,7 +46,7 @@ const tarjetas = {
     h1 { font-size: 132px; } .a h1 span { color: #1863B8; } .c h1 span { color: #0C0433; }
   </style>
   <div class="m a">${logo('#1863B8', 120)}<h1>Xbuyer Team<br><span>Academy</span></h1></div>
-  <div class="m c">${logo('#0C0433', 120)}<h1>Xbuyer<br><span>Cup</span></h1></div>`,
+  <div class="m c">${logoCup('#0C0433', 108)}<h1>Xbuyer<br><span>Cup</span></h1></div>`,
   academy: `<style>${base}
     body { background: #FFED00; color: #0C0433; padding: 64px; display: grid; grid-template-columns: 1fr auto; align-items: end; }
     h1 { font-size: 168px; } h1 span { color: #1863B8; }
@@ -56,7 +60,7 @@ const tarjetas = {
     .f { margin-top: 28px; font-size: 64px; color: #FFED00; line-height: 0.95; }
     .x { align-self: start; }
   </style>
-  <div><h1>Xbuyer <span>Cup</span></h1><p class="d f">${fechas}<br>${ciudad}</p></div><div class="x">${logo('#FFED00', 230)}</div>`,
+  <div><h1>Xbuyer <span>Cup</span></h1><p class="d f">${fechas}<br>${ciudad}</p></div><div class="x">${logoCup('#FFED00', 250)}</div>`,
 };
 
 const icono = `<style>${base} html, body { width: 180px; height: 180px; background: #0C0433; display: grid; place-items: center; }</style>${logo('#FFED00', 148)}`;

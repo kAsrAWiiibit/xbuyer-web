@@ -5,6 +5,7 @@
  */
 import { ruta } from '../lib/ruta';
 import { t, type Idioma } from '../i18n/ui';
+import LogoCup from './LogoCup.astro';
 import Monograma from './Monograma.astro';
 
 interface Enlace { href: string; texto: string }
@@ -17,12 +18,14 @@ interface Props {
   /** La otra marca */
   otra: Enlace;
   idioma?: Idioma;
+  /** Logo junto a la marca: el monograma de la academia (por defecto) o el de la Cup */
+  logo?: 'academy' | 'cup';
 }
-const { marca, capitulo, enlaces = [], otra, idioma = 'es' } = Astro.props;
+const { marca, capitulo, enlaces = [], otra, idioma = 'es', logo = 'academy' } = Astro.props;
 ---
 <header class="cabecera" data-capitulo={capitulo}>
   <a class="cabecera__marca" href={ruta('/')}>
-    <Monograma class="cabecera__xb" />
+    {logo === 'cup' ? <LogoCup class="cabecera__xb cabecera__xb--cup" /> : <Monograma class="cabecera__xb" />}
     <span>{marca}</span>
     <span class="solo-lector">({t(idioma, 'nav.inicio')})</span>
   </a>
@@ -62,6 +65,8 @@ const { marca, capitulo, enlaces = [], otra, idioma = 'es' } = Astro.props;
     white-space: nowrap;
   }
   .cabecera__xb { width: 40px; height: auto; }
+  /* Más alto que ancho que el monograma: misma altura óptica */
+  .cabecera__xb--cup { width: 36px; }
   .cabecera__nav ul { display: flex; gap: 28px; margin: 0; }
   .cabecera__nav a {
     display: inline-block;
@@ -112,6 +117,7 @@ const { marca, capitulo, enlaces = [], otra, idioma = 'es' } = Astro.props;
     .cabecera__nav a { padding-block: 8px 10px; min-height: 44px; display: inline-flex; align-items: center; font-size: var(--step-small); text-decoration-color: currentColor; text-decoration-thickness: 1px; }
     .cabecera__marca { font-size: var(--step-body); }
     .cabecera__xb { width: 32px; }
+    .cabecera__xb--cup { width: 30px; }
     .cabecera__otra { padding: 0 12px; font-size: var(--step-small); }
   }
 </style>

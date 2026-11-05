@@ -88,6 +88,15 @@ diagonal XB. Skills del proyecto: `design-taste-frontend`, `impeccable`, `emil-d
   `npm run paginas` publica subiendo `src/data/legal/legal.json` aquí. Dominio en `src/data/sitio.mjs` (`DOMINIO_PROPIO`); con `SIN_DOMINIO=1`
   (variable del repositorio) se publica en github.io mientras el DNS no apunte.
 
+## Logo de la Xbuyer Cup (6 de noviembre de 2026)
+
+- [x] Logo nuevo «XB / CUP» (`contenido/logos/xb-cup-negro.jpg`, vectorizado con potrace en
+  `src/components/LogoCup.astro`, toma el color del texto). Solo donde representa al torneo: camino Cup de la
+  portada, cabecera de `/cup/` (`Cabecera` con `logo="cup"`), portada de `/cup/` (marino, encima del título) e
+  imágenes para compartir (`cup.png` y la mitad azul de `inicio.png`, `scripts/imagenes-compartir.mjs`). El
+  monograma XB de la academia sigue en el pie, la cabecera de las demás páginas, los huecos de foto y los iconos.
+  Revisado a 390 y 1440 px.
+
 ## Siguiente sesión
 
 1. Esperar la revisión del túnel en el móvil (velocidad del zoom, destello, tamaño final del rótulo)

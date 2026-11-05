@@ -9,6 +9,7 @@ import Campo from '../../components/Campo.astro';
 import Cupon from '../../components/Cupon.astro';
 import Dato from '../../components/Dato.astro';
 import Foto from '../../components/Foto.astro';
+import LogoCup from '../../components/LogoCup.astro';
 import SiCompleto from '../../components/SiCompleto.astro';
 import { academy, cup } from '../../data/contenido';
 import { t } from '../../i18n/ui';
@@ -54,10 +55,11 @@ const fotosDe = (ciudad: string, fechas: string) =>
   fotos={['cup-portada', ...galeria.map((g) => g.hueco)]}
 >
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(evento)} />
-  <Cabecera slot="cabecera" marca={cup.nombre} capitulo="azul" enlaces={enlaces} otra={{ href: ruta('/academy/'), texto: academy.nombre }} />
+  <Cabecera slot="cabecera" marca={cup.nombre} logo="cup" capitulo="azul" enlaces={enlaces} otra={{ href: ruta('/academy/'), texto: academy.nombre }} />
 
   <section class="portada" data-capitulo="azul" aria-labelledby="portada-titulo">
     <div class="portada__texto">
+      <LogoCup class="portada__logo" />
       <h1 id="portada-titulo" class="portada__titulo"><span>Xbuyer</span> <span>Cup</span></h1>
       <p class="portada__fecha"><time datetime={ed.inicio}>{dias}</time> <span>{ano} · {ed.ciudad}</span></p>
       {cup.organiza && <p class="portada__organiza">{cup.organiza}</p>}
@@ -194,6 +196,7 @@ const fotosDe = (ciudad: string, fechas: string) =>
     padding: clamp(40px, 6vh, 80px) var(--margen);
   }
   .portada__texto { grid-column: 1 / 8; display: grid; justify-items: start; gap: 20px; }
+  .portada__logo { width: clamp(88px, 8vw, 128px); height: auto; color: var(--marino); }
   .portada__organiza { font-size: var(--step-lead); font-weight: 500; }
   .portada__titulo {
     font-size: min(var(--step-display), 26vh);
