@@ -81,7 +81,9 @@ diagonal XB. Skills del proyecto: `design-taste-frontend`, `impeccable`, `emil-d
 - [x] Bloque 3: revisión final a 360/768/1440 (lista de correcciones en el informe). Tramo de
   tableta (600–899 px) en `/cup/` y `/academy/`; fuentes precargadas (CLS 0).
 - [~] Bloque 4: publicar. Repositorio público `kAsrAWiiibit/xbuyer-web` creado; Pages con Actions
-  en https://kasrawiiibit.github.io/xbuyer-web/ (variable `SIN_DOMINIO=1`). Falta el DNS en Namecheap. Dominio en `src/data/sitio.mjs` (`DOMINIO_PROPIO`); con `SIN_DOMINIO=1`
+  en https://kasrawiiibit.github.io/xbuyer-web/ (variable `SIN_DOMINIO=1`). Falta el DNS en Namecheap.
+  Cuando apunte: pasos en `docs/informe-noche.md` («Cuando el DNS apunte»); después, redirecciones en
+  `xbuyer-cup-privacidad` y «Enforce HTTPS». Dominio en `src/data/sitio.mjs` (`DOMINIO_PROPIO`); con `SIN_DOMINIO=1`
   (variable del repositorio) se publica en github.io mientras el DNS no apunte.
 
 ## Siguiente sesión
