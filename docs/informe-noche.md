@@ -1,5 +1,13 @@
 # Informe de la noche: 5 de noviembre de 2026
 
+> **Actualización (después):** el DNS ya apunta. La web está en **https://xbuyerteamacademy.com** con
+> certificado aprobado (dominio y `www`, caduca el 3 de febrero de 2027 y GitHub lo renueva solo),
+> «Enforce HTTPS» activado y el dominio verificado en GitHub. `www`, `http` y github.io redirigen con 301. Las
+> seis páginas responden 200 y se ven bien en móvil y escritorio. Las URL antiguas de `xbuyer-cup-privacidad`
+> ya redirigen. En la app, `privacy.url` y `contact.support` apuntan al dominio; ese cambio está sin commit en
+> la app, junto con cambios anteriores. Lo que queda: actualizar las URL en las fichas de App Store y Google
+> Play.
+
 Trabajo autónomo de 02:40 a la mañana. Todo está en `main` con un commit por bloque y subido a
 `github.com/kAsrAWiiibit/xbuyer-web`.
 

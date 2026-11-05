@@ -80,10 +80,12 @@ diagonal XB. Skills del proyecto: `design-taste-frontend`, `impeccable`, `emil-d
   sobre las fotos) y en el pie solo los de cada página. Apartados de la página visibles en móvil.
 - [x] Bloque 3: revisión final a 360/768/1440 (lista de correcciones en el informe). Tramo de
   tableta (600–899 px) en `/cup/` y `/academy/`; fuentes precargadas (CLS 0).
-- [~] Bloque 4: publicar. Repositorio público `kAsrAWiiibit/xbuyer-web` creado; Pages con Actions
-  en https://kasrawiiibit.github.io/xbuyer-web/ (variable `SIN_DOMINIO=1`). Falta el DNS en Namecheap.
-  Cuando apunte: pasos en `docs/informe-noche.md` («Cuando el DNS apunte»); después, redirecciones en
-  `xbuyer-cup-privacidad` y «Enforce HTTPS». Dominio en `src/data/sitio.mjs` (`DOMINIO_PROPIO`); con `SIN_DOMINIO=1`
+- [x] Bloque 4: publicada en **https://xbuyerteamacademy.com** (repositorio público
+  `kAsrAWiiibit/xbuyer-web`, Pages con Actions, dominio verificado, certificado aprobado y «Enforce
+  HTTPS»; `www`, `http` y github.io redirigen con 301). Variable `SIN_DOMINIO=0`. Las URL antiguas
+  `kasrawiiibit.github.io/xbuyer-cup-privacidad/` y `/soporte/` redirigen (meta refresh + canonical) a
+  `/privacidad/` y `/soporte/`. En la app, `privacy.url` y `contact.support` apuntan al dominio y
+  `npm run paginas` publica subiendo `src/data/legal/legal.json` aquí. Dominio en `src/data/sitio.mjs` (`DOMINIO_PROPIO`); con `SIN_DOMINIO=1`
   (variable del repositorio) se publica en github.io mientras el DNS no apunte.
 
 ## Siguiente sesión
@@ -101,13 +103,14 @@ Cómo revisar: `npm run borradores` y servir `dist-borradores/` en la red local
 `--host`. Capturas con el inspector de la skill:
 `CHROME_PATH=~/Library/Caches/ms-playwright/chromium_headless_shell-1228/chrome-headless-shell-mac-arm64/chrome-headless-shell node .claude/skills/design-taste-frontend/scripts/inspect.mjs <url> --out .taste-skill/<carpeta> --widths 1440,390`.
 
-Git: solo commits locales en `main`; no hay remoto ni repositorio en GitHub.
+Git: `main` en `github.com/kAsrAWiiibit/xbuyer-web` (público); cada push a `main` despliega.
 
 ## Pendiente de la organización
 
-Año y categoría de los demás títulos de Costa Daurada y Copa UNIQ, categoría de la MADCUP, año y
+Fichas de App Store y Google Play con las URL nuevas (privacidad, soporte y eliminación de datos:
+`https://xbuyerteamacademy.com/soporte/#eliminar-datos`). Año y categoría de los demás títulos de Costa Daurada y Copa UNIQ, categoría de la MADCUP, año y
 categoría de la Donosti Cup, autoría de las imágenes de equipación (se acreditan a Xbuyer Team
 Academy), sedes de Madrid y Barcelona 2027, cifras de ediciones anteriores, fechas exactas de Barcelona 2025,
 enlaces de la app en las tiendas, patrocinador oficial, número del registro de asociaciones,
-fotos de los torneos de la academia (L8 Sport Murcia), dominio, y si la equipación de `IMG_2696`
+fotos de los torneos de la academia (L8 Sport Murcia), y si la equipación de `IMG_2696`
 es de la academia.

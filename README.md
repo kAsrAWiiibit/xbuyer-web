@@ -59,9 +59,10 @@ Después, súbelo con git aquí. La web solo les pone el diseño: no se editan a
 
 ## Dominio
 
-Cuando la organización compre el dominio, ponlo en `src/data/sitio.mjs` (`DOMINIO = 'ejemplo.es'`). La
-build escribe el `CNAME` y usa el dominio en las URL canónicas. Configúralo también en
-*Settings → Pages* del repositorio y en el DNS.
+https://xbuyerteamacademy.com (`DOMINIO_PROPIO` en `src/data/sitio.mjs`). DNS en Namecheap: 4 registros A de
+`@` a GitHub Pages, CNAME de `www` a `kasrawiiibit.github.io` y el TXT de verificación
+`_github-pages-challenge-kAsrAWiiibit`. *Settings → Pages*: dominio personalizado y «Enforce HTTPS».
+La variable del repositorio `SIN_DOMINIO=1` volvería a publicar en github.io con ruta `/xbuyer-web/`.
 
 ## Idiomas
 
@@ -69,12 +70,12 @@ Castellano en la raíz. Catalán (`/ca/`) e inglés (`/en/`) ya están declarado
 los textos de interfaz se traducen en `src/i18n/ui.ts`. Las páginas se crean cuando la organización
 pase las traducciones; no se publica ninguna traducción automática.
 
-## Tareas pendientes al publicar con dominio
+## Al publicar con dominio
 
-- [ ] Redirigir las URL antiguas `https://kasrawiiibit.github.io/xbuyer-cup-privacidad/` y `/soporte/`
+- [x] Redirigir las URL antiguas `https://kasrawiiibit.github.io/xbuyer-cup-privacidad/` y `/soporte/`
       a `/privacidad/` y `/soporte/` del dominio nuevo. Como GitHub Pages no hace redirecciones 301,
       el repositorio `xbuyer-cup-privacidad` debe quedarse con dos páginas de redirección (meta refresh
       con `rel="canonical"`).
-- [ ] En la app: actualizar `privacy.url` y `contact.support` en `config/tournaments/xbuyer-valencia.ts`
-      y adaptar `npm run paginas`, que hoy publica en ese repositorio.
+- [x] En la app: `privacy.url` y `contact.support` apuntan al dominio y `npm run paginas` publica a través
+      de esta web (sube `src/data/legal/legal.json`); ya no toca `xbuyer-cup-privacidad`.
 - [ ] Actualizar la URL de privacidad y la de soporte en las fichas de App Store y Google Play.
