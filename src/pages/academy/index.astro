@@ -14,7 +14,7 @@ import Pendiente from '../../components/Pendiente.astro';
 import { academy, cup } from '../../data/contenido';
 import { t } from '../../i18n/ui';
 import Base from '../../layouts/Base.astro';
-import { fotoDe, type Hueco } from '../../lib/fotos';
+import { autores, fotoDe, type Hueco } from '../../lib/fotos';
 import { MOSTRAR_PENDIENTES, ocultado } from '../../lib/pendiente';
 import { ruta } from '../../lib/ruta';
 
@@ -45,6 +45,10 @@ const cifras = [
   { valor: palmares.length, etiqueta: plural(palmares.length, 'academy.marcador.torneo', 'academy.marcador.torneos') },
 ].filter((c) => c.valor > 0);
 
+// Huecos con foto de la página (palmarés y equipación), para los créditos
+const huecosEquipacion = piezas.flatMap((p) => [p.hueco, ...(p.espalda ? [p.espalda] : [])]);
+const fotosPagina = [...palmares.map((p) => p.hueco), ...huecosEquipacion];
+
 const enlaces = [
   { href: '#quienes', texto: t('es', 'nav.quienes') },
   { href: '#palmares', texto: t('es', 'nav.palmares') },
@@ -52,7 +56,7 @@ const enlaces = [
   { href: '#contacto', texto: t('es', 'nav.contacto') },
 ];
 ---
-<Base titulo={academy.nombre} descripcion={t('es', 'academy.frase')} colorTema="#FFED00">
+<Base titulo={`${academy.nombre} · ${t('es', 'academy.tituloPagina')}`} descripcion={`${t('es', 'academy.frase')} ${academy.desde}.`} colorTema="#FFED00" compartir="academy" fotos={fotosPagina}>
   <Cabecera slot="cabecera" marca={academy.nombre} capitulo="amarillo" enlaces={enlaces} otra={{ href: ruta('/cup/'), texto: cup.nombre }} />
 
   <section class="portada" data-capitulo="amarillo" aria-labelledby="portada-titulo">
@@ -124,6 +128,7 @@ const enlaces = [
         </li>
       ))}
     </ul>
+    <p class="creditos">{t('es', 'pie.fotos')}: {autores(huecosEquipacion).join(', ')}</p>
   </section>
 
   <section class="bloque contacto" id="contacto" data-capitulo="blanco" aria-labelledby="contacto-titulo">
@@ -169,7 +174,7 @@ const enlaces = [
   .quienes__texto { grid-column: 6 / 13; display: grid; gap: 20px; }
   .quienes__desde {
     font-family: var(--fuente-display);
-    font-size: var(--step-head);
+    font-size: var(--step-sub);
     font-weight: 700;
     line-height: 1;
     text-transform: uppercase;
@@ -186,10 +191,10 @@ const enlaces = [
   }
   .palmares__lista--fotos { grid-template-columns: 1fr; gap: 56px; }
   .palmares__lista--fotos .torneo { display: grid; grid-template-columns: 5fr 7fr; gap: 32px; align-items: center; }
-  .torneo__nombre { font-size: var(--step-head); text-transform: uppercase; color: var(--amarillo); }
+  .torneo__nombre { font-size: var(--step-sub); text-transform: uppercase; color: var(--amarillo); }
   .torneo__resultado { margin-top: 6px; font-size: var(--step-lead); font-weight: 500; }
   /* Una participación no es un título: mismo orden de lectura, menos peso */
-  .torneo--participacion .torneo__nombre { color: var(--blanco); font-size: var(--step-lead); }
+  .torneo--participacion .torneo__nombre { color: var(--blanco); }
   .torneo--participacion .torneo__resultado { font-size: var(--step-body); font-weight: 400; }
   .torneo__detalle {
     margin-top: 4px;
@@ -260,7 +265,7 @@ const enlaces = [
   }
   .pieza__vuelta:active { transform: scale(0.97); }
 
-  .contacto { display: grid; --fondo-seccion: var(--blanco); }
+  .contacto { display: grid; padding-block: clamp(48px, 7vw, 112px); }
   .contacto :global(.cupon) { width: min(100%, 1120px); justify-self: center; }
 
   @media (max-width: 899px) {

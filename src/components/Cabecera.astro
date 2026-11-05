@@ -95,8 +95,21 @@ const { marca, capitulo, enlaces = [], otra, idioma = 'es' } = Astro.props;
   .cabecera__otra:active { transform: scale(0.97); }
 
   @media (max-width: 899px) {
-    .cabecera { gap: 12px; }
-    .cabecera__nav { display: none; }
+    /* Los apartados bajan a una segunda fila, siempre a la vista (se desliza si no caben) */
+    :global(:root:has(.cabecera__nav)) { --cabecera: 108px; }
+    .cabecera { flex-wrap: wrap; gap: 0 12px; height: auto; min-height: 64px; padding-top: 10px; }
+    .cabecera:has(.cabecera__nav) { padding-top: 10px; }
+    .cabecera__nav {
+      order: 3;
+      flex-basis: calc(100% + var(--margen) * 2);
+      margin-inline: calc(var(--margen) * -1);
+      padding-inline: var(--margen);
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .cabecera__nav::-webkit-scrollbar { display: none; }
+    .cabecera__nav ul { gap: 20px; white-space: nowrap; }
+    .cabecera__nav a { padding-block: 8px 10px; min-height: 44px; display: inline-flex; align-items: center; font-size: var(--step-small); text-decoration-color: currentColor; text-decoration-thickness: 1px; }
     .cabecera__marca { font-size: var(--step-body); }
     .cabecera__xb { width: 32px; }
     .cabecera__otra { padding: 0 12px; font-size: var(--step-small); }

@@ -70,6 +70,18 @@ diagonal XB. Skills del proyecto: `design-taste-frontend`, `impeccable`, `emil-d
     reglamentarias), detrás de las sedes en `/cup/#torrent` (en móvil, debajo). Se trazan una vez al
     asomar; mismas condiciones de movimiento reducido.
 
+## Noche del 5 de noviembre de 2026 (trabajo autónomo; informe en `docs/informe-noche.md`)
+
+- [x] Bloque 1: marcador y líneas del campo (arriba).
+- [x] Bloque 2: crítica (impeccable, dos evaluaciones), pulido, revisión de animaciones, SEO
+  (Open Graph de marca en `public/compartir/`, generado con `scripts/imagenes-compartir.mjs`;
+  `apple-touch-icon.png`; sitemap.xml y robots.txt en la build; 404 «Fuera de juego»; canónicas con
+  el dominio; datos estructurados SportsEvent en `/cup/`). Créditos de foto agrupados (sin rótulo
+  sobre las fotos) y en el pie solo los de cada página. Apartados de la página visibles en móvil.
+- [ ] Bloque 3: revisión final a 360/768/1440.
+- [ ] Bloque 4: publicar. Dominio en `src/data/sitio.mjs` (`DOMINIO_PROPIO`); con `SIN_DOMINIO=1`
+  (variable del repositorio) se publica en github.io mientras el DNS no apunte.
+
 ## Siguiente sesión
 
 1. Esperar la revisión del túnel en el móvil (velocidad del zoom, destello, tamaño final del rótulo)

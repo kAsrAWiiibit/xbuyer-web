@@ -17,7 +17,7 @@ const indice = [
   { id: 'legislacion', titulo: 'Legislación' },
 ];
 ---
-<Legal titulo="Aviso legal" tituloPagina={`Aviso legal · ${academy.nombre}`} subtitulo={`De la web de ${academy.nombre} y la ${cup.nombre}.`} descripcion={`Aviso legal de la web de ${academy.nombre}.`} indice={indice}>
+<Legal titulo="Aviso legal" tituloPagina={`Aviso legal · ${academy.nombre}`} subtitulo={`De la web de ${academy.nombre} y la ${cup.nombre}.`} descripcion={`Aviso legal de la web de ${academy.nombre} y la ${cup.nombre}: titular, uso de la web, datos personales y fotos.`} indice={indice}>
   <section id="titular-de-la-web">
     <h2>Titular de la web</h2>
     <p>
@@ -52,7 +52,7 @@ const indice = [
   <section id="fotos">
     <h2>Fotos</h2>
     <p>
-      Las fotos de los torneos son de la organización y de sus fotógrafos, que firman cada una. Si apareces tú o tu hijo/a en una
+      Las fotos son de la organización y de sus fotógrafos, que figuran en los créditos. Si apareces tú o tu hijo/a en una
       foto de esta web y quieres que se retire, escríbenos a <a href={`mailto:${asociacion.email}`}>{asociacion.email}</a>.
     </p>
   </section>
@@ -61,7 +61,7 @@ const indice = [
     <h2>Propiedad intelectual</h2>
     <p>
       Los logotipos y nombres {academy.nombre} y {cup.nombre}, los textos y las fotos no se pueden reproducir sin autorización.
-      El autor de cada foto figura en la propia foto y en el pie de la página.
+      Los autores de las fotos figuran junto a ellas y en el pie de cada página.
     </p>
   </section>
 

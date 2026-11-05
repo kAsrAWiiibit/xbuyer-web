@@ -13,7 +13,7 @@ import SiCompleto from '../../components/SiCompleto.astro';
 import { academy, cup } from '../../data/contenido';
 import { t } from '../../i18n/ui';
 import Base from '../../layouts/Base.astro';
-import { fotoDe, type Hueco } from '../../lib/fotos';
+import { autores, fotoDe, type Hueco } from '../../lib/fotos';
 import { completo } from '../../lib/pendiente';
 import { ruta } from '../../lib/ruta';
 
@@ -26,6 +26,20 @@ const enlaces = [
   { href: '#ediciones', texto: t('es', 'nav.ediciones') },
   { href: '#contacto', texto: t('es', 'nav.contacto') },
 ];
+// Datos estructurados del torneo para los buscadores (solo lo que está en textos.md)
+const evento = {
+  '@context': 'https://schema.org',
+  '@type': 'SportsEvent',
+  name: `${cup.nombre} ${ed.ciudad} ${ed.inicio.slice(0, 4)}`,
+  sport: 'Fútbol',
+  startDate: ed.inicio,
+  endDate: ed.fin,
+  eventStatus: 'https://schema.org/EventScheduled',
+  eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+  location: ed.sedes.map((s) => ({ '@type': 'Place', name: s, address: { '@type': 'PostalAddress', addressLocality: ed.ciudad, addressCountry: 'ES' } })),
+  organizer: { '@type': 'SportsOrganization', name: academy.nombre, url: Astro.site ? new URL(ruta('/academy/'), Astro.site).href : undefined },
+  image: Astro.site ? new URL(ruta('/compartir/cup.png'), Astro.site).href : undefined,
+};
 const comoLlegar = (sede: string) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${sede}, ${ed.ciudad}`)}`;
 
 // Las fotos de cada edición anterior: las de su fotógrafo con «Xbuyer Cup <ciudad> <año>» como origen
@@ -35,15 +49,18 @@ const fotosDe = (ciudad: string, fechas: string) =>
 ---
 <Base
   titulo={`${cup.nombre} · ${ed.ciudad}, ${ed.fechas.toLowerCase()}`}
-  descripcion={`${cup.organiza ?? cup.nombre}. ${ed.etiqueta}: ${ed.fechas.toLowerCase()}. ${ed.equipos} equipos.`}
+  descripcion={`${cup.organiza ?? cup.nombre}. ${ed.etiqueta}: ${ed.fechas.toLowerCase()}. ${ed.formatos.flatMap((f) => f.categorias).join(', ').replace(/, ([^,]+)$/, ' y $1')}. ${ed.equipos} equipos.`}
+  compartir="cup"
+  fotos={['cup-portada', ...galeria.map((g) => g.hueco)]}
 >
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(evento)} />
   <Cabecera slot="cabecera" marca={cup.nombre} capitulo="azul" enlaces={enlaces} otra={{ href: ruta('/academy/'), texto: academy.nombre }} />
 
   <section class="portada" data-capitulo="azul" aria-labelledby="portada-titulo">
     <div class="portada__texto">
-      {cup.organiza && <p class="portada__organiza">{cup.organiza}</p>}
       <h1 id="portada-titulo" class="portada__titulo"><span>Xbuyer</span> <span>Cup</span></h1>
       <p class="portada__fecha"><time datetime={ed.inicio}>{dias}</time> <span>{ano} · {ed.ciudad}</span></p>
+      {cup.organiza && <p class="portada__organiza">{cup.organiza}</p>}
       <p class="portada__cuenta" data-cuenta={ed.inicio} data-fin={ed.fin} data-uno={t('es', 'cup.faltan.uno')} data-n={t('es', 'cup.faltan.n', { n: '{n}' })} data-hoy={t('es', 'cup.hoy')}></p>
       <a class="boton" href={accion.href}>{accion.texto}</a>
     </div>
@@ -128,14 +145,17 @@ const fotosDe = (ciudad: string, fechas: string) =>
         return (
           <li class:list={['anterior', fotos.length > 0 && 'anterior--fotos']}>
             <div>
-              <h3 class="ed__ciudad">{a.ciudad}</h3>
+              <h3 class="ed__ciudad">{a.ciudad}<span class="solo-lector">, {a.fechas.toLowerCase()}</span></h3>
               {a.lugar && <p class="ed__lugar">{a.lugar}</p>}
               <p class="ed__fechas">{a.fechas}</p>
               {a.detalle && <p class="ed__detalle">{a.detalle}</p>}
             </div>
             {fotos.length > 0 && (
-              <div class="anterior__fotos">
-                {fotos.map((g) => <Foto hueco={g.hueco} proporcion="3 / 2" fondo="azul" sizes="(min-width: 900px) 30vw, 100vw" />)}
+              <div>
+                <div class="anterior__fotos">
+                  {fotos.map((g) => <Foto hueco={g.hueco} proporcion="3 / 2" fondo="azul" sizes="(min-width: 900px) 30vw, 100vw" />)}
+                </div>
+                <p class="creditos">{t('es', 'pie.fotos')}: {autores(fotos.map((g) => g.hueco)).join(', ')}</p>
               </div>
             )}
           </li>
@@ -193,6 +213,8 @@ const fotosDe = (ciudad: string, fechas: string) =>
   .portada__fecha span { display: block; }
   .portada__cuenta { font-size: var(--step-lead); font-weight: 500; min-height: 1.4em; }
   .portada__foto { grid-column: 8 / 13; }
+  /* El trofeo y las caras, lejos del corte diagonal */
+  .portada__foto :global(img) { object-position: 42% 40%; }
 
   /* Las líneas del campo, detrás de categorías y sedes */
   .edicion { position: relative; isolation: isolate; overflow: hidden; }
@@ -224,12 +246,12 @@ const fotosDe = (ciudad: string, fechas: string) =>
   .formato__nombre { font-size: var(--step-body); }
   .formato__categorias, .sede__nombre {
     font-family: var(--fuente-display);
-    font-size: var(--step-head);
+    font-size: var(--step-sub);
     font-weight: 700;
     line-height: 1.05;
   }
   .sedes { display: grid; gap: 24px; }
-  .sede .enlace { display: inline-block; margin-top: 4px; padding-block: 6px; }
+  .sede .enlace { display: inline-flex; align-items: center; min-height: 44px; margin-top: 2px; }
 
   .diferente__lista,
   .incluye__lista {
@@ -259,7 +281,7 @@ const fotosDe = (ciudad: string, fechas: string) =>
 
   .ediciones__lista { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 40px; }
   .ediciones__anteriores { margin-top: var(--entre-secciones); }
-  .ed__ciudad { font-size: var(--step-head); text-transform: uppercase; }
+  .ed__ciudad { font-size: var(--step-sub); text-transform: uppercase; }
   .ed__lugar { margin-top: 4px; font-size: var(--step-lead); font-weight: 500; }
   .ed__fechas { margin-top: 8px; font-size: var(--step-lead); font-weight: 500; color: var(--azul); }
   .ed__detalle { margin-top: 4px; font-size: var(--step-lead); }
@@ -267,14 +289,14 @@ const fotosDe = (ciudad: string, fechas: string) =>
   .anterior--fotos { display: grid; gap: 24px; }
   .anterior__fotos { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 
-  .contacto { display: grid; --fondo-seccion: var(--azul); }
+  .contacto { display: grid; padding-block: clamp(48px, 7vw, 112px); }
   .contacto :global(.cupon) { width: min(100%, 1120px); justify-self: center; }
 
   @media (max-width: 899px) {
     .portada { min-height: 0; padding-block: 48px 64px; row-gap: 40px; }
     .portada__texto, .portada__foto { grid-column: 1 / -1; }
     .portada__titulo { font-size: 24vw; }
-    .edicion__campo { position: static; width: 100%; margin-top: 56px; color: var(--azul); --grosor: 0.4; }
+    .edicion__campo { position: static; width: 100%; margin-top: 40px; color: var(--azul); --grosor: 0.4; }
     .edicion__columnas, .diferente__lista, .incluye__lista, .ediciones__lista, .anterior__fotos { grid-template-columns: 1fr; }
   }
 </style>

@@ -8,3 +8,5 @@ dist-borradores/
 # Fotos originales y por revisar: nunca al repositorio (es público en GitHub Pages)
 contenido/fotos/
 contenido/.DS_Store
+dist-noche/
+.impeccable/

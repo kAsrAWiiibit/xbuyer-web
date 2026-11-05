@@ -1,7 +1,7 @@
 ---
 /**
- * Hueco de foto con el corte diagonal de la X. Lee src/data/fotos.json: con foto, la muestra con
- * su crédito; sin foto (null), el monograma sobre color plano, para que la página se vea completa.
+ * Hueco de foto con el corte diagonal de la X. Lee src/data/fotos.json: con foto, la muestra (el
+ * crédito va agrupado en la sección, con Creditos.astro, y en el pie de la página); sin foto (null), el monograma sobre color plano, para que la página se vea completa.
  * Añadir una foto no cambia el tamaño ni la composición del hueco.
  */
 import type { ImageMetadata } from 'astro';
@@ -33,7 +33,6 @@ if (foto && (!foto.alt?.trim() || !foto.autor?.trim())) throw new Error(`fotos.j
   {foto && src ? (
     <>
       <Image src={src} alt={foto.alt} widths={[480, 800, 1200, 1600]} sizes={sizes} loading={prioridad ? 'eager' : 'lazy'} fetchpriority={prioridad ? 'high' : undefined} />
-      <figcaption>Foto: {foto.autor}{foto.origen && ` · ${foto.origen}`}</figcaption>
     </>
   ) : (
     <Monograma class="foto__monograma" />

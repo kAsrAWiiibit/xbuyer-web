@@ -16,6 +16,7 @@ const es = {
   'nav.ediciones': 'Ediciones',
   // Frases propuestas para la portada y la cabecera de la academia (pendientes de aprobar)
   'academy.frase': 'La selección que compite en torneos de fútbol base y organiza la Xbuyer Cup.',
+  'academy.tituloPagina': 'Selección de fútbol base',
   'inicio.academy.boton': 'Conoce la academia',
   'inicio.cup.frase': 'El torneo de la academia. Próxima edición: {ciudad}, {fechas}.',
   'inicio.cup.boton': 'Ver la Xbuyer Cup',
@@ -71,6 +72,9 @@ const es = {
   'pie.privacidad': 'Privacidad',
   'pie.soporte': 'Ayuda de la app',
   'pie.fotos': 'Fotos',
+  'error.titulo': 'Fuera de juego',
+  'error.texto': 'Error 404: esta página no existe o ha cambiado de sitio.',
+  'error.inicio': 'Ir al inicio',
 };
 export type Clave = keyof typeof es;
 
