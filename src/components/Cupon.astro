@@ -26,7 +26,9 @@ const email = entidad.email;
     <p class="cupon__texto" set:html={t(idioma, 'contacto.texto', { email: `<strong>${email}</strong>` })} />
   </div>
 
-  <form class="cupon__form" action={`mailto:${email}?subject=${encodeURIComponent(marca)}`} method="post" enctype="text/plain" novalidate>
+  <!-- Sin JavaScript no hay formulario (no enviaría nada): queda el enlace de correo -->
+  <noscript><p class="cupon__sin-js"><a class="enlace" href={`mailto:${email}?subject=${encodeURIComponent(marca)}`}>{email}</a></p></noscript>
+  <form class="cupon__form" hidden data-form novalidate>
     <label class="cupon__campo">
       <span>{t(idioma, 'contacto.nombre')}</span>
       <input name="nombre" type="text" autocomplete="name" required />
@@ -62,6 +64,7 @@ const email = entidad.email;
 <script>
   for (const cupon of document.querySelectorAll<HTMLElement>('[data-cupon]')) {
     const form = cupon.querySelector('form')!;
+    form.hidden = false;
     const planB = cupon.querySelector<HTMLElement>('[data-plan-b]')!;
     const error = cupon.querySelector<HTMLElement>('[data-error]')!;
     const aviso = cupon.querySelector<HTMLElement>('[data-aviso]')!;
@@ -192,7 +195,8 @@ const email = entidad.email;
   }
 
   .cupon__plan-b { align-content: start; gap: 20px; outline: none; }
-  .cupon__plan-b[hidden], .cupon__error[hidden] { display: none; }
+  .cupon__plan-b[hidden], .cupon__error[hidden], .cupon__form[hidden] { display: none; }
+  .cupon__sin-js { grid-column: 2; grid-row: 1; align-self: center; padding: 48px; font-size: var(--step-lead); }
   .cupon--enviado .cupon__form { display: none; }
   .cupon__plan-b p { font-size: var(--step-lead); line-height: 1.3; }
   .cupon__plan-b p a { overflow-wrap: anywhere; }
