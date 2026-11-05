@@ -29,6 +29,8 @@ function fechas(texto: string) {
   return {
     texto: m[0],
     resto: texto.slice(m[0].length).replace(/^\s*\([^)]*\)/, '').replace(/^[,.]\s*/, '').trim(),
+    /** «(desde el 28 de junio)» tras las fechas: una precisión que también se muestra */
+    precision: texto.slice(m[0].length).match(/^\s*\(([^)]*)\)/)?.[1] ?? null,
     inicio: dias.length ? iso(dias[0]) : null,
     fin: dias.length ? iso(dias.at(-1)!) : null,
     orden: Number(m[3]) * 10000 + mes * 100 + (dias[0] ?? 1),
@@ -127,7 +129,8 @@ export const cup = {
       const { texto } = sinPendiente(valor);
       const f = fechas(texto);
       const fotos = f.resto.match(/^Fotos: (.+)$/)?.[1] ?? null;
-      return { ...lugar(etiqueta), fechas: mayuscula(f.texto), detalle: fotos ? null : f.resto ? mayuscula(sinPunto(f.resto)) : null, fotografo: fotos ? sinPunto(fotos) : null, orden: f.orden };
+      const detalle = fotos ? null : f.resto ? mayuscula(sinPunto(f.resto)) : f.precision ? mayuscula(f.precision) : null;
+      return { ...lugar(etiqueta), fechas: mayuscula(f.texto), detalle, fotografo: fotos ? sinPunto(fotos) : null, orden: f.orden };
     })
     .sort((a, b) => b.orden - a.orden),
   // Fuera de textos.md: lo pide la organización y aún no está

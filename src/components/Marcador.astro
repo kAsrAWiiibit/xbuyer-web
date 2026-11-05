@@ -11,8 +11,6 @@ const { cifras, titulo } = Astro.props;
 
 // Siempre dos dígitos, como en un marcador de verdad (07, 21)
 const digitos = (n: number) => String(n).padStart(2, '0').split('').map(Number);
-// La tira tiene 0-9 dos veces: la última cifra da una vuelta entera antes de pararse
-const TIRA = [...Array(20).keys()].map((i) => i % 10);
 ---
 <div class="marcador" data-marcador role="group" aria-label={titulo} style={`--celdas: ${cifras.length}`}>
   {cifras.map((c) => (
@@ -21,7 +19,7 @@ const TIRA = [...Array(20).keys()].map((i) => i % 10);
         <span class="solo-lector">{c.valor}</span>
         {digitos(c.valor).map((d, i, todos) => (
           <span class="marcador__digito" aria-hidden="true" style={`--d: ${d + (i === todos.length - 1 ? 10 : 0)}; --j: ${i}`}>
-            <span class="marcador__tira">{TIRA.map((n) => <span>{n}</span>)}</span>
+            <span class="marcador__tira"></span>
           </span>
         ))}
       </p>
@@ -94,7 +92,13 @@ const TIRA = [...Array(20).keys()].map((i) => i % 10);
     flex-direction: column;
     translate: 0 calc(var(--d) * -1em);
   }
-  .marcador__tira > span { display: block; height: 1em; }
+  /* La tira, 0-9 dos veces (la última cifra da una vuelta entera antes de pararse), en CSS para
+     que no sea texto de la página */
+  .marcador__tira::before {
+    content: '0\A 1\A 2\A 3\A 4\A 5\A 6\A 7\A 8\A 9\A 0\A 1\A 2\A 3\A 4\A 5\A 6\A 7\A 8\A 9';
+    white-space: pre;
+    line-height: 1;
+  }
   .marcador__etiqueta {
     font-family: var(--fuente-display);
     font-size: var(--step-body);

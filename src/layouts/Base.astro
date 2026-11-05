@@ -3,6 +3,9 @@ import '@fontsource/barlow-condensed/latin-700.css';
 import '@fontsource/barlow/latin-400.css';
 import '@fontsource/barlow/latin-500.css';
 import '../styles/global.css';
+// Las dos fuentes de la primera pantalla, precargadas para que el texto no salte al llegar
+import fuenteTitulos from '@fontsource/barlow-condensed/files/barlow-condensed-latin-700-normal.woff2?url';
+import fuenteTexto from '@fontsource/barlow/files/barlow-latin-400-normal.woff2?url';
 
 import Pie from '../components/Pie.astro';
 import { t, type Idioma } from '../i18n/ui';
@@ -32,6 +35,8 @@ const imagen = absoluta(`${base}/compartir/${compartir}.png`);
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{titulo}</title>
+    <link rel="preload" href={fuenteTitulos} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={fuenteTexto} as="font" type="font/woff2" crossorigin />
     <meta name="description" content={descripcion} />
     {canonica && <link rel="canonical" href={canonica} />}
     <meta name="theme-color" content={colorTema} />

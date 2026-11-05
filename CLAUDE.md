@@ -78,8 +78,10 @@ diagonal XB. Skills del proyecto: `design-taste-frontend`, `impeccable`, `emil-d
   `apple-touch-icon.png`; sitemap.xml y robots.txt en la build; 404 «Fuera de juego»; canónicas con
   el dominio; datos estructurados SportsEvent en `/cup/`). Créditos de foto agrupados (sin rótulo
   sobre las fotos) y en el pie solo los de cada página. Apartados de la página visibles en móvil.
-- [ ] Bloque 3: revisión final a 360/768/1440.
-- [ ] Bloque 4: publicar. Dominio en `src/data/sitio.mjs` (`DOMINIO_PROPIO`); con `SIN_DOMINIO=1`
+- [x] Bloque 3: revisión final a 360/768/1440 (lista de correcciones en el informe). Tramo de
+  tableta (600–899 px) en `/cup/` y `/academy/`; fuentes precargadas (CLS 0).
+- [~] Bloque 4: publicar. Repositorio público `kAsrAWiiibit/xbuyer-web` creado; Pages con Actions
+  en https://kasrawiiibit.github.io/xbuyer-web/ (variable `SIN_DOMINIO=1`). Falta el DNS en Namecheap. Dominio en `src/data/sitio.mjs` (`DOMINIO_PROPIO`); con `SIN_DOMINIO=1`
   (variable del repositorio) se publica en github.io mientras el DNS no apunte.
 
 ## Siguiente sesión

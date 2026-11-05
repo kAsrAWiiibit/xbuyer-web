@@ -45,7 +45,7 @@ const fotografos = creditos(fotos);
 
   <div class="pie__base">
     <address>
-      {entidad.nombre} · NIF {entidad.nif} · {entidad.direccion}, {entidad.ciudad}
+      {entidad.nombre} · NIF {entidad.nif} · {entidad.direccion.replace(/^C\/ /, "C/\u00a0")}, {entidad.ciudad}
       <SiCompleto datos={[entidad.registro]} donde="pie: registro de asociaciones">
         · <Dato v={entidad.registro} donde="pie: registro de asociaciones" />
       </SiCompleto>

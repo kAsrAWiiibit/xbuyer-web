@@ -297,6 +297,14 @@ const fotosDe = (ciudad: string, fechas: string) =>
     .portada__texto, .portada__foto { grid-column: 1 / -1; }
     .portada__titulo { font-size: 24vw; }
     .edicion__campo { position: static; width: 100%; margin-top: 40px; color: var(--azul); --grosor: 0.4; }
+    .incluye__lista { grid-template-columns: 1fr 1fr; }
+  }
+  /* Tableta: la foto de portada apaisada, para no ocupar dos pantallas */
+  @media (min-width: 600px) and (max-width: 899px) {
+    .portada__foto { aspect-ratio: 3 / 2; }
+    .portada__foto :global(img) { object-position: 50% 22%; }
+  }
+  @media (max-width: 599px) {
     .edicion__columnas, .diferente__lista, .incluye__lista, .ediciones__lista, .anterior__fotos { grid-template-columns: 1fr; }
   }
 </style>

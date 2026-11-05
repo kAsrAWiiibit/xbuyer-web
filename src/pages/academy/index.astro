@@ -273,12 +273,15 @@ const enlaces = [
     .portada__texto { grid-column: 1 / -1; }
     .portada__titulo { font-size: 17vw; }
     .portada__xb { display: none; }
-    .palmares__lista { grid-template-columns: 1fr; gap: 28px; }
+    .palmares__lista { gap: 32px 24px; }
     .quienes .bloque__titulo, .quienes__texto { grid-column: 1 / -1; }
     .quienes__texto { margin-top: 32px; }
     .palmares__lista--fotos .torneo { grid-template-columns: 1fr; gap: 16px; }
     .equipacion__titulo { grid-column: 1 / -1; font-size: 21vw; }
     .equipacion__frase { grid-column: 1 / -1; margin-top: 20px; padding: 0; }
+  }
+  @media (max-width: 599px) {
+    .palmares__lista { grid-template-columns: 1fr; gap: 28px; }
     /* En el móvil, una debajo de otra, alternando lado */
     .equipacion__piezas { grid-template-columns: 1fr; gap: 40px; }
     .pieza { width: 84%; }
