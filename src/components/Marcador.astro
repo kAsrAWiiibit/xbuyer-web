@@ -1,0 +1,124 @@
+---
+/**
+ * Marcador de estadio con las cifras del palmarés (sumadas de contenido/textos.md, nada inventado).
+ * Cada dígito es una tira 0-9 que rueda hasta su número cuando el marcador asoma, una sola vez.
+ * Sin JavaScript, con «Reducir movimiento» o con ahorro de datos, el número está quieto desde el
+ * principio. Solo transform: no toca el hilo principal ni el LCP.
+ */
+interface Cifra { valor: number; etiqueta: string }
+interface Props { cifras: Cifra[]; titulo: string }
+const { cifras, titulo } = Astro.props;
+
+// Siempre dos dígitos, como en un marcador de verdad (07, 21)
+const digitos = (n: number) => String(n).padStart(2, '0').split('').map(Number);
+// La tira tiene 0-9 dos veces: la última cifra da una vuelta entera antes de pararse
+const TIRA = [...Array(20).keys()].map((i) => i % 10);
+---
+<div class="marcador" data-marcador role="group" aria-label={titulo} style={`--celdas: ${cifras.length}`}>
+  {cifras.map((c) => (
+    <div class="marcador__celda">
+      <p class="marcador__numero">
+        <span class="solo-lector">{c.valor}</span>
+        {digitos(c.valor).map((d, i, todos) => (
+          <span class="marcador__digito" aria-hidden="true" style={`--d: ${d + (i === todos.length - 1 ? 10 : 0)}; --j: ${i}`}>
+            <span class="marcador__tira">{TIRA.map((n) => <span>{n}</span>)}</span>
+          </span>
+        ))}
+      </p>
+      <p class="marcador__etiqueta">{c.etiqueta}</p>
+    </div>
+  ))}
+</div>
+
+<script>
+  // Solo se prepara para rodar si hay movimiento y el marcador aún no está a la vista
+  const quieto =
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+    (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData === true ||
+    !('IntersectionObserver' in window);
+  for (const m of document.querySelectorAll<HTMLElement>('[data-marcador]')) {
+    if (quieto || m.getBoundingClientRect().top < window.innerHeight * 0.9) continue;
+    m.classList.add('marcador--espera');
+    const obs = new IntersectionObserver(
+      ([v]) => {
+        if (!v.isIntersecting) return;
+        // Un fotograma para que el navegador pinte el 00 antes de rodar
+        requestAnimationFrame(() => m.classList.replace('marcador--espera', 'marcador--rueda'));
+        obs.disconnect();
+      },
+      { threshold: 0.6 },
+    );
+    obs.observe(m);
+  }
+</script>
+
+<style>
+  .marcador {
+    display: grid;
+    grid-template-columns: repeat(var(--celdas, 3), auto);
+    justify-content: start;
+    gap: 0;
+    width: fit-content;
+    max-width: 100%;
+    background: var(--azul);
+    color: var(--blanco);
+  }
+  .marcador__celda {
+    display: grid;
+    justify-items: center;
+    gap: 6px;
+    padding: 18px clamp(16px, 3vw, 36px) 16px;
+  }
+  .marcador__celda + .marcador__celda { box-shadow: inset 2px 0 0 var(--marino); }
+  .marcador__numero {
+    display: flex;
+    gap: 4px;
+    font-family: var(--fuente-display);
+    font-size: clamp(3.5rem, 2rem + 6vw, 7.5rem);
+    font-weight: 700;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    color: var(--amarillo);
+  }
+  /* Cada dígito, una ventanita de marcador: fondo marino y la tira dentro */
+  .marcador__digito {
+    display: block;
+    width: 0.62em;
+    height: 1em;
+    overflow: hidden;
+    background: var(--marino);
+    text-align: center;
+  }
+  .marcador__tira {
+    display: flex;
+    flex-direction: column;
+    translate: 0 calc(var(--d) * -1em);
+  }
+  .marcador__tira > span { display: block; height: 1em; }
+  .marcador__etiqueta {
+    font-family: var(--fuente-display);
+    font-size: var(--step-body);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  /* Antes de asomar, todo a 00; al asomar, rueda con un poco de escalonado entre dígitos */
+  .marcador--espera .marcador__tira { translate: 0 0; }
+  .marcador--rueda .marcador__tira {
+    transition: translate 1400ms cubic-bezier(0.2, 0.7, 0.1, 1);
+    transition-delay: calc(var(--j) * 90ms + var(--k, 0) * 140ms);
+  }
+  .marcador__celda:nth-child(2) { --k: 1; }
+  .marcador__celda:nth-child(3) { --k: 2; }
+
+  @media (max-width: 599px) {
+    .marcador { width: 100%; grid-template-columns: repeat(var(--celdas, 3), 1fr); }
+    .marcador__celda { padding-inline: 8px; }
+    .marcador__numero { font-size: clamp(2.75rem, 14vw, 4rem); gap: 3px; }
+    .marcador__etiqueta { font-size: var(--step-small); letter-spacing: 0.02em; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .marcador__tira { transition: none !important; }
+  }
+</style>

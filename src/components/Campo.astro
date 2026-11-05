@@ -1,0 +1,83 @@
+---
+/**
+ * Líneas de un campo de fútbol 11 (105 × 68 m, medidas reglamentarias) en SVG. Decoración: va
+ * detrás del contenido y los lectores de pantalla lo ignoran. Cuando asoma, las líneas se trazan
+ * una vez (stroke-dashoffset, de fuera adentro). Sin JavaScript, con «Reducir movimiento» o con
+ * ahorro de datos, el campo ya está dibujado.
+ */
+interface Props { class?: string; /** Medio campo: solo la mitad izquierda, para huecos estrechos */ medio?: boolean }
+const { class: clase, medio = false } = Astro.props;
+
+// Medidas en metros
+const L = 105, A = 68, c = A / 2;
+const area = { fondo: 16.5, ancho: 40.32 };
+const areaChica = { fondo: 5.5, ancho: 18.32 };
+const penalti = 11, radio = 9.15;
+// Arco del área: la parte del círculo de radio 9,15 desde el punto de penalti que queda fuera del área
+const dx = area.fondo - penalti;
+const dy = Math.sqrt(radio * radio - dx * dx);
+const vista = medio ? `-1 -1 ${L / 2 + 2} ${A + 2}` : `-1 -1 ${L + 2} ${A + 2}`;
+---
+<svg class:list={['campo', clase]} data-campo viewBox={vista} preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+  <g fill="none" stroke="currentColor" stroke-linecap="square">
+    <rect style="--o: 0" pathLength="1" x="0" y="0" width={L} height={A} />
+    <path style="--o: 1" pathLength="1" d={`M ${L / 2} 0 V ${A}`} />
+    <circle style="--o: 2" pathLength="1" cx={L / 2} cy={c} r={radio} />
+    {[0, 1].map((lado) => {
+      const x = lado ? L : 0, s = lado ? -1 : 1;
+      return (
+        <>
+          <path style="--o: 1" pathLength="1" d={`M ${x} ${c - area.ancho / 2} H ${x + s * area.fondo} V ${c + area.ancho / 2} H ${x}`} />
+          <path style="--o: 2" pathLength="1" d={`M ${x} ${c - areaChica.ancho / 2} H ${x + s * areaChica.fondo} V ${c + areaChica.ancho / 2} H ${x}`} />
+          <path style="--o: 3" pathLength="1" d={`M ${x + s * area.fondo} ${c - dy} A ${radio} ${radio} 0 0 ${lado ? 0 : 1} ${x + s * area.fondo} ${c + dy}`} />
+          <path style="--o: 3" pathLength="1" d={`M ${x} 1 A 1 1 0 0 ${lado ? 0 : 1} ${x + s} 0 M ${x} ${A - 1} A 1 1 0 0 ${lado ? 1 : 0} ${x + s} ${A}`} />
+        </>
+      );
+    })}
+  </g>
+  <g fill="currentColor" class="campo__puntos">
+    <circle cx={L / 2} cy={c} r="0.5" />
+    <circle cx={penalti} cy={c} r="0.4" />
+    <circle cx={L - penalti} cy={c} r="0.4" />
+  </g>
+</svg>
+
+<script>
+  const quieto =
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+    (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData === true ||
+    !('IntersectionObserver' in window);
+  for (const campo of document.querySelectorAll<SVGElement>('[data-campo]')) {
+    if (quieto || campo.getBoundingClientRect().top < window.innerHeight * 0.85) continue;
+    campo.classList.add('campo--espera');
+    const obs = new IntersectionObserver(
+      ([v]) => {
+        if (!v.isIntersecting) return;
+        requestAnimationFrame(() => campo.classList.replace('campo--espera', 'campo--traza'));
+        obs.disconnect();
+      },
+      { threshold: 0.25 },
+    );
+    obs.observe(campo);
+  }
+</script>
+
+<style>
+  .campo { display: block; overflow: visible; }
+  /* Grosor en metros del dibujo (0,25 ≈ 2 px a 900 px de ancho) */
+  .campo g[stroke] > * { stroke-width: var(--grosor, 0.25); }
+  /* Antes de asomar, ninguna línea; al asomar, se trazan de fuera adentro y luego aparecen los puntos */
+  .campo--espera g[stroke] > * { stroke-dasharray: 1; stroke-dashoffset: 1; }
+  .campo--espera .campo__puntos { opacity: 0; }
+  .campo--traza g[stroke] > * {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 1100ms var(--ease-in-out);
+    transition-delay: calc(var(--o) * 260ms);
+  }
+  .campo--traza .campo__puntos { transition: opacity 400ms ease 1500ms; }
+  @media (prefers-reduced-motion: reduce) {
+    .campo g[stroke] > * { transition: none !important; stroke-dashoffset: 0 !important; }
+    .campo__puntos { opacity: 1 !important; }
+  }
+</style>

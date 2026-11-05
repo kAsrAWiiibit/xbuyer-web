@@ -44,7 +44,7 @@ diagonal XB. Skills del proyecto: `design-taste-frontend`, `impeccable`, `emil-d
   **`IMG_2696` («New technical partner») no se usa**: pone «XBUYER TEAM» y lleva la corona, que son
   del equipo de la Kings League, no de la academia. Fuera hasta que la organización confirme que esa
   equipación es de la academia.
-- [ ] **c) Animaciones de fútbol.** Prototipo del túnel al campo en 3D en `/cup/` (enseñarlo antes de
+- [~] **c) Animaciones de fútbol.** Prototipo del túnel al campo en 3D en `/cup/` (enseñarlo antes de
   integrarlo), marcador en el palmarés y líneas del campo en SVG, con condiciones de rendimiento y
   movimiento reducido.
   - [~] Túnel: **prototipo con imágenes, pendiente de revisión.** `/prototipos/tunel/` (solo en
@@ -63,8 +63,12 @@ diagonal XB. Skills del proyecto: `design-taste-frontend`, `impeccable`, `emil-d
     No integrado en `/cup/` todavía: falta decidir si sustituye a la portada de `/cup/` o va debajo.
     Historial: hubo una primera versión 3D con three.js (commit `33ab169`); se descartó por poco
     realista y se pasó a imágenes (`102a93b`).
-  - [ ] Marcador en el palmarés.
-  - [ ] Líneas del campo en SVG.
+  - [x] Marcador en el palmarés: `src/components/Marcador.astro` en `/academy/#palmares`. Títulos,
+    subcampeonatos y torneos sumados de `textos.md` (21 · 1 · 7); los dígitos ruedan una vez al asomar.
+    Quieto con «Reducir movimiento», ahorro de datos o sin JavaScript.
+  - [x] Líneas del campo en SVG: `src/components/Campo.astro` (campo de 105 × 68 con medidas
+    reglamentarias), detrás de las sedes en `/cup/#torrent` (en móvil, debajo). Se trazan una vez al
+    asomar; mismas condiciones de movimiento reducido.
 
 ## Siguiente sesión
 

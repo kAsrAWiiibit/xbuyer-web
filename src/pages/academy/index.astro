@@ -8,6 +8,7 @@ import Cabecera from '../../components/Cabecera.astro';
 import Cupon from '../../components/Cupon.astro';
 import Dato from '../../components/Dato.astro';
 import Foto from '../../components/Foto.astro';
+import Marcador from '../../components/Marcador.astro';
 import Monograma from '../../components/Monograma.astro';
 import Pendiente from '../../components/Pendiente.astro';
 import { academy, cup } from '../../data/contenido';
@@ -33,6 +34,16 @@ const piezas = equipacion.piezas.map((p) => ({ ...p, espalda: fotoDe(`${p.hueco}
 // «Temporada 26/27, con Adidas como…»: la marca va en negrita
 const frase = t('es', 'academy.equipacion.frase', { temporada: equipacion.temporada, marca: '\u0000' }).split('\u0000');
 for (const p of piezas) if (!fotoDe(p.hueco)) throw new Error(`fotos.json: falta la foto de la equipación «${p.nombre}» (hueco ${p.hueco})`);
+
+// Marcador: lo que suman los resultados de textos.md (campeones cuenta 1; «N veces campeones», N)
+const titulos = palmares.reduce((n, p) => n + (Number.isInteger(p.titulos) ? p.titulos : 0), 0);
+const subcampeonatos = palmares.filter((p) => p.titulos === 0.5).length;
+const plural = (n: number, uno: Parameters<typeof t>[1], varios: Parameters<typeof t>[1]) => t('es', n === 1 ? uno : varios);
+const cifras = [
+  { valor: titulos, etiqueta: plural(titulos, 'academy.marcador.titulo', 'academy.marcador.titulos') },
+  { valor: subcampeonatos, etiqueta: plural(subcampeonatos, 'academy.marcador.subcampeonato', 'academy.marcador.subcampeonatos') },
+  { valor: palmares.length, etiqueta: plural(palmares.length, 'academy.marcador.torneo', 'academy.marcador.torneos') },
+].filter((c) => c.valor > 0);
 
 const enlaces = [
   { href: '#quienes', texto: t('es', 'nav.quienes') },
@@ -65,6 +76,7 @@ const enlaces = [
   <section class="bloque palmares" id="palmares" data-capitulo="marino" aria-labelledby="palmares-titulo">
     <h2 id="palmares-titulo" class="bloque__titulo">{t('es', 'academy.palmares')}</h2>
     {academy.faseOro && <p class="bloque__intro">{t('es', 'academy.faseOro', { fase: academy.faseOro })}</p>}
+    <Marcador cifras={cifras} titulo={t('es', 'academy.marcador')} />
     <ol role="list" class:list={['palmares__lista', conFotos && 'palmares__lista--fotos']}>
       {palmares.map((p) => (
         <li class:list={['torneo', p.participacion && 'torneo--participacion']}>
@@ -165,6 +177,7 @@ const enlaces = [
   }
   .quienes__familia { font-size: var(--step-lead); line-height: 1.4; }
 
+  .palmares :global(.marcador) { margin-top: 40px; }
   .palmares__lista {
     display: grid;
     grid-template-columns: 1fr 1fr;

@@ -5,6 +5,7 @@
  * incluye la inscripción, las próximas ediciones y las anteriores.
  */
 import Cabecera from '../../components/Cabecera.astro';
+import Campo from '../../components/Campo.astro';
 import Cupon from '../../components/Cupon.astro';
 import Dato from '../../components/Dato.astro';
 import Foto from '../../components/Foto.astro';
@@ -74,6 +75,7 @@ const fotosDe = (ciudad: string, fechas: string) =>
         </ul>
       </div>
     </div>
+    <Campo class="edicion__campo" />
   </section>
 
   <section class="bloque diferente" data-capitulo="blanco" aria-labelledby="diferente-titulo">
@@ -192,6 +194,17 @@ const fotosDe = (ciudad: string, fechas: string) =>
   .portada__cuenta { font-size: var(--step-lead); font-weight: 500; min-height: 1.4em; }
   .portada__foto { grid-column: 8 / 13; }
 
+  /* Las líneas del campo, detrás de categorías y sedes */
+  .edicion { position: relative; isolation: isolate; overflow: hidden; }
+  .edicion > :not(.edicion__campo) { position: relative; }
+  .edicion__campo {
+    position: absolute;
+    z-index: -1;
+    right: calc(var(--margen) * -1);
+    bottom: clamp(24px, 4vw, 56px);
+    width: min(62%, 980px);
+    color: color-mix(in srgb, var(--azul) 75%, var(--marino));
+  }
   .edicion__columnas {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -261,6 +274,7 @@ const fotosDe = (ciudad: string, fechas: string) =>
     .portada { min-height: 0; padding-block: 48px 64px; row-gap: 40px; }
     .portada__texto, .portada__foto { grid-column: 1 / -1; }
     .portada__titulo { font-size: 24vw; }
+    .edicion__campo { position: static; width: 100%; margin-top: 56px; color: var(--azul); --grosor: 0.4; }
     .edicion__columnas, .diferente__lista, .incluye__lista, .ediciones__lista, .anterior__fotos { grid-template-columns: 1fr; }
   }
 </style>
