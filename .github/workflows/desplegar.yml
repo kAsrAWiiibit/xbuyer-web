@@ -1,6 +1,8 @@
 # Publica la web en GitHub Pages en cada push a main.
-# Sin dominio propio, la web queda en https://<usuario>.github.io/<repositorio>/ (BASE_PATH y SITE_URL).
-# Con dominio (src/data/sitio.mjs), la build escribe el CNAME y la sirve en la raíz.
+# Con el dominio de src/data/sitio.mjs, la build escribe el CNAME y la sirve en la raíz.
+# Mientras el DNS no apunte a GitHub Pages, la variable del repositorio SIN_DOMINIO=1 la publica en
+# https://<usuario>.github.io/<repositorio>/ (BASE_PATH y SITE_URL). Para pasar al dominio:
+# gh variable set SIN_DOMINIO --body 0 y volver a lanzar el flujo.
 name: Desplegar
 
 on:
@@ -31,6 +33,7 @@ jobs:
       - run: npm ci
       - run: npm run build
         env:
+          SIN_DOMINIO: ${{ vars.SIN_DOMINIO }}
           BASE_PATH: ${{ steps.pages.outputs.base_path }}/
           SITE_URL: ${{ steps.pages.outputs.origin }}
       - uses: actions/upload-pages-artifact@v3

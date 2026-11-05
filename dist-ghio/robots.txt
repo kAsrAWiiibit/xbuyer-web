@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://kasrawiiibit.github.io/xbuyer-web/sitemap.xml
