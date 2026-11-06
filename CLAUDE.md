@@ -70,7 +70,7 @@ diagonal XB. Skills del proyecto: `design-taste-frontend`, `impeccable`, `emil-d
     reglamentarias), detrás de las sedes en `/cup/#torrent` (en móvil, debajo). Se trazan una vez al
     asomar; mismas condiciones de movimiento reducido.
 
-## Noche del 5 de noviembre de 2026 (trabajo autónomo; informe en `docs/informe-noche.md`)
+## Noche del 5 de noviembre de 2026 (trabajo autónomo; informe en `docs/informe-noche-2026-11-05.md`)
 
 - [x] Bloque 1: marcador y líneas del campo (arriba).
 - [x] Bloque 2: crítica (impeccable, dos evaluaciones), pulido, revisión de animaciones, SEO
@@ -140,5 +140,12 @@ publicada; vista previa en un repositorio aparte (`kAsrAWiiibit/xbuyer-web-previ
   el `<head>`; `.entradas` el módulo. Con «Reducir movimiento», solo fundidos. Vista previa:
   `./scripts/publicar-vista-previa.sh` (build `npm run vista-previa`, `VISTA_PREVIA=1`: noindex, robots cerrado,
   sin CNAME) → https://kasrawiiibit.github.io/xbuyer-web-preview/
-- [ ] Bloque 3: crítica, pulido y capturas.
-- [ ] Bloque 4: `docs/reunion-propuestas.md` e informe.
+- [x] Bloque 3: crítica (25/32, `docs/critica-noche.md`, dos subagentes) y pulido: placa plana en los torneos (sin
+  scroll lateral en el móvil), inclinación 3,5°/3°, cursor del sistema en legales, contacto y pie, imán de 4 px,
+  `aria-label` en los títulos partidos, portada de `/cup/` dentro de 1440 × 900. Capturas en
+  `.taste-skill/capturas-noche/`. Lighthouse móvil después (vista previa): rendimiento 98/100/98/100/100/100,
+  accesibilidad 100 en todas (SEO 60 por el noindex). Peso: 78 / 266 / 396 / 75 / 75 / 76 KB.
+- [x] Bloque 4: `docs/reunion-propuestas.md` y `docs/informe-noche.md`.
+
+Siguiente: revisar la vista previa en el móvil con los dueños; si dan el visto bueno, fusionar `mejoras-noche` en
+`main` (eso publica). La vista previa se vuelve a publicar con `./scripts/publicar-vista-previa.sh`.
