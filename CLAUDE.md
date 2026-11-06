@@ -123,3 +123,16 @@ Academy), sedes de Madrid y Barcelona 2027, cifras de ediciones anteriores, fech
 enlaces de la app en las tiendas, patrocinador oficial, número del registro de asociaciones,
 fotos de los torneos de la academia (L8 Sport Murcia), y si la equipación de `IMG_2696`
 es de la academia.
+
+## Noche del 6 de noviembre de 2026: mejoras de experiencia (rama `mejoras-noche`)
+
+Encargo: más viva e interactiva **sin cambiar estructura, contenido ni textos**. No se toca `main` ni la web
+publicada; vista previa en un repositorio aparte (`kAsrAWiiibit/xbuyer-web-preview`, noindex). Informe en
+`docs/informe-noche.md` (el de la noche anterior pasa a `docs/informe-noche-2026-11-05.md`).
+
+- [x] Bloque 1: referencias en `docs/referencias.md`. Lighthouse móvil antes (web publicada): rendimiento
+  100/98/99/100/100/100 (inicio, academy, cup, aviso legal, privacidad, soporte), accesibilidad 100 en todas.
+  Peso recorriendo la página entera en móvil: 73 / 258 / 389 / 70 / 71 / 71 KB.
+- [ ] Bloque 2: interactividad.
+- [ ] Bloque 3: crítica, pulido y capturas.
+- [ ] Bloque 4: `docs/reunion-propuestas.md` e informe.
