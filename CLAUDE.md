@@ -123,3 +123,53 @@ Academy), sedes de Madrid y Barcelona 2027, cifras de ediciones anteriores, fech
 enlaces de la app en las tiendas, patrocinador oficial, número del registro de asociaciones,
 fotos de los torneos de la academia (L8 Sport Murcia), y si la equipación de `IMG_2696`
 es de la academia.
+
+## Cambios de la reunión con los dueños (6 de noviembre de 2026, rama `cambios-reunion`)
+
+La rama `mejoras-noche` (interactividad) **no gustó y no se fusiona**. Se parte de `main` y se mantiene su estilo.
+Vista previa en `kAsrAWiiibit/xbuyer-web-preview` (noindex): `./scripts/publicar-vista-previa.sh` →
+https://kasrawiiibit.github.io/xbuyer-web-preview/. No se toca la web oficial hasta que lo aprueben.
+
+**Dónde están los datos** (nada escrito en las plantillas):
+- Textos: `contenido/textos.md`.
+- Torneos 2027: `src/data/torneos-2027.ts`. Sacados de los PDF de `contenido/torneos-2027/`, que está fuera de git
+  porque los PDF traen fotos de niños.
+- Ediciones de la Cup: `src/data/cup-ediciones.ts`, de los carteles de `contenido/cup-ediciones/`, también fuera de
+  git.
+- Equipación: `src/data/equipacion.ts`.
+- Patrocinador: `src/data/patrocinadores.ts`, con el logo en `src/components/logos/Synergy.astro`.
+- Fechas: `src/lib/fechas.ts`, que calcula el día de la semana para no repetir los errores de los PDF.
+
+**Enlaces de inscripción:** los Google Form van en `formulario` de cada torneo o edición. Mientras falten, el botón
+abre un email a aexbuyer2026@gmail.com con el asunto del torneo y la build lo lista.
+
+- [x] Bloque 1: portada con los textos nuevos de las dos tarjetas.
+- [x] Bloque 2: `/academy/`.
+  - Portada solo con título y monograma; «¿Quiénes somos?» nuevo.
+  - Sección «Torneos 2027» (8 tarjetas) y desplegable en la cabecera (`<details>`, `Cabecera.astro` con `hijos`).
+  - Página de cada torneo en `/academy/torneos/<slug>/`: ficha con precio e «Inscríbete», qué incluye, categorías
+    con años de nacimiento y programa.
+  - Palmarés con titular «Más de 20 títulos en menos de 3 años», logos de los torneos sacados de los PDF y cifra
+    por torneo.
+  - «Nueva piel»: descripción de cada pieza, extras opcionales (sudadera 30 €, mochila 35 €) y el texto de lo que
+    incluye.
+  - Villarreal Yellow Cup sin PDF: programa, categorías y lugar del acto inaugural pendientes (ocultos).
+- [x] Bloque 3: `/cup/`.
+  - Portada sin «Organizada por…»; frase y botón «Ver torneos».
+  - Las cinco razones de «¿Qué hace diferente…?», tarjetas de las ediciones, «Ediciones anteriores», patrocinador
+    y contacto.
+  - Páginas `/cup/valencia/` (inscripciones cerradas y la app destacada), `/cup/madrid/` y `/cup/barcelona/`.
+  - Infantil femenino pendiente (oculto) en las tres. Valencia queda solo en Sant Gregori: Parc Central ya no
+    figura.
+- [x] Bloque 4: Synergy, patrocinador principal.
+  - En la web: banda destacada en `/cup/` y en cada edición, más una línea en la portada de `/cup/`.
+  - En la app: logo en `~/xbuyer-cup-app/xbuyer-cup-app/data/source/patrocinadores/synergy.png`, probado con
+    `--dry-run`, y nota en su CLAUDE.md. Sin subir ni commit allí.
+- [x] Bloque 5: propuesta en `docs/propuesta-myteaminfo.md`. **No implementar hasta que la aprueben.**
+
+**Pendiente de la organización (nuevo):**
+- Enlaces de los Google Form: 8 torneos, Madrid y Barcelona.
+- Villarreal Yellow Cup: PDF, programa con fechas correctas, lugar del acto inaugural y categorías.
+- Campo de la edición de Barcelona.
+- Si hay Infantil femenino en Valencia, Madrid y Barcelona.
+- Si el teléfono 615 72 25 83 de los PDF se publica en la web.
