@@ -1,0 +1,350 @@
+---
+/**
+ * Página de una edición de la Xbuyer Cup (src/data/cup-ediciones.ts). Arriba, la sede, las fechas y la inscripción
+ * (el formulario, o «Inscripciones cerradas» con la app destacada); debajo, el patrocinador principal, qué incluye,
+ * categorías y formato, la sede con quién apoya la edición, y contacto.
+ */
+import Cabecera from '../../components/Cabecera.astro';
+import Campo from '../../components/Campo.astro';
+import Cupon from '../../components/Cupon.astro';
+import Dato from '../../components/Dato.astro';
+import LogoCup from '../../components/LogoCup.astro';
+import Patrocinador from '../../components/Patrocinador.astro';
+import SiCompleto from '../../components/SiCompleto.astro';
+import { academy, cup } from '../../data/contenido';
+import { ediciones, type Edicion } from '../../data/cup-ediciones';
+import { principal } from '../../data/patrocinadores';
+import { t } from '../../i18n/ui';
+import Base from '../../layouts/Base.astro';
+import { menuEdiciones, rutaEdicion } from '../../lib/ediciones';
+import { rango } from '../../lib/fechas';
+import { completo, esPendiente } from '../../lib/pendiente';
+import { ruta } from '../../lib/ruta';
+import { enlaceInscripcion } from '../../lib/torneos';
+
+export function getStaticPaths() {
+  return ediciones.map((edicion) => ({ params: { edicion: edicion.slug }, props: { edicion } }));
+}
+interface Props { edicion: Edicion }
+const { edicion: ed } = Astro.props;
+
+const fechas = rango(ed.inicio, ed.fin);
+const abierta = ed.inscripcion === 'abierta';
+const inscripcion = abierta ? enlaceInscripcion(ed.formulario, t('es', 'edicion.asunto', { ciudad: ed.ciudad }), Astro.url.pathname) : null;
+const externo = inscripcion ? !inscripcion.startsWith('mailto:') : false;
+const appLista = Boolean(ed.app) && completo(cup.app.appStore) && completo(cup.app.googlePlay);
+const sede = completo(ed.sede) ? ed.sede : null;
+const comoLlegar = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${sede ?? ''} ${ed.localidad}`.trim())}`;
+const otras = ediciones.filter((e) => e.slug !== ed.slug);
+
+const cup_ = (ancla: string) => ruta(`/cup/${ancla}`);
+const enlaces = [
+  { href: cup_('#ediciones'), texto: t('es', 'nav.ediciones'), ...menuEdiciones(ed.slug), todos: { href: cup_('#ediciones'), texto: t('es', 'nav.verTodas') } },
+  { href: cup_('#anteriores'), texto: t('es', 'nav.anteriores') },
+  { href: '#patrocinador', texto: t('es', 'nav.patrocinador') },
+  { href: '#contacto', texto: t('es', 'nav.contacto') },
+];
+
+// Datos estructurados del torneo para los buscadores (solo lo confirmado)
+const evento = {
+  '@context': 'https://schema.org',
+  '@type': 'SportsEvent',
+  name: `${cup.nombre} ${ed.ciudad} ${ed.inicio.slice(0, 4)}`,
+  sport: 'Fútbol',
+  startDate: ed.inicio,
+  endDate: ed.fin,
+  eventStatus: 'https://schema.org/EventScheduled',
+  eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+  location: { '@type': 'Place', name: sede ?? ed.localidad, address: { '@type': 'PostalAddress', addressLocality: ed.localidad, addressCountry: 'ES' } },
+  organizer: { '@type': 'SportsOrganization', name: academy.nombre, url: Astro.site ? new URL(ruta('/academy/'), Astro.site).href : undefined },
+  sponsor: principal ? { '@type': 'Organization', name: principal.nombre, url: `https://www.instagram.com/${principal.instagram}/` } : undefined,
+  image: Astro.site ? new URL(ruta('/compartir/cup.png'), Astro.site).href : undefined,
+};
+const categoriasTexto = ed.formatos.map((f) => `${f.nombre}: ${f.categorias.filter(completo).join(', ')}`).join('. ');
+---
+<Base
+  titulo={`${cup.nombre} ${ed.ciudad} · ${fechas}`}
+  descripcion={`${cup.nombre} ${ed.ciudad}: ${fechas}, ${ed.localidad}${sede ? ` (${sede})` : ''}. ${categoriasTexto}.`}
+  compartir="cup"
+>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(evento)} />
+  <Cabecera slot="cabecera" marca={cup.nombre} logo="cup" capitulo="azul" enlaces={enlaces} otra={{ href: ruta('/academy/'), texto: academy.nombre }} />
+
+  <section class="portada" data-capitulo="azul" aria-labelledby="portada-titulo">
+    <a class="portada__volver enlace" href={cup_('#ediciones')}>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12H5M11 6l-6 6 6 6" /></svg>{t('es', 'nav.ediciones')}
+    </a>
+    <div class="portada__cuerpo">
+      <div class="portada__texto">
+        <h1 id="portada-titulo" class="portada__titulo">
+          <span class="portada__marca"><LogoCup class="portada__logo" />{cup.nombre}</span>
+          <span class="portada__ciudad">{ed.ciudad}</span>
+        </h1>
+        <p class="portada__fecha"><time datetime={ed.inicio}>{fechas}</time></p>
+        <p class="portada__sede">{ed.localidad}{sede && <><span aria-hidden="true"> · </span>{sede}</>}</p>
+        <p class="portada__cuenta" data-cuenta={ed.inicio} data-fin={ed.fin} data-uno={t('es', 'cup.faltan.uno')} data-n={t('es', 'cup.faltan.n', { n: '{n}' })} data-hoy={t('es', 'cup.hoy')}></p>
+      </div>
+      <div class:list={['inscripcion', !abierta && 'inscripcion--cerrada']}>
+        <p class="inscripcion__estado">{abierta ? t('es', 'cup.abiertas') : t('es', 'cup.cerradas')}</p>
+        {inscripcion ? (
+          <a class="boton inscripcion__boton" href={inscripcion} {...(externo ? { rel: 'noopener', target: '_blank' } : {})}>{t('es', 'edicion.inscribete')}</a>
+        ) : (
+          <p class="inscripcion__texto">{t('es', 'edicion.cerradasTexto')}</p>
+        )}
+        {!abierta && ed.app && <a class="enlace inscripcion__app" href="#app">{t('es', 'edicion.app')}</a>}
+      </div>
+    </div>
+  </section>
+
+  {ed.app && (
+    <section class="bloque app" id="app" data-capitulo="amarillo" aria-labelledby="app-titulo">
+      <h2 id="app-titulo" class="bloque__titulo">{t('es', 'edicion.app')}</h2>
+      <p class="app__texto">{t('es', 'edicion.appTexto')}</p>
+      <SiCompleto datos={[cup.app.appStore, cup.app.googlePlay]} donde={`${ed.slug}: enlaces de la app`}>
+        <ul role="list" class="app__tiendas">
+          <li>{completo(cup.app.appStore) ? <a class="boton" href={cup.app.appStore}>App Store</a> : <Dato v={cup.app.appStore} donde={`${ed.slug}: App Store`} />}</li>
+          <li>{completo(cup.app.googlePlay) ? <a class="boton" href={cup.app.googlePlay}>Google Play</a> : <Dato v={cup.app.googlePlay} donde={`${ed.slug}: Google Play`} />}</li>
+        </ul>
+      </SiCompleto>
+    </section>
+  )}
+
+  <Patrocinador id="patrocinador" capitulo="blanco" compacto />
+
+  <section class="bloque incluye" data-capitulo="amarillo" aria-labelledby="incluye-titulo">
+    <h2 id="incluye-titulo" class="bloque__titulo">{t('es', 'edicion.incluye')}</h2>
+    <ul role="list" class="incluye__lista">
+      {cup.incluye.map((d) => <li>{d}</li>)}
+    </ul>
+  </section>
+
+  <section class="bloque categorias" data-capitulo="marino" aria-labelledby="categorias-titulo">
+    <h2 id="categorias-titulo" class="bloque__titulo">{t('es', 'edicion.categorias')}</h2>
+    {ed.equipos && <p class="bloque__intro">{t('es', 'edicion.equipos', { n: ed.equipos })}</p>}
+    <div class="categorias__formatos">
+      {ed.formatos.map((f) => (
+        <div class="formato">
+          <h3 class="formato__nombre">{f.nombre}</h3>
+          <ul role="list" class="formato__categorias">
+            {f.categorias.map((c) => esPendiente(c) ? (
+              <SiCompleto datos={[c]} donde={`${ed.slug}: ${c.pendiente}`}><li><Dato v={c} donde={`${ed.slug}: ${c.pendiente}`} /></li></SiCompleto>
+            ) : <li>{c}</li>)}
+          </ul>
+        </div>
+      ))}
+    </div>
+    <Campo class="categorias__campo" />
+  </section>
+
+  <section class="bloque sede" data-capitulo="blanco" aria-labelledby="sede-titulo">
+    <h2 id="sede-titulo" class="bloque__titulo">{t('es', 'edicion.sede')}</h2>
+    <div class="sede__columnas">
+      <div>
+        {sede && <p class="sede__nombre">{sede}</p>}
+        <SiCompleto datos={[ed.sede]} donde={`${ed.slug}: campo`}>
+          {!sede && <p class="sede__nombre"><Dato v={ed.sede} donde={`${ed.slug}: campo`} /></p>}
+        </SiCompleto>
+        <p class="sede__localidad">{ed.localidad}</p>
+        <a class="enlace sede__mapa" href={comoLlegar} rel="noopener">{t('es', 'edicion.comoLlegar')}<span class="solo-lector"> a {sede ?? ed.localidad}</span></a>
+      </div>
+      {(ed.apoyo.length > 0 || ed.colaboradores.length > 0) && (
+        <dl class="sede__apoyos">
+          {ed.apoyo.length > 0 && <div><dt>{t('es', 'edicion.apoyo')}</dt>{ed.apoyo.map((a) => <dd>{a}</dd>)}</div>}
+          {ed.colaboradores.length > 0 && <div><dt>{t('es', 'edicion.colaboradores')}</dt>{ed.colaboradores.map((a) => <dd>{a}</dd>)}</div>}
+        </dl>
+      )}
+    </div>
+    <nav class="otras" aria-labelledby="otras-titulo">
+      <h2 id="otras-titulo" class="otras__titulo">{t('es', 'edicion.otras')}</h2>
+      <ul role="list" class="otras__lista">
+        {otras.map((o) => (
+          <li><a class="otras__enlace" href={rutaEdicion(o)}><span class="otras__ciudad">{o.ciudad}</span> <span class="otras__fechas">{rango(o.inicio, o.fin)}</span></a></li>
+        ))}
+      </ul>
+    </nav>
+  </section>
+
+  <section class="bloque contacto" id="contacto" data-capitulo="azul" aria-labelledby="contacto-titulo">
+    <Cupon marca="Xbuyer Cup" tituloId="contacto-titulo" titulo={t('es', 'contacto.tituloCup')} instagram={cup.instagram} />
+  </section>
+</Base>
+
+<script>
+  // Cuenta atrás hasta el torneo (sin JavaScript se ven las fechas)
+  const el = document.querySelector<HTMLElement>('[data-cuenta]');
+  if (el) {
+    const { cuenta = '', fin = '', uno = '', n = '', hoy = '' } = el.dataset;
+    const dia = (iso: string) => new Date(`${iso}T00:00:00`).getTime();
+    const ahora = new Date();
+    const hoyMs = new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate()).getTime();
+    const faltan = Math.round((dia(cuenta) - hoyMs) / 86_400_000);
+    if (faltan > 1) el.textContent = n.replace('{n}', String(faltan));
+    else if (faltan === 1) el.textContent = uno;
+    else if (hoyMs <= dia(fin)) el.textContent = hoy;
+  }
+</script>
+
+<style>
+  .portada { padding: clamp(24px, 4vh, 48px) var(--margen) clamp(56px, 8vw, 112px); }
+  .portada__volver { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font-weight: 500; }
+  .portada__volver svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: square; }
+  .portada__cuerpo {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    column-gap: 16px;
+    align-items: end;
+    margin-top: clamp(24px, 4vw, 56px);
+  }
+  .portada__texto { grid-column: 1 / 9; display: grid; justify-items: start; gap: 16px; }
+  .portada__titulo { display: grid; gap: 12px; text-transform: uppercase; }
+  .portada__marca {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    font-size: var(--step-lead);
+    line-height: 1;
+    color: var(--marino);
+  }
+  .portada__logo { width: 44px; height: auto; }
+  .portada__ciudad { font-size: min(var(--step-display), 22vh); line-height: 0.85; }
+  .portada__fecha {
+    font-family: var(--fuente-display);
+    font-size: var(--step-head);
+    font-weight: 700;
+    line-height: 0.95;
+    text-transform: uppercase;
+    color: var(--amarillo);
+  }
+  .portada__sede { font-size: var(--step-lead); font-weight: 500; }
+  .portada__cuenta { font-size: var(--step-body); font-weight: 500; min-height: 1.5em; }
+
+  /* La inscripción, un recuadro aparte: abierta (botón) o cerrada (aviso y la app) */
+  .inscripcion {
+    grid-column: 9 / 13;
+    display: grid;
+    justify-items: start;
+    gap: 16px;
+    padding: 28px 24px;
+    background: var(--marino);
+    color: var(--blanco);
+    --acento: var(--amarillo);
+    --sobre-acento: var(--marino);
+  }
+  .inscripcion__estado {
+    font-family: var(--fuente-display);
+    font-size: var(--step-sub);
+    font-weight: 700;
+    line-height: 0.95;
+    text-transform: uppercase;
+    color: var(--amarillo);
+  }
+  .inscripcion--cerrada .inscripcion__estado { color: var(--blanco); }
+  .inscripcion__texto { line-height: 1.4; }
+  .inscripcion__app { display: inline-flex; align-items: center; min-height: 44px; font-weight: 500; }
+
+  .app { display: grid; justify-items: start; gap: 20px; }
+  .app__texto { max-width: 40ch; font-size: var(--step-lead); line-height: 1.3; }
+  .app__tiendas { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 12px; }
+
+  .incluye__lista {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px 32px;
+    margin-top: 48px;
+    font-size: var(--step-lead);
+    line-height: 1.3;
+  }
+  .incluye__lista li { position: relative; padding-left: 28px; max-width: 30ch; }
+  .incluye__lista li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.45em;
+    width: 12px;
+    height: 12px;
+    background: var(--acento);
+  }
+
+  /* Categorías, con las líneas del campo detrás */
+  .categorias { position: relative; isolation: isolate; overflow: hidden; }
+  .categorias > :not(.categorias__campo) { position: relative; }
+  .categorias__campo {
+    position: absolute;
+    z-index: -1;
+    right: calc(var(--margen) * -1);
+    bottom: clamp(24px, 4vw, 56px);
+    width: min(56%, 900px);
+    color: color-mix(in srgb, var(--azul) 75%, var(--marino));
+  }
+  .categorias__formatos { display: grid; grid-template-columns: 1fr 1fr; gap: 48px 32px; margin-top: 56px; max-width: 900px; }
+  .formato__nombre {
+    font-family: var(--fuente-texto);
+    font-size: var(--step-lead);
+    font-weight: 500;
+    letter-spacing: 0;
+    line-height: 1.2;
+    color: var(--amarillo);
+  }
+  .formato__categorias { display: grid; gap: 4px; margin-top: 16px; }
+  .formato__categorias li {
+    font-family: var(--fuente-display);
+    font-size: var(--step-sub);
+    font-weight: 700;
+    line-height: 1.05;
+    text-transform: uppercase;
+  }
+
+  .sede__columnas { display: grid; grid-template-columns: 1fr 1fr; gap: 40px 32px; margin-top: 48px; }
+  .sede__nombre {
+    font-family: var(--fuente-display);
+    font-size: var(--step-sub);
+    font-weight: 700;
+    line-height: 1.05;
+    text-transform: uppercase;
+  }
+  .sede__localidad { margin-top: 6px; font-size: var(--step-lead); font-weight: 500; color: var(--azul); }
+  .sede__mapa { display: inline-flex; align-items: center; min-height: 44px; margin-top: 8px; }
+  .sede__apoyos { display: grid; gap: 24px; margin: 0; align-content: start; }
+  .sede__apoyos dt { font-weight: 500; color: var(--azul); }
+  .sede__apoyos dd { margin: 4px 0 0; font-size: var(--step-lead); line-height: 1.25; }
+
+  .otras { margin-top: clamp(64px, 8vw, 120px); padding-top: 32px; border-top: 2px solid var(--marino); }
+  .otras__titulo {
+    font-family: var(--fuente-texto);
+    font-size: var(--step-lead);
+    font-weight: 500;
+    letter-spacing: 0;
+    line-height: 1.2;
+  }
+  .otras__lista { display: flex; flex-wrap: wrap; gap: 16px 48px; margin-top: 16px; }
+  .otras__enlace { display: grid; text-decoration: none; }
+  .otras__ciudad {
+    font-family: var(--fuente-display);
+    font-size: var(--step-sub);
+    font-weight: 700;
+    line-height: 1;
+    text-transform: uppercase;
+    text-decoration: underline;
+    text-decoration-thickness: 3px;
+    text-underline-offset: 0.12em;
+    text-decoration-color: var(--azul);
+  }
+  .otras__fechas { margin-top: 4px; font-weight: 500; }
+  @media (hover: hover) and (pointer: fine) {
+    .otras__enlace:hover .otras__ciudad { color: var(--azul); }
+  }
+
+  .contacto { display: grid; padding-block: clamp(48px, 7vw, 112px); }
+  .contacto :global(.cupon) { width: min(100%, 1120px); justify-self: center; }
+
+  @media (max-width: 899px) {
+    .portada__texto, .inscripcion { grid-column: 1 / -1; }
+    .inscripcion { margin-top: 40px; }
+    .portada__ciudad { font-size: 19vw; }
+    .incluye__lista { grid-template-columns: 1fr 1fr; }
+    .categorias__campo { position: static; width: 100%; margin-top: 40px; color: var(--azul); --grosor: 0.4; }
+  }
+  @media (max-width: 599px) {
+    .incluye__lista, .categorias__formatos, .sede__columnas { grid-template-columns: 1fr; }
+  }
+</style>

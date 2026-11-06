@@ -6,6 +6,8 @@
 import Cabecera from '../../components/Cabecera.astro';
 import Tunel from '../../components/Tunel.astro';
 import { academy, cup } from '../../data/contenido';
+import { ediciones } from '../../data/cup-ediciones';
+import { rango } from '../../lib/fechas';
 import { t } from '../../i18n/ui';
 import Base from '../../layouts/Base.astro';
 import { MOSTRAR_PENDIENTES } from '../../lib/pendiente';
@@ -13,15 +15,15 @@ import { ruta } from '../../lib/ruta';
 
 export const getStaticPaths = () => (MOSTRAR_PENDIENTES ? [{ params: { nombre: 'tunel' } }] : []);
 
-const ed = cup.edicion;
+const ed = ediciones[0];
 ---
 <Base titulo={`Prototipo · túnel · ${cup.nombre}`} descripcion="Prototipo: del túnel al campo.">
   <Cabecera slot="cabecera" marca={cup.nombre} capitulo="azul" otra={{ href: ruta('/academy/'), texto: academy.nombre }} />
 
-  <Tunel titulo={cup.nombre} linea={`${ed.ciudad} · ${ed.fechas.toLowerCase()} · ${t('es', 'cup.equipos', { n: ed.equipos }).replace(/\.$/, '')}`} />
+  <Tunel titulo={cup.nombre} linea={`${ed.ciudad} · ${rango(ed.inicio, ed.fin)}${ed.equipos ? ` · ${t('es', 'edicion.equipos', { n: ed.equipos }).replace(/\.$/, '')}` : ''}`} />
 
   <section class="bloque" data-capitulo="azul" aria-labelledby="sigue">
-    <h2 id="sigue" class="bloque__titulo">{t('es', 'cup.edicion')}</h2>
-    <p class="bloque__intro">{ed.etiqueta}. {ed.sedes.join(' · ')}.</p>
+    <h2 id="sigue" class="bloque__titulo">{t('es', 'edicion.categorias')}</h2>
+    <p class="bloque__intro">{ed.localidad} · {typeof ed.sede === 'string' ? ed.sede : ''}</p>
   </section>
 </Base>

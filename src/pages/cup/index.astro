@@ -1,47 +1,33 @@
 ---
 /**
- * Xbuyer Cup, organizada por Xbuyer Team Academy. La edición principal (la primera de «Próximas
- * ediciones» en contenido/textos.md) manda en la página; debajo, lo que la hace diferente, qué
- * incluye la inscripción, las próximas ediciones y las anteriores.
+ * Xbuyer Cup: presentación corta, qué la hace diferente, las ediciones de esta temporada (cada una con su página,
+ * src/data/cup-ediciones.ts), las anteriores, el patrocinador principal y contacto.
  */
 import Cabecera from '../../components/Cabecera.astro';
-import Campo from '../../components/Campo.astro';
 import Cupon from '../../components/Cupon.astro';
 import Dato from '../../components/Dato.astro';
 import Foto from '../../components/Foto.astro';
 import LogoCup from '../../components/LogoCup.astro';
+import Patrocinador from '../../components/Patrocinador.astro';
 import SiCompleto from '../../components/SiCompleto.astro';
 import { academy, cup } from '../../data/contenido';
+import { ediciones } from '../../data/cup-ediciones';
+import { enlaceInstagram, principal } from '../../data/patrocinadores';
+import Synergy from '../../components/logos/Synergy.astro';
 import { t } from '../../i18n/ui';
 import Base from '../../layouts/Base.astro';
+import { rango } from '../../lib/fechas';
 import { autores, fotoDe, type Hueco } from '../../lib/fotos';
 import { completo } from '../../lib/pendiente';
 import { ruta } from '../../lib/ruta';
+import { menuEdiciones, rutaEdicion } from '../../lib/ediciones';
 
-const ed = cup.edicion;
-const [dias, ano] = ed.fechas.split(/ de (?=\d{4}$)/);
-const appLista = ed.tieneApp && completo(cup.app.appStore) && completo(cup.app.googlePlay);
-const accion = appLista ? { href: '#app', texto: t('es', 'cup.app') } : { href: '#torrent', texto: t('es', 'cup.ver') };
 const enlaces = [
-  { href: '#torrent', texto: t('es', 'nav.torrent') },
-  { href: '#ediciones', texto: t('es', 'nav.ediciones') },
+  { href: '#ediciones', texto: t('es', 'nav.ediciones'), ...menuEdiciones(), todos: { href: '#ediciones', texto: t('es', 'nav.verTodas') } },
+  { href: '#anteriores', texto: t('es', 'nav.anteriores') },
+  { href: '#patrocinador', texto: t('es', 'nav.patrocinador') },
   { href: '#contacto', texto: t('es', 'nav.contacto') },
 ];
-// Datos estructurados del torneo para los buscadores (solo lo que está en textos.md)
-const evento = {
-  '@context': 'https://schema.org',
-  '@type': 'SportsEvent',
-  name: `${cup.nombre} ${ed.ciudad} ${ed.inicio.slice(0, 4)}`,
-  sport: 'Fútbol',
-  startDate: ed.inicio,
-  endDate: ed.fin,
-  eventStatus: 'https://schema.org/EventScheduled',
-  eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
-  location: ed.sedes.map((s) => ({ '@type': 'Place', name: s, address: { '@type': 'PostalAddress', addressLocality: ed.ciudad, addressCountry: 'ES' } })),
-  organizer: { '@type': 'SportsOrganization', name: academy.nombre, url: Astro.site ? new URL(ruta('/academy/'), Astro.site).href : undefined },
-  image: Astro.site ? new URL(ruta('/compartir/cup.png'), Astro.site).href : undefined,
-};
-const comoLlegar = (sede: string) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${sede}, ${ed.ciudad}`)}`;
 
 // Las fotos de cada edición anterior: las de su fotógrafo con «Xbuyer Cup <ciudad> <año>» como origen
 const galeria = (['cup-galeria-1', 'cup-galeria-2', 'cup-galeria-3', 'cup-galeria-4'] as Hueco[]).map((h) => ({ hueco: h, foto: fotoDe(h) }));
@@ -49,108 +35,74 @@ const fotosDe = (ciudad: string, fechas: string) =>
   galeria.filter((g) => g.foto?.origen === `${cup.nombre} ${ciudad} ${fechas.match(/\d{4}$/)?.[0]}`);
 ---
 <Base
-  titulo={`${cup.nombre} · ${ed.ciudad}, ${ed.fechas.toLowerCase()}`}
-  descripcion={`${cup.organiza ?? cup.nombre}. ${ed.etiqueta}: ${ed.fechas.toLowerCase()}. ${ed.formatos.flatMap((f) => f.categorias).join(', ').replace(/, ([^,]+)$/, ' y $1')}. ${ed.equipos} equipos.`}
+  titulo={`${cup.nombre} · ${ediciones.map((e) => e.ciudad).join(', ').replace(/, ([^,]+)$/, ' y $1')}`}
+  descripcion={`${cup.frase} ${ediciones.map((e) => `${e.ciudad}: ${rango(e.inicio, e.fin)}`).join('. ')}.`}
   compartir="cup"
   fotos={['cup-portada', ...galeria.map((g) => g.hueco)]}
 >
-  <script slot="head" type="application/ld+json" set:html={JSON.stringify(evento)} />
   <Cabecera slot="cabecera" marca={cup.nombre} logo="cup" capitulo="azul" enlaces={enlaces} otra={{ href: ruta('/academy/'), texto: academy.nombre }} />
 
   <section class="portada" data-capitulo="azul" aria-labelledby="portada-titulo">
     <div class="portada__texto">
       <LogoCup class="portada__logo" />
       <h1 id="portada-titulo" class="portada__titulo"><span>Xbuyer</span> <span>Cup</span></h1>
-      <p class="portada__fecha"><time datetime={ed.inicio}>{dias}</time> <span>{ano} · {ed.ciudad}</span></p>
-      {cup.organiza && <p class="portada__organiza">{cup.organiza}</p>}
-      <p class="portada__cuenta" data-cuenta={ed.inicio} data-fin={ed.fin} data-uno={t('es', 'cup.faltan.uno')} data-n={t('es', 'cup.faltan.n', { n: '{n}' })} data-hoy={t('es', 'cup.hoy')}></p>
-      <a class="boton" href={accion.href}>{accion.texto}</a>
+      <p class="portada__frase">{cup.frase}</p>
+      <a class="boton" href="#ediciones">{t('es', 'cup.verTorneos')}</a>
+      {principal && (
+        <a class="portada__patrocinador" href={enlaceInstagram(principal.instagram)} rel="noopener">
+          <span>{t('es', 'cup.patrocinador')}</span>
+          <Synergy titulo={principal.nombre} class="portada__synergy" />
+        </a>
+      )}
     </div>
     <Foto hueco="cup-portada" proporcion="4 / 5" fondo="marino" prioridad class="portada__foto" sizes="(min-width: 900px) 36vw, 100vw" />
   </section>
 
-  <section class="bloque edicion" id="torrent" data-capitulo="marino" aria-labelledby="edicion-titulo">
-    <h2 id="edicion-titulo" class="bloque__titulo">{t('es', 'cup.edicion')}</h2>
-    <p class="bloque__intro">{ed.etiqueta}. {t('es', 'cup.equipos', { n: ed.equipos })}</p>
-    <div class="edicion__columnas">
-      <div>
-        <h3 class="edicion__sub">{t('es', 'cup.categorias')}</h3>
-        {ed.formatos.map((f) => (
-          <div class="formato">
-            <p class="formato__nombre">{f.nombre}</p>
-            <p class="formato__categorias">{f.categorias.join(' · ')}</p>
-          </div>
-        ))}
-      </div>
-      <div>
-        <h3 class="edicion__sub">{t('es', 'cup.sedes')}</h3>
-        <ul role="list" class="sedes">
-          {ed.sedes.map((s) => (
-            <li class="sede">
-              <p class="sede__nombre">{s}</p>
-              <a class="enlace" href={comoLlegar(s)} rel="noopener">{t('es', 'cup.comoLlegar')}<span class="solo-lector"> a {s}</span></a>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
-    <Campo class="edicion__campo" />
-  </section>
-
   <section class="bloque diferente" data-capitulo="blanco" aria-labelledby="diferente-titulo">
     <h2 id="diferente-titulo" class="bloque__titulo">{t('es', 'cup.diferente')}</h2>
-    <ul role="list" class="diferente__lista">
-      {cup.diferente.map((d) => <li>{d}</li>)}
-    </ul>
-  </section>
-
-  <section class="bloque incluye" data-capitulo="amarillo" aria-labelledby="incluye-titulo">
-    <h2 id="incluye-titulo" class="bloque__titulo">{t('es', 'cup.incluye')}</h2>
-    <ul role="list" class="incluye__lista">
-      {cup.incluye.map((d) => <li>{d}</li>)}
-    </ul>
-  </section>
-
-  <SiCompleto datos={[cup.app.appStore, cup.app.googlePlay]} donde="cup: sección de la app">
-    <section class="bloque app" id="app" data-capitulo="azul" aria-labelledby="app-titulo">
-      <h2 id="app-titulo" class="bloque__titulo">{t('es', 'cup.laApp')}</h2>
-      <ul role="list" class="app__tiendas">
-        <li>{completo(cup.app.appStore) ? <a class="boton" href={cup.app.appStore}>App Store</a> : <Dato v={cup.app.appStore} donde="cup: App Store" />}</li>
-        <li>{completo(cup.app.googlePlay) ? <a class="boton" href={cup.app.googlePlay}>Google Play</a> : <Dato v={cup.app.googlePlay} donde="cup: Google Play" />}</li>
-      </ul>
-    </section>
-  </SiCompleto>
-
-  <section class="bloque ediciones" id="ediciones" data-capitulo="blanco" aria-labelledby="proximas-titulo">
-    <h2 id="proximas-titulo" class="bloque__titulo">{t('es', 'cup.proximas')}</h2>
-    <ul role="list" class="ediciones__lista">
-      {cup.proximas.map((p) => (
-        <li class="ed ed--proxima">
-          <h3 class="ed__ciudad">{p.ciudad}</h3>
-          <p class="ed__fechas">{p.fechas}</p>
-          {p.sede && (
-            <SiCompleto datos={[p.sede]} donde={`cup: sede de ${p.ciudad}`}>
-              <p class="ed__detalle"><Dato v={p.sede} donde={`cup: sede de ${p.ciudad}`} /></p>
-            </SiCompleto>
-          )}
+    <ol role="list" class="diferente__lista">
+      {cup.diferente.map((d, i) => (
+        <li class="razon">
+          <p class="razon__numero" aria-hidden="true">{String(i + 1).padStart(2, '0')}</p>
+          <h3 class="razon__titulo">{d.titulo}</h3>
+          <p class="razon__texto">{d.texto}</p>
         </li>
       ))}
-    </ul>
+    </ol>
+  </section>
 
-    <h2 class="bloque__titulo ediciones__anteriores">{t('es', 'cup.anteriores')}</h2>
+  <section class="bloque ediciones" id="ediciones" data-capitulo="marino" aria-labelledby="ediciones-titulo">
+    <h2 id="ediciones-titulo" class="bloque__titulo">{t('es', 'cup.ediciones')}</h2>
+    <ol role="list" class="ediciones__lista">
+      {ediciones.map((e) => (
+        <li>
+          <a class:list={['edicion', `edicion--${e.inscripcion}`]} href={rutaEdicion(e)}>
+            <span class="edicion__estado">{e.inscripcion === 'abierta' ? t('es', 'cup.abiertas') : t('es', 'cup.cerradas')}</span>
+            <span class="edicion__ciudad">{e.ciudad}</span>
+            <span class="edicion__fechas"><time datetime={e.inicio}>{rango(e.inicio, e.fin)}</time></span>
+            <span class="edicion__lugar">{e.localidad}{completo(e.sede) && <>{' · '}{e.sede}</>}</span>
+            <span class="edicion__ver">{t('es', 'cup.verEdicion')}<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6" /></svg></span>
+          </a>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <section class="bloque anteriores" id="anteriores" data-capitulo="blanco" aria-labelledby="anteriores-titulo">
+    <h2 id="anteriores-titulo" class="bloque__titulo">{t('es', 'cup.anteriores')}</h2>
     <SiCompleto datos={[cup.cifras]} donde="cup: cifras de ediciones anteriores">
       <p class="bloque__intro"><Dato v={cup.cifras} donde="cup: cifras de ediciones anteriores" /></p>
     </SiCompleto>
-    <ul role="list" class="anteriores">
+    <ul role="list" class="anteriores__lista">
       {cup.anteriores.map((a) => {
         const fotos = fotosDe(a.ciudad, a.fechas);
         return (
           <li class:list={['anterior', fotos.length > 0 && 'anterior--fotos']}>
             <div>
-              <h3 class="ed__ciudad">{a.ciudad}<span class="solo-lector">, {a.fechas.toLowerCase()}</span></h3>
-              {a.lugar && <p class="ed__lugar">{a.lugar}</p>}
-              <p class="ed__fechas">{a.fechas}</p>
-              {a.detalle && <p class="ed__detalle">{a.detalle}</p>}
+              <h3 class="anterior__ciudad">{a.ciudad}<span class="solo-lector">, {a.fechas.toLowerCase()}</span></h3>
+              {a.lugar && <p class="anterior__lugar">{a.lugar}</p>}
+              <p class="anterior__fechas">{a.fechas}</p>
+              {a.detalle && <p class="anterior__detalle">{a.detalle}</p>}
             </div>
             {fotos.length > 0 && (
               <div>
@@ -166,25 +118,12 @@ const fotosDe = (ciudad: string, fechas: string) =>
     </ul>
   </section>
 
+  <Patrocinador id="patrocinador" capitulo="amarillo" />
+
   <section class="bloque contacto" id="contacto" data-capitulo="azul" aria-labelledby="contacto-titulo">
     <Cupon marca="Xbuyer Cup" tituloId="contacto-titulo" titulo={t('es', 'contacto.tituloCup')} instagram={cup.instagram} />
   </section>
 </Base>
-
-<script>
-  // Cuenta atrás hasta el torneo (sin JavaScript se ven las fechas, que ya están en la portada)
-  const el = document.querySelector<HTMLElement>('[data-cuenta]');
-  if (el) {
-    const { cuenta = '', fin = '', uno = '', n = '', hoy = '' } = el.dataset;
-    const dia = (iso: string) => new Date(`${iso}T00:00:00`).getTime();
-    const ahora = new Date();
-    const hoyMs = new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate()).getTime();
-    const faltan = Math.round((dia(cuenta) - hoyMs) / 86_400_000);
-    if (faltan > 1) el.textContent = n.replace('{n}', String(faltan));
-    else if (faltan === 1) el.textContent = uno;
-    else if (hoyMs <= dia(fin)) el.textContent = hoy;
-  }
-</script>
 
 <style>
   .portada {
@@ -195,9 +134,8 @@ const fotosDe = (ciudad: string, fechas: string) =>
     min-height: calc(100svh - var(--cabecera));
     padding: clamp(40px, 6vh, 80px) var(--margen);
   }
-  .portada__texto { grid-column: 1 / 8; display: grid; justify-items: start; gap: 20px; }
+  .portada__texto { grid-column: 1 / 8; display: grid; justify-items: start; gap: 24px; }
   .portada__logo { width: clamp(88px, 8vw, 128px); height: auto; color: var(--marino); }
-  .portada__organiza { font-size: var(--step-lead); font-weight: 500; }
   .portada__titulo {
     font-size: min(var(--step-display), 26vh);
     line-height: 0.85;
@@ -205,102 +143,106 @@ const fotosDe = (ciudad: string, fechas: string) =>
   }
   .portada__titulo span { display: block; }
   .portada__titulo span + span { color: var(--marino); }
-  .portada__fecha {
-    font-family: var(--fuente-display);
-    font-size: var(--step-head);
-    font-weight: 700;
-    line-height: 0.95;
-    text-transform: uppercase;
-    color: var(--amarillo);
+  .portada__frase { max-width: 34ch; font-size: var(--step-lead); line-height: 1.3; }
+  .portada__patrocinador {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    min-height: 44px;
+    margin-top: 8px;
+    font-size: var(--step-small);
+    font-weight: 500;
+    text-decoration: none;
   }
-  .portada__fecha span { display: block; }
-  .portada__cuenta { font-size: var(--step-lead); font-weight: 500; min-height: 1.4em; }
+  .portada__synergy { width: 92px; height: auto; color: var(--blanco); }
   .portada__foto { grid-column: 8 / 13; }
   /* El trofeo y las caras, lejos del corte diagonal */
   .portada__foto :global(img) { object-position: 42% 40%; }
 
-  /* Las líneas del campo, detrás de categorías y sedes */
-  .edicion { position: relative; isolation: isolate; overflow: hidden; }
-  .edicion > :not(.edicion__campo) { position: relative; }
-  .edicion__campo {
-    position: absolute;
-    z-index: -1;
-    right: calc(var(--margen) * -1);
-    bottom: clamp(24px, 4vw, 56px);
-    width: min(62%, 980px);
-    color: color-mix(in srgb, var(--azul) 75%, var(--marino));
-  }
-  .edicion__columnas {
+  /* Qué la hace diferente: cinco razones numeradas */
+  .diferente__lista {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(6, 1fr);
     gap: 48px 32px;
     margin-top: 56px;
   }
-  .edicion__sub {
-    margin-bottom: 20px;
-    font-family: var(--fuente-texto);
-    font-size: var(--step-lead);
-    font-weight: 500;
-    letter-spacing: 0;
-    line-height: 1.2;
-    color: var(--amarillo);
-  }
-  .formato + .formato { margin-top: 24px; }
-  .formato__nombre { font-size: var(--step-body); }
-  .formato__categorias, .sede__nombre {
+  .razon { grid-column: span 2; display: grid; align-content: start; gap: 10px; }
+  /* Las dos últimas, más anchas: cierran la fila sin hueco */
+  .razon:nth-child(4), .razon:nth-child(5) { grid-column: span 3; }
+  .razon__numero {
     font-family: var(--fuente-display);
     font-size: var(--step-sub);
     font-weight: 700;
-    line-height: 1.05;
+    line-height: 0.9;
+    font-variant-numeric: tabular-nums;
+    color: var(--azul);
   }
-  .sedes { display: grid; gap: 24px; }
-  .sede .enlace { display: inline-flex; align-items: center; min-height: 44px; margin-top: 2px; }
+  .razon__titulo { font-size: clamp(1.75rem, 1.2rem + 1.4vw, 2.75rem); text-transform: uppercase; }
+  .razon__texto { max-width: 36ch; font-size: var(--step-body); line-height: 1.45; }
 
-  .diferente__lista,
-  .incluye__lista {
+  /* Ediciones: una tarjeta por edición, que lleva a su página */
+  .ediciones__lista { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 48px; }
+  .edicion {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px 32px;
-    margin-top: 48px;
-    font-size: var(--step-lead);
-    line-height: 1.3;
+    align-content: start;
+    gap: 8px;
+    height: 100%;
+    padding: 28px 24px 24px;
+    background: var(--azul);
+    color: var(--blanco);
+    text-decoration: none;
+    transition: background-color 200ms ease, transform 160ms var(--ease-out);
   }
-  .diferente__lista li,
-  .incluye__lista li { padding-left: 28px; position: relative; max-width: 30ch; }
-  /* Marca de lista: un cuadrado plano del color de acento */
-  .diferente__lista li::before,
-  .incluye__lista li::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0.45em;
-    width: 12px;
-    height: 12px;
-    background: var(--acento);
+  .edicion:active { transform: scale(0.98); }
+  .edicion:focus-visible { outline-offset: 4px; }
+  @media (hover: hover) and (pointer: fine) {
+    .edicion:hover { background: var(--azul-hondo); }
+    .edicion:hover .edicion__ver svg { translate: 4px 0; }
   }
-  .incluye__lista { grid-template-columns: repeat(3, 1fr); }
+  .edicion__estado {
+    justify-self: start;
+    padding: 6px 10px;
+    background: var(--amarillo);
+    color: var(--marino);
+    font-size: var(--step-small);
+    font-weight: 500;
+    line-height: 1.2;
+  }
+  .edicion--cerrada .edicion__estado { background: var(--marino); color: var(--blanco); }
+  .edicion__ciudad {
+    margin-top: 20px;
+    font-family: var(--fuente-display);
+    font-size: clamp(3rem, 1.6rem + 3.6vw, 5.5rem);
+    font-weight: 700;
+    line-height: 0.85;
+    text-transform: uppercase;
+  }
+  .edicion__fechas { margin-top: 8px; font-size: var(--step-lead); font-weight: 500; color: var(--amarillo); }
+  .edicion__lugar { font-size: var(--step-body); }
+  .edicion__ver { display: inline-flex; align-items: center; gap: 8px; margin-top: 24px; font-weight: 500; }
+  .edicion__ver svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: square; transition: translate 200ms var(--ease-out); }
 
-  .app__tiendas { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 32px; }
-
-  .ediciones__lista { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 40px; }
-  .ediciones__anteriores { margin-top: var(--entre-secciones); }
-  .ed__ciudad { font-size: var(--step-sub); text-transform: uppercase; }
-  .ed__lugar { margin-top: 4px; font-size: var(--step-lead); font-weight: 500; }
-  .ed__fechas { margin-top: 8px; font-size: var(--step-lead); font-weight: 500; color: var(--azul); }
-  .ed__detalle { margin-top: 4px; font-size: var(--step-lead); }
-  .anteriores { display: grid; gap: 48px; margin-top: 40px; }
+  /* Ediciones anteriores */
+  .anteriores__lista { display: grid; gap: 48px; margin-top: 40px; }
+  .anterior__ciudad { font-size: var(--step-sub); text-transform: uppercase; }
+  .anterior__lugar { margin-top: 4px; font-size: var(--step-lead); font-weight: 500; }
+  .anterior__fechas { margin-top: 8px; font-size: var(--step-lead); font-weight: 500; color: var(--azul); }
+  .anterior__detalle { margin-top: 4px; font-size: var(--step-lead); }
   .anterior--fotos { display: grid; gap: 24px; }
   .anterior__fotos { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 
   .contacto { display: grid; padding-block: clamp(48px, 7vw, 112px); }
   .contacto :global(.cupon) { width: min(100%, 1120px); justify-self: center; }
 
+  @media (max-width: 1099px) {
+    .ediciones__lista { grid-template-columns: 1fr 1fr; }
+    .diferente__lista { grid-template-columns: 1fr 1fr; }
+    .razon, .razon:nth-child(4), .razon:nth-child(5) { grid-column: auto; }
+  }
   @media (max-width: 899px) {
     .portada { min-height: 0; padding-block: 48px 64px; row-gap: 40px; }
     .portada__texto, .portada__foto { grid-column: 1 / -1; }
     .portada__titulo { font-size: 24vw; }
-    .edicion__campo { position: static; width: 100%; margin-top: 40px; color: var(--azul); --grosor: 0.4; }
-    .incluye__lista { grid-template-columns: 1fr 1fr; }
   }
   /* Tableta: la foto de portada apaisada, para no ocupar dos pantallas */
   @media (min-width: 600px) and (max-width: 899px) {
@@ -308,6 +250,7 @@ const fotosDe = (ciudad: string, fechas: string) =>
     .portada__foto :global(img) { object-position: 50% 22%; }
   }
   @media (max-width: 599px) {
-    .edicion__columnas, .diferente__lista, .incluye__lista, .ediciones__lista, .anterior__fotos { grid-template-columns: 1fr; }
+    .diferente__lista, .ediciones__lista, .anterior__fotos { grid-template-columns: 1fr; }
+    .diferente__lista { gap: 36px; margin-top: 40px; }
   }
 </style>
