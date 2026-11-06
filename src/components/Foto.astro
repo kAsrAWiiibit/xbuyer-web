@@ -19,9 +19,11 @@ interface Props {
   sizes?: string;
   prioridad?: boolean;
   class?: string;
+  /** Grupo del visor: con foto, se amplía al pulsarla y se pasa a las demás del mismo grupo */
+  galeria?: string;
 }
 
-const { hueco, proporcion = '4 / 5', fondo = 'marino', sizes = '(min-width: 900px) 40vw, 100vw', prioridad = false, class: clase } = Astro.props;
+const { hueco, proporcion = '4 / 5', fondo = 'marino', sizes = '(min-width: 900px) 40vw, 100vw', prioridad = false, class: clase, galeria } = Astro.props;
 
 const archivos = import.meta.glob<ImageMetadata>('/src/fotos/**/*.{jpg,jpeg,png,webp,avif}', { eager: true, import: 'default' });
 const foto = fotoDe(hueco);
@@ -29,7 +31,7 @@ const src = foto ? archivos[`/src/fotos/${foto.archivo}`] : undefined;
 if (foto && !src) throw new Error(`fotos.json: no existe src/fotos/${foto.archivo} (hueco ${hueco})`);
 if (foto && (!foto.alt?.trim() || !foto.autor?.trim())) throw new Error(`fotos.json: al hueco ${hueco} le falta alt o autor`);
 ---
-<figure class:list={['foto', `foto--${fondo}`, !foto && 'foto--vacia', clase]} style={`--proporcion: ${proporcion}`}>
+<figure class:list={['foto', `foto--${fondo}`, !foto && 'foto--vacia', clase]} style={`--proporcion: ${proporcion}`} data-galeria={foto && galeria ? galeria : undefined} data-autor={foto && galeria ? foto.autor : undefined}>
   {foto && src ? (
     <>
       <Image src={src} alt={foto.alt} widths={[480, 800, 1200, 1600]} sizes={sizes} loading={prioridad ? 'eager' : 'lazy'} fetchpriority={prioridad ? 'high' : undefined} />

@@ -13,6 +13,7 @@ const { cifras, titulo } = Astro.props;
 const digitos = (n: number) => String(n).padStart(2, '0').split('').map(Number);
 ---
 <div class="marcador" data-marcador role="group" aria-label={titulo} style={`--celdas: ${cifras.length}`}>
+  <span class="marcador__luces" aria-hidden="true"></span>
   {cifras.map((c) => (
     <div class="marcador__celda">
       <p class="marcador__numero">
@@ -29,38 +30,82 @@ const digitos = (n: number) => String(n).padStart(2, '0').split('').map(Number);
 </div>
 
 <script>
-  // Solo se prepara para rodar si hay movimiento y el marcador aún no está a la vista
+  // Solo se prepara para rodar si hay movimiento y el marcador aún no está a la vista. Al pararse, se
+  // encienden las bombillas. Con ratón, pasar por una cifra la hace rodar otra vez (decoración).
   const quieto =
     window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
     (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData === true ||
     !('IntersectionObserver' in window);
+  const raton = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  // Lo que tarda la última tira en pararse (1400 ms y el escalonado de la última celda)
+  const enciende = (m: HTMLElement, espera: number) => setTimeout(() => m.classList.add('marcador--luz'), espera);
   for (const m of document.querySelectorAll<HTMLElement>('[data-marcador]')) {
-    if (quieto || m.getBoundingClientRect().top < window.innerHeight * 0.9) continue;
-    m.classList.add('marcador--espera');
-    const obs = new IntersectionObserver(
-      ([v]) => {
-        if (!v.isIntersecting) return;
-        // Un fotograma para que el navegador pinte el 00 antes de rodar
-        requestAnimationFrame(() => m.classList.replace('marcador--espera', 'marcador--rueda'));
-        obs.disconnect();
-      },
-      { threshold: 0.6 },
-    );
-    obs.observe(m);
+    if (quieto) { m.classList.add('marcador--luz'); continue; }
+    const celdas = m.querySelectorAll('.marcador__celda').length;
+    const duracion = 1400 + (celdas - 1) * 140 + 90;
+    if (m.getBoundingClientRect().top < window.innerHeight * 0.9) {
+      m.classList.add('marcador--luz');
+    } else {
+      m.classList.add('marcador--espera');
+      const obs = new IntersectionObserver(
+        ([v]) => {
+          if (!v.isIntersecting) return;
+          // Un fotograma para que el navegador pinte el 00 antes de rodar
+          requestAnimationFrame(() => m.classList.replace('marcador--espera', 'marcador--rueda'));
+          enciende(m, duracion - 200);
+          obs.disconnect();
+        },
+        { threshold: 0.6 },
+      );
+      obs.observe(m);
+    }
+    if (!raton) continue;
+    for (const celda of m.querySelectorAll<HTMLElement>('.marcador__celda')) {
+      let rodando = false;
+      celda.addEventListener('pointerenter', () => {
+        if (rodando || m.classList.contains('marcador--espera')) return;
+        rodando = true;
+        const tiras = [...celda.querySelectorAll<HTMLElement>('.marcador__tira')];
+        // Vuelve a 0 sin transición y rueda otra vez hasta su número, más rápido que la primera vez
+        for (const t of tiras) t.animate([{ translate: '0 0' }, { translate: getComputedStyle(t).translate }], {
+          duration: 900, easing: 'cubic-bezier(0.2, 0.7, 0.1, 1)', delay: tiras.indexOf(t) * 70,
+          fill: 'backwards',
+        });
+        setTimeout(() => { rodando = false; }, 1100);
+      });
+    }
   }
 </script>
 
 <style>
   .marcador {
+    position: relative;
     display: grid;
     grid-template-columns: repeat(var(--celdas, 3), auto);
     justify-content: start;
     gap: 0;
     width: fit-content;
     max-width: 100%;
+    padding-top: 22px;
     background: var(--azul);
     color: var(--blanco);
   }
+  /* Fila de bombillas de estadio: apagadas, y se encienden de izquierda a derecha al pararse */
+  .marcador__luces {
+    position: absolute;
+    inset: 8px 12px auto;
+    height: 6px;
+    background: radial-gradient(circle, color-mix(in srgb, var(--marino) 55%, var(--azul)) 2.4px, transparent 3px) 0 50% / 14px 6px repeat-x;
+  }
+  .marcador__luces::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle, var(--amarillo) 2.4px, transparent 3px) 0 50% / 14px 6px repeat-x;
+    clip-path: inset(0 100% 0 0);
+    transition: clip-path 700ms steps(24, end);
+  }
+  .marcador--luz .marcador__luces::after { clip-path: inset(0 0 0 0); }
   .marcador__celda {
     display: grid;
     justify-items: center;
@@ -80,12 +125,21 @@ const digitos = (n: number) => String(n).padStart(2, '0').split('').map(Number);
   }
   /* Cada dígito, una ventanita de marcador: fondo marino y la tira dentro */
   .marcador__digito {
+    position: relative;
     display: block;
     width: 0.62em;
     height: 1em;
     overflow: hidden;
     background: var(--marino);
     text-align: center;
+  }
+  /* La bisagra de las fichas, a media altura */
+  .marcador__digito::after {
+    content: '';
+    position: absolute;
+    inset: calc(50% - 1px) 0 auto;
+    height: 2px;
+    background: color-mix(in srgb, var(--azul) 30%, var(--marino));
   }
   .marcador__tira {
     display: flex;
@@ -123,6 +177,14 @@ const digitos = (n: number) => String(n).padStart(2, '0').split('').map(Number);
     .marcador__etiqueta { font-size: var(--step-small); letter-spacing: 0.02em; }
   }
   @media (prefers-reduced-motion: reduce) {
-    .marcador__tira { transition: none !important; }
+    /* La bisagra de las fichas, a media altura */
+  .marcador__digito::after {
+    content: '';
+    position: absolute;
+    inset: calc(50% - 1px) 0 auto;
+    height: 2px;
+    background: color-mix(in srgb, var(--azul) 30%, var(--marino));
+  }
+  .marcador__tira { transition: none !important; }
   }
 </style>

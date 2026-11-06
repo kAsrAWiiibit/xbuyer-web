@@ -72,6 +72,13 @@ const es = {
   'pie.privacidad': 'Privacidad',
   'pie.soporte': 'Ayuda de la app',
   'pie.fotos': 'Fotos',
+  'pie.foto': 'Foto',
+  // Visor de fotos (ampliar al pulsar): solo etiquetas para lectores de pantalla y botones con icono
+  'visor.nombre': 'Fotos ampliadas',
+  'visor.ampliar': 'Ampliar la foto',
+  'visor.cerrar': 'Cerrar',
+  'visor.anterior': 'Foto anterior',
+  'visor.siguiente': 'Foto siguiente',
   'error.titulo': 'Fuera de juego',
   'error.texto': 'Error 404: esta página no existe o ha cambiado de sitio.',
   'error.inicio': 'Ir al inicio',

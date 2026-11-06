@@ -220,15 +220,4 @@ input, textarea, button, select { font: inherit; color: inherit; }
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
 }
 
-/* ── Movimiento ───────────────────────────────────────────────────────────
-   Poco y tranquilo: las partes de cada sección entran una vez, en orden, al asomar. Solo se ocultan
-   cuando el script ya corre (.mov en <html>); sin él, o con movimiento reducido, todo está quieto. */
 :root { --ease-expo: cubic-bezier(0.16, 1, 0.3, 1); }
-
-.mov main > section:not(:first-child) > * {
-  opacity: 0;
-  transform: translateY(16px);
-  transition: opacity 500ms var(--ease-out), transform 700ms var(--ease-expo);
-  transition-delay: calc(var(--i, 0) * 70ms);
-}
-.mov main > section.visto > * { opacity: 1; transform: none; }

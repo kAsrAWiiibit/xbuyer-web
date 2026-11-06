@@ -18,7 +18,7 @@ const dx = area.fondo - penalti;
 const dy = Math.sqrt(radio * radio - dx * dx);
 const vista = medio ? `-1 -1 ${L / 2 + 2} ${A + 2}` : `-1 -1 ${L + 2} ${A + 2}`;
 ---
-<svg class:list={['campo', clase]} data-campo viewBox={vista} preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+<svg class:list={['campo', clase]} data-campo data-centro={`${L / 2} ${c}`} data-medidas={`${L} ${A}`} viewBox={vista} preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
   <g fill="none" stroke="currentColor" stroke-linecap="square">
     <rect style="--o: 0" pathLength="1" x="0" y="0" width={L} height={A} />
     <path style="--o: 1" pathLength="1" d={`M ${L / 2} 0 V ${A}`} />
@@ -40,6 +40,11 @@ const vista = medio ? `-1 -1 ${L / 2 + 2} ${A + 2}` : `-1 -1 ${L + 2} ${A + 2}`;
     <circle cx={penalti} cy={c} r="0.4" />
     <circle cx={L - penalti} cy={c} r="0.4" />
   </g>
+  <!-- El balón: aparece en el centro cuando el campo ya está dibujado y, con ratón, va hacia el puntero -->
+  <g class="campo__balon" data-balon transform={`translate(${L / 2} ${c})`}>
+    <circle r="1.25" fill="var(--amarillo)" />
+    <path d="M0-.55.52-.17.32.45H-.32L-.52-.17Z" fill="var(--marino)" />
+  </g>
 </svg>
 
 <script>
@@ -47,18 +52,58 @@ const vista = medio ? `-1 -1 ${L / 2 + 2} ${A + 2}` : `-1 -1 ${L + 2} ${A + 2}`;
     window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
     (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData === true ||
     !('IntersectionObserver' in window);
-  for (const campo of document.querySelectorAll<SVGElement>('[data-campo]')) {
-    if (quieto || campo.getBoundingClientRect().top < window.innerHeight * 0.85) continue;
+  for (const campo of document.querySelectorAll<SVGSVGElement>('[data-campo]')) {
+    if (quieto) continue;
+    balon(campo);
+    if (campo.getBoundingClientRect().top < window.innerHeight * 0.85) {
+      campo.classList.add('campo--listo');
+      continue;
+    }
     campo.classList.add('campo--espera');
     const obs = new IntersectionObserver(
       ([v]) => {
         if (!v.isIntersecting) return;
         requestAnimationFrame(() => campo.classList.replace('campo--espera', 'campo--traza'));
+        setTimeout(() => campo.classList.add('campo--listo'), 1700);
         obs.disconnect();
       },
       { threshold: 0.25 },
     );
     obs.observe(campo);
+  }
+
+  /** El balón sigue al puntero por el campo (con ratón) o va adonde se toca, rodando; al salir, vuelve al centro */
+  function balon(campo: SVGSVGElement) {
+    const b = campo.querySelector<SVGGElement>('[data-balon]');
+    const zona = campo.parentElement;
+    if (!b || !zona) return;
+    const [cx, cy] = campo.dataset.centro!.split(' ').map(Number);
+    const [L, A] = campo.dataset.medidas!.split(' ').map(Number);
+    let x = cx, y = cy, tx = cx, ty = cy, giro = 0, animando = false;
+    const paso = () => {
+      const nx = x + (tx - x) * 0.06, ny = y + (ty - y) * 0.06;
+      giro += Math.hypot(nx - x, ny - y) * 45 * Math.sign(nx - x || 1);
+      x = nx; y = ny;
+      b.setAttribute('transform', `translate(${x.toFixed(2)} ${y.toFixed(2)}) rotate(${giro.toFixed(1)})`);
+      animando = Math.hypot(tx - x, ty - y) > 0.02;
+      if (animando) requestAnimationFrame(paso);
+    };
+    const apunta = (e: PointerEvent) => {
+      if (!campo.classList.contains('campo--listo')) return;
+      const m = campo.getScreenCTM();
+      if (!m) return;
+      const p = new DOMPoint(e.clientX, e.clientY).matrixTransform(m.inverse());
+      tx = Math.min(Math.max(p.x, 1.5), L - 1.5);
+      ty = Math.min(Math.max(p.y, 1.5), A - 1.5);
+      if (!animando) { animando = true; requestAnimationFrame(paso); }
+    };
+    zona.addEventListener('pointermove', (e) => { if (e.pointerType === 'mouse') apunta(e); }, { passive: true });
+    zona.addEventListener('pointerdown', (e) => { if (e.pointerType !== 'mouse') apunta(e); }, { passive: true });
+    zona.addEventListener('pointerleave', (e) => {
+      if (e.pointerType !== 'mouse') return;
+      tx = cx; ty = cy;
+      if (!animando) { animando = true; requestAnimationFrame(paso); }
+    });
   }
 </script>
 
@@ -76,7 +121,11 @@ const vista = medio ? `-1 -1 ${L / 2 + 2} ${A + 2}` : `-1 -1 ${L + 2} ${A + 2}`;
     transition-delay: calc(var(--o) * 260ms);
   }
   .campo--traza .campo__puntos { transition: opacity 400ms ease 1500ms; }
+  /* El balón solo existe con movimiento: aparece cuando el campo está dibujado */
+  .campo__balon { opacity: 0; transition: opacity 400ms ease; }
+  .campo--listo .campo__balon { opacity: 1; }
   @media (prefers-reduced-motion: reduce) {
+    .campo__balon { display: none; }
     .campo g[stroke] > * { transition: none !important; stroke-dashoffset: 0 !important; }
     .campo__puntos { opacity: 1 !important; }
   }

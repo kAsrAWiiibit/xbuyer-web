@@ -11,6 +11,7 @@ import Foto from '../../components/Foto.astro';
 import Marcador from '../../components/Marcador.astro';
 import Monograma from '../../components/Monograma.astro';
 import Pendiente from '../../components/Pendiente.astro';
+import Visor from '../../components/Visor.astro';
 import { academy, cup } from '../../data/contenido';
 import { t } from '../../i18n/ui';
 import Base from '../../layouts/Base.astro';
@@ -114,8 +115,8 @@ const enlaces = [
       {piezas.map((p) => (
         <li class="pieza">
           <div class="pieza__fotos" data-lado="frente">
-            <Foto hueco={p.hueco as Hueco} proporcion="1 / 1" fondo="marino" sizes="(min-width: 900px) 31vw, 82vw" class="pieza__frente" />
-            {p.espalda && <Foto hueco={p.espalda as Hueco} proporcion="1 / 1" fondo="marino" sizes="(min-width: 900px) 31vw, 82vw" class="pieza__espalda" />}
+            <Foto hueco={p.hueco as Hueco} proporcion="1 / 1" fondo="marino" sizes="(min-width: 900px) 31vw, 82vw" class="pieza__frente" galeria="equipacion" />
+            {p.espalda && <Foto hueco={p.espalda as Hueco} proporcion="1 / 1" fondo="marino" sizes="(min-width: 900px) 31vw, 82vw" class="pieza__espalda" galeria="equipacion" />}
           </div>
           <div class="pieza__pie">
             <h3 class="pieza__nombre">{p.nombre}</h3>
@@ -134,6 +135,7 @@ const enlaces = [
   <section class="bloque contacto" id="contacto" data-capitulo="blanco" aria-labelledby="contacto-titulo">
     <Cupon marca="Xbuyer Team Academy" tituloId="contacto-titulo" instagram={academy.instagram} />
   </section>
+  <Visor />
 </Base>
 
 <script>

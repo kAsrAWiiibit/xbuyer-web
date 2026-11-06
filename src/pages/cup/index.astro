@@ -11,6 +11,7 @@ import Dato from '../../components/Dato.astro';
 import Foto from '../../components/Foto.astro';
 import LogoCup from '../../components/LogoCup.astro';
 import SiCompleto from '../../components/SiCompleto.astro';
+import Visor from '../../components/Visor.astro';
 import { academy, cup } from '../../data/contenido';
 import { t } from '../../i18n/ui';
 import Base from '../../layouts/Base.astro';
@@ -155,7 +156,7 @@ const fotosDe = (ciudad: string, fechas: string) =>
             {fotos.length > 0 && (
               <div>
                 <div class="anterior__fotos">
-                  {fotos.map((g) => <Foto hueco={g.hueco} proporcion="3 / 2" fondo="azul" sizes="(min-width: 900px) 30vw, 100vw" />)}
+                  {fotos.map((g) => <Foto hueco={g.hueco} proporcion="3 / 2" fondo="azul" sizes="(min-width: 900px) 30vw, 82vw" galeria={`cup-${a.ciudad}`} />)}
                 </div>
                 <p class="creditos">{t('es', 'pie.fotos')}: {autores(fotos.map((g) => g.hueco)).join(', ')}</p>
               </div>
@@ -169,6 +170,7 @@ const fotosDe = (ciudad: string, fechas: string) =>
   <section class="bloque contacto" id="contacto" data-capitulo="azul" aria-labelledby="contacto-titulo">
     <Cupon marca="Xbuyer Cup" tituloId="contacto-titulo" titulo={t('es', 'contacto.tituloCup')} instagram={cup.instagram} />
   </section>
+  <Visor />
 </Base>
 
 <script>

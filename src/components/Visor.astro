@@ -1,0 +1,210 @@
+---
+/**
+ * Visor de fotos: las fotos con `galeria` (Foto.astro) se amplían al pulsarlas, con Intro o con la barra
+ * espaciadora. Dentro, flechas (botones, teclado o deslizar con el dedo) para pasar a las demás del mismo
+ * grupo, y Esc o el botón para cerrar. Usa <dialog> (foco atrapado y Esc nativos). La foto grande se pide al
+ * abrir, del mismo srcset, así que no pesa nada hasta entonces. Sin JavaScript, las fotos se ven como siempre.
+ */
+import { t, type Idioma } from '../i18n/ui';
+
+interface Props { idioma?: Idioma }
+const { idioma = 'es' } = Astro.props;
+---
+<dialog class="visor" data-visor aria-label={t(idioma, 'visor.nombre')} data-ampliar={t(idioma, 'visor.ampliar')} data-credito={t(idioma, 'pie.foto')}>
+  <div class="visor__escena" data-escena>
+    <img class="visor__img" data-img alt="" decoding="async" />
+  </div>
+  <p class="visor__pie"><span data-credito-texto></span> <span class="visor__cuenta" data-cuenta></span></p>
+  <button type="button" class="visor__boton visor__cerrar" data-cerrar aria-label={t(idioma, 'visor.cerrar')}>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19" /></svg>
+  </button>
+  <button type="button" class="visor__boton visor__anterior" data-paso="-1" aria-label={t(idioma, 'visor.anterior')}>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4l-8 8 8 8" /></svg>
+  </button>
+  <button type="button" class="visor__boton visor__siguiente" data-paso="1" aria-label={t(idioma, 'visor.siguiente')}>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4l8 8-8 8" /></svg>
+  </button>
+</dialog>
+
+<script>
+  const visor = document.querySelector<HTMLDialogElement>('[data-visor]');
+  if (visor && typeof visor.showModal === 'function') {
+    const img = visor.querySelector<HTMLImageElement>('[data-img]')!;
+    const escena = visor.querySelector<HTMLElement>('[data-escena]')!;
+    const cuenta = visor.querySelector<HTMLElement>('[data-cuenta]')!;
+    const credito = visor.querySelector<HTMLElement>('[data-credito-texto]')!;
+    const reducido = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let grupo: HTMLElement[] = [];
+    let actual = 0;
+    let origen: HTMLElement | null = null;
+
+    const visibles = (nombre: string) =>
+      [...document.querySelectorAll<HTMLElement>(`[data-galeria="${CSS.escape(nombre)}"]`)];
+
+    const pinta = (i: number, dir = 0) => {
+      actual = (i + grupo.length) % grupo.length;
+      const fig = grupo[actual];
+      const fuente = fig.querySelector('img')!;
+      img.srcset = fuente.srcset;
+      img.sizes = '100vw';
+      img.src = fuente.src;
+      img.alt = fuente.alt;
+      credito.textContent = `${visor.dataset.credito}: ${fig.dataset.autor ?? ''}`;
+      cuenta.textContent = grupo.length > 1 ? `${actual + 1} / ${grupo.length}` : '';
+      visor.classList.toggle('visor--solo', grupo.length < 2);
+      if (dir && !reducido.matches) {
+        img.animate(
+          [{ transform: `translateX(${dir * 48}px)`, opacity: 0 }, { transform: 'none', opacity: 1 }],
+          { duration: 280, easing: 'cubic-bezier(0.23, 1, 0.32, 1)' },
+        );
+      } else if (dir) {
+        img.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 180, easing: 'ease' });
+      }
+    };
+
+    const abre = (fig: HTMLElement) => {
+      // Todas las del grupo, en el orden de la página: de cada camiseta, frente y espalda
+      grupo = visibles(fig.dataset.galeria!);
+      origen = fig;
+      pinta(grupo.indexOf(fig));
+      document.documentElement.classList.add('visor-abierto');
+      visor.showModal();
+    };
+
+    visor.addEventListener('close', () => {
+      document.documentElement.classList.remove('visor-abierto');
+      origen?.focus({ preventScroll: true });
+    });
+    visor.querySelector('[data-cerrar]')!.addEventListener('click', () => visor.close());
+    for (const b of visor.querySelectorAll<HTMLButtonElement>('[data-paso]'))
+      b.addEventListener('click', () => pinta(actual + Number(b.dataset.paso), Number(b.dataset.paso)));
+    // Pulsar fuera de la foto cierra
+    visor.addEventListener('click', (e) => { if (e.target === visor || e.target === escena) visor.close(); });
+    visor.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') pinta(actual + 1, 1);
+      else if (e.key === 'ArrowLeft') pinta(actual - 1, -1);
+    });
+
+    // Deslizar con el dedo: la foto sigue al dedo y, con un gesto rápido o largo, pasa a la siguiente
+    let x0 = 0, t0 = 0, arrastra = false;
+    escena.addEventListener('pointerdown', (e) => {
+      if (e.pointerType === 'mouse' || grupo.length < 2 || arrastra) return;
+      arrastra = true; x0 = e.clientX; t0 = performance.now();
+    });
+    escena.addEventListener('pointermove', (e) => {
+      if (!arrastra) return;
+      img.style.transform = `translateX(${e.clientX - x0}px)`;
+    });
+    const suelta = (e: PointerEvent) => {
+      if (!arrastra) return;
+      arrastra = false;
+      const dx = e.clientX - x0;
+      const velocidad = Math.abs(dx) / (performance.now() - t0);
+      img.style.transform = '';
+      if (Math.abs(dx) > 60 || velocidad > 0.4) pinta(actual + (dx < 0 ? 1 : -1), dx < 0 ? 1 : -1);
+    };
+    escena.addEventListener('pointerup', suelta);
+    escena.addEventListener('pointercancel', suelta);
+
+    // Cada foto de una galería, un botón que la amplía
+    for (const fig of document.querySelectorAll<HTMLElement>('[data-galeria]')) {
+      const alt = fig.querySelector('img')?.alt ?? '';
+      fig.tabIndex = 0;
+      fig.setAttribute('role', 'button');
+      fig.setAttribute('aria-label', `${visor.dataset.ampliar}: ${alt}`);
+      fig.dataset.ampliable = '';
+      fig.addEventListener('click', () => abre(fig));
+      fig.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); abre(fig); }
+      });
+    }
+  }
+</script>
+
+<style>
+  .visor {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: var(--marino);
+    color: var(--blanco);
+    overflow: hidden;
+    --acento: var(--amarillo);
+  }
+  .visor::backdrop { background: var(--marino); }
+  .visor[open] {
+    display: grid;
+    grid-template-rows: 1fr auto;
+    animation: visor-entra 240ms var(--ease-out);
+  }
+  @keyframes visor-entra { from { opacity: 0; } }
+  .visor__escena {
+    display: grid;
+    place-items: center;
+    min-height: 0;
+    overflow: hidden;
+    padding: 72px var(--margen) 8px;
+    touch-action: pan-y;
+  }
+  .visor__img {
+    max-width: 100%;
+    max-height: calc(100svh - 136px);
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+  .visor[open] .visor__img { animation: visor-foto 320ms var(--ease-out); }
+  @keyframes visor-foto { from { opacity: 0; transform: scale(0.96); } }
+  .visor__pie {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    max-width: none;
+    padding: 12px var(--margen) 20px;
+    font-size: var(--step-small);
+    opacity: 0.85;
+  }
+  .visor__cuenta { font-variant-numeric: tabular-nums; }
+  .visor__boton {
+    position: absolute;
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    border: 0;
+    border-radius: 0;
+    background: var(--amarillo);
+    color: var(--marino);
+    cursor: pointer;
+    transition: transform 160ms var(--ease-out), background-color 200ms ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .visor__boton:active { transform: scale(0.94); }
+  .visor__boton svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: square; }
+  @media (hover: hover) and (pointer: fine) {
+    .visor__boton:hover { background: var(--blanco); }
+  }
+  .visor__cerrar { top: 8px; right: var(--margen); }
+  .visor__anterior, .visor__siguiente { top: 50%; translate: 0 -50%; }
+  .visor__anterior { left: var(--margen); }
+  .visor__siguiente { right: var(--margen); }
+  .visor--solo .visor__anterior, .visor--solo .visor__siguiente { display: none; }
+  @media (max-width: 599px) {
+    /* En el móvil, las flechas abajo, al alcance del pulgar */
+    .visor__anterior, .visor__siguiente { top: auto; bottom: 52px; translate: none; }
+    .visor__escena { padding-bottom: 72px; }
+    .visor__img { max-height: calc(100svh - 200px); }
+  }
+  :global(html.visor-abierto) { overflow: hidden; }
+  @media (prefers-reduced-motion: reduce) {
+    .visor[open] .visor__img { animation: visor-entra 200ms ease; }
+  }
+</style>

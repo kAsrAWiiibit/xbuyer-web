@@ -1,0 +1,227 @@
+/* ── Movimiento ───────────────────────────────────────────────────────────
+   Tiempos y curvas (emil-design-eng): entradas con salida fuerte (--ease-out, --ease-expo), lo que se mueve
+   en pantalla con --ease-in-out, nada de ease-in. Respuesta al puntero 160–280 ms; entradas de una vez,
+   600–1000 ms. Con «Reducir movimiento», solo fundidos: sin cursor, inclinaciones, imanes, parallax ni
+   desplazamientos. */
+
+/* Entradas: las partes de cada sección aparecen una vez, en orden, al asomar. Solo se ocultan cuando el
+   script ya corre (.entradas en <html>); sin él, todo está quieto y a la vista. */
+.entradas main > section:not(:first-child) > * {
+  opacity: 0;
+  transition: opacity 500ms var(--ease-out), transform 700ms var(--ease-expo);
+  transition-delay: calc(var(--i, 0) * 70ms);
+}
+.entradas main > section.visto > * { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: no-preference) {
+  .entradas main > section:not(:first-child) > * { transform: translateY(16px); }
+  .entradas main > section.visto > * { transform: none; }
+}
+
+/* Títulos de sección: suben palabra a palabra desde su máscara (el título no se funde entero) */
+.entradas main > section:not(:first-child) > .titulo-palabras { opacity: 1; transform: none; }
+.palabra {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  /* Aire para las tildes de las mayúsculas (QUIÉNES, EDICIÓN) y las colas */
+  padding: 0.14em 0.04em 0.08em;
+  margin: -0.14em -0.04em -0.08em;
+}
+.palabra > span {
+  display: inline-block;
+  transform: translateY(110%);
+  transition: transform 850ms var(--ease-expo);
+  transition-delay: calc(var(--p, 0) * 60ms + 60ms);
+}
+.titulo-palabras.visto .palabra > span { transform: none; }
+
+/* Portada: las líneas del título suben desde su máscara al cargar, solo en CSS (.mov la pone el <head>
+   antes de pintar; si se llega con transición de página, la transición ya hace de entrada) */
+@media (prefers-reduced-motion: no-preference) {
+  .mov:not(.llega) :is(.portada__titulo, .camino__nombre) > span {
+    animation: linea-sube 900ms var(--ease-expo) both;
+    animation-delay: calc(var(--l, 0) * 90ms + 40ms);
+  }
+  :is(.portada__titulo, .camino__nombre) > span + span { --l: 1; }
+  .camino + .camino .camino__nombre > span { --l: 2; }
+  .camino + .camino .camino__nombre > span + span { --l: 3; }
+}
+@keyframes linea-sube {
+  from { translate: 0 100%; clip-path: inset(-100% -5% 100% -5%); }
+  to { translate: 0 0; clip-path: inset(-15% -5% -15% -5%); }
+}
+
+/* Fotos: se revelan con el corte diagonal de la X sobre su color, cuando ya han cargado */
+@media (prefers-reduced-motion: no-preference) {
+  .foto--revela img {
+    clip-path: polygon(0 0, 0 0, -40% 100%, 0 100%);
+    transition: clip-path 1000ms var(--ease-in-out);
+  }
+  .foto--revela.foto--vista img { clip-path: polygon(0 0, 140% 0, 100% 100%, 0 100%); }
+}
+
+/* Marcas cuadradas de las listas: giran media vuelta al entrar, una detrás de otra */
+@media (prefers-reduced-motion: no-preference) {
+  .entradas .visto :is(.diferente__lista, .incluye__lista) > li::before {
+    animation: marca-gira 700ms var(--ease-out) both;
+    animation-delay: calc(var(--n, 0) * 70ms + 250ms);
+  }
+}
+@keyframes marca-gira { from { rotate: -180deg; scale: 0.4; opacity: 0; } }
+
+/* Parallax suave, sin JavaScript: la foto se desplaza dentro de su corte y el monograma o el campo van a
+   otra velocidad que la página. Solo donde el navegador lo hace fuera del hilo principal. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    :is(.portada__foto, .anterior__fotos > .foto):not(.foto--vacia) img {
+      scale: 1.1;
+      animation: foto-paralaje linear both;
+      animation-timeline: view();
+    }
+    .portada__xb {
+      animation: capa-lenta linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 100vh;
+    }
+    .edicion__campo {
+      animation: campo-paralaje linear both;
+      animation-timeline: view();
+    }
+  }
+}
+@keyframes foto-paralaje { from { translate: 0 -4%; } to { translate: 0 4%; } }
+@keyframes capa-lenta { to { translate: 0 22%; } }
+@keyframes campo-paralaje { from { translate: 0 8%; } to { translate: 0 -8%; } }
+
+/* Inclinación 3D con brillo (fotos, camisetas y torneos del palmarés) */
+.inclina { transform-origin: 50% 50%; }
+.inclina--activa { will-change: transform; }
+.brillo {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(circle at var(--bx, 50%) var(--by, 50%), rgb(255 255 255 / 0.24), rgb(255 255 255 / 0) 55%);
+  opacity: 0;
+  transition: opacity 280ms ease;
+}
+.inclina--activa .brillo { opacity: 1; }
+/* El torneo, como una placa: un fondo un tono más claro aparece detrás al pasar o tocar */
+.torneo.inclina { position: relative; isolation: isolate; }
+.torneo.inclina::before {
+  content: '';
+  position: absolute;
+  inset: -18px -22px;
+  z-index: -1;
+  background: color-mix(in srgb, var(--azul) 22%, var(--marino));
+  opacity: 0;
+  transition: opacity 240ms ease;
+}
+.torneo.inclina > .brillo { inset: -18px -22px; }
+.torneo.inclina--activa::before { opacity: 1; }
+
+/* Fotos que se amplían: el foco, dentro del corte, y el cursor de mano sin el cursor propio */
+[data-ampliable] { cursor: zoom-in; }
+[data-ampliable]:focus-visible { outline: none; }
+[data-ampliable]:focus-visible::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  box-shadow: inset 0 0 0 4px var(--amarillo), inset 0 0 0 7px var(--marino);
+}
+
+/* Galería de Madrid en el móvil: una tira que se desliza con el dedo (scroll nativo con imán); la última
+   foto asoma por el borde para invitar a deslizar */
+@media (max-width: 599px) {
+  .anterior__fotos {
+    display: flex !important;
+    gap: 12px !important;
+    margin-inline: calc(var(--margen) * -1);
+    padding-inline: var(--margen);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--margen);
+    scrollbar-width: none;
+  }
+  .anterior__fotos::-webkit-scrollbar { display: none; }
+  .anterior__fotos > .foto { flex: 0 0 84%; scroll-snap-align: start; }
+}
+
+/* Microanimaciones de los logos: el monograma de la cabecera y los de la portada se mueven al pasar */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .cabecera__xb { transition: rotate 280ms var(--ease-out), scale 280ms var(--ease-out); }
+  .cabecera__marca:hover .cabecera__xb { rotate: -8deg; scale: 1.08; }
+  .camino__xb { transition: translate 400ms var(--ease-out), rotate 400ms var(--ease-out); }
+  .camino:hover .camino__xb { translate: 0 -6px; rotate: -6deg; }
+  .pie__xb { transition: rotate 400ms var(--ease-out); }
+  .pie__marca:hover .pie__xb { rotate: 8deg; }
+}
+
+/* ── Cursor propio (solo con ratón y movimiento) ────────────────────────── */
+.cursor-xb, .cursor-xb * { cursor: none !important; }
+.cursor-xb :is(input, textarea) { cursor: text !important; }
+.cursor-xb select { cursor: auto !important; }
+.cursor, .cursor__balon {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 2147483000;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+.cursor-visible .cursor, .cursor-visible .cursor__balon { opacity: 1; }
+.cursor { width: 36px; height: 36px; margin: -18px 0 0 -18px; }
+.cursor::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  transition: scale 240ms var(--ease-out), background-color 200ms ease;
+}
+.cursor-enlace .cursor::before { scale: 1.5; background: color-mix(in srgb, currentColor 16%, transparent); }
+.cursor-foto .cursor::before { scale: 2; background: currentColor; }
+.cursor-pulsa .cursor::before { scale: 0.8; }
+.cursor-pulsa.cursor-enlace .cursor::before { scale: 1.3; }
+.cursor__mas {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: var(--sobre, #fff);
+  stroke-width: 2.5;
+  opacity: 0;
+  scale: 0.6;
+  transition: opacity 160ms ease, scale 240ms var(--ease-out);
+}
+.cursor-foto .cursor__mas { opacity: 1; scale: 1; }
+.cursor__balon { width: 12px; height: 12px; margin: -6px 0 0 -6px; }
+.cursor__balon svg { width: 100%; height: 100%; }
+.cursor-foto .cursor__balon, .cursor-texto .cursor, .cursor-texto .cursor__balon { opacity: 0 !important; }
+/* El visor está en la capa superior, por encima del cursor propio: allí vuelve el del sistema */
+.cursor-xb.visor-abierto, .cursor-xb.visor-abierto * { cursor: auto !important; }
+.cursor-xb.visor-abierto :is(button, [data-escena]) { cursor: pointer !important; }
+.visor-abierto .cursor, .visor-abierto .cursor__balon { opacity: 0 !important; }
+
+/* ── Transiciones entre páginas (View Transitions nativas, sin JavaScript) ──
+   El bloque amarillo o azul de la portada se convierte en la portada de /academy/ o /cup/, con su título y
+   su logo; entre las demás páginas, un fundido corto. Donde no hay soporte, la navegación es la de siempre. */
+@view-transition { navigation: auto; }
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: 260ms; animation-timing-function: ease; }
+::view-transition-group(*) { animation-duration: 520ms; animation-timing-function: var(--ease-in-out); }
+@media (prefers-reduced-motion: no-preference) {
+  .camino[data-capitulo='amarillo'], .portada[data-capitulo='amarillo'] { view-transition-name: capitulo-academy; }
+  .camino[data-capitulo='azul'], .portada[data-capitulo='azul'] { view-transition-name: capitulo-cup; }
+  .camino[data-capitulo='amarillo'] .camino__nombre, .portada[data-capitulo='amarillo'] .portada__titulo { view-transition-name: titulo-academy; }
+  .camino[data-capitulo='azul'] .camino__nombre, .portada[data-capitulo='azul'] .portada__titulo { view-transition-name: titulo-cup; }
+  .camino__xb--cup, .portada__logo { view-transition-name: logo-cup; }
+  .cabecera { view-transition-name: cabecera; }
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*) { animation-duration: 0s; }
+}
