@@ -1,0 +1,277 @@
+---
+/**
+ * Página de un torneo 2027 de la academia (src/data/torneos-2027.ts): arriba nombre, fechas, lugar, precio y el
+ * botón de inscripción; debajo, qué incluye, categorías con los años de nacimiento y el programa día a día.
+ */
+import Cabecera from '../../../components/Cabecera.astro';
+import Dato from '../../../components/Dato.astro';
+import LogoTorneo from '../../../components/LogoTorneo.astro';
+import SiCompleto from '../../../components/SiCompleto.astro';
+import { academy, cup, entidad } from '../../../data/contenido';
+import { torneos, type Torneo } from '../../../data/torneos-2027';
+import { t } from '../../../i18n/ui';
+import Base from '../../../layouts/Base.astro';
+import { dia, euros, rango } from '../../../lib/fechas';
+import { completo, esPendiente } from '../../../lib/pendiente';
+import { ruta } from '../../../lib/ruta';
+import { enlaceInscripcion, fondoLogo, menuTorneos, nombreCompleto } from '../../../lib/torneos';
+
+export function getStaticPaths() {
+  return torneos.map((torneo) => ({ params: { torneo: torneo.slug }, props: { torneo } }));
+}
+interface Props { torneo: Torneo }
+const { torneo: tr } = Astro.props;
+
+const nombre = nombreCompleto(tr);
+const fechas = rango(tr.inicio, tr.fin);
+const inscripcion = enlaceInscripcion(tr.formulario, t('es', 'torneo.asunto', { torneo: `${nombre} 2027` }), Astro.url.pathname);
+const externo = !inscripcion.startsWith('mailto:');
+
+const categorias = completo(tr.categorias) ? tr.categorias : [];
+const formatos = [...new Set(categorias.map((g) => g.formato))];
+const programa = completo(tr.programa) ? tr.programa : [];
+
+const academia = (ancla: string) => ruta(`/academy/${ancla}`);
+const enlaces = [
+  { href: academia('#quienes'), texto: t('es', 'nav.quienes') },
+  { href: academia('#torneos'), texto: t('es', 'nav.torneos'), ...menuTorneos(tr.slug), todos: { href: academia('#torneos'), texto: t('es', 'nav.verTodos') } },
+  { href: academia('#palmares'), texto: t('es', 'nav.palmares') },
+  { href: academia('#equipacion'), texto: t('es', 'nav.equipacion') },
+  { href: academia('#contacto'), texto: t('es', 'nav.contacto') },
+];
+
+// Datos estructurados del torneo para los buscadores
+const evento = {
+  '@context': 'https://schema.org',
+  '@type': 'SportsEvent',
+  name: `${nombre} 2027`,
+  sport: 'Fútbol',
+  startDate: tr.inicio,
+  endDate: tr.fin,
+  eventStatus: 'https://schema.org/EventScheduled',
+  eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+  location: { '@type': 'Place', name: tr.lugar, address: { '@type': 'PostalAddress', addressLocality: tr.lugar } },
+  offers: { '@type': 'Offer', price: tr.precio, priceCurrency: 'EUR', url: Astro.site ? new URL(Astro.url.pathname, Astro.site).href : undefined },
+};
+---
+<Base
+  titulo={`${nombre} 2027 · ${academy.nombre}`}
+  descripcion={`${nombre}: ${fechas}, ${tr.lugar}. ${euros(tr.precio)}${tr.precioNota ? ` (${tr.precioNota.toLowerCase()})` : ''}. ${tr.incluye.slice(3, 6).join(', ')}.`}
+  colorTema="#FFED00"
+  compartir="academy"
+>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(evento)} />
+  <Cabecera slot="cabecera" marca={academy.nombre} capitulo="amarillo" enlaces={enlaces} otra={{ href: ruta('/cup/'), texto: cup.nombre }} />
+
+  <section class="ficha" data-capitulo="amarillo" aria-labelledby="ficha-titulo">
+    <a class="ficha__volver enlace" href={academia('#torneos')}>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12H5M11 6l-6 6 6 6" /></svg>{t('es', 'torneo.volver')}
+    </a>
+    <div class="ficha__cuerpo">
+      <div class="ficha__texto">
+        <h1 id="ficha-titulo" class="ficha__nombre">{tr.nombre}{tr.edicion && <span class="ficha__edicion">{tr.edicion}</span>}</h1>
+        <dl class="ficha__datos">
+          <div><dt class="solo-lector">Fechas</dt><dd class="ficha__fechas"><time datetime={tr.inicio}>{fechas}</time></dd></div>
+          <div><dt class="solo-lector">Lugar</dt><dd class="ficha__lugar">{tr.lugar}</dd></div>
+          <div class="ficha__precio">
+            <dt class="solo-lector">Precio</dt>
+            <dd><span class="ficha__euros">{euros(tr.precio)}</span> <span class="ficha__por">{t('es', 'torneo.porJugador')}{tr.precioNota && <>. {tr.precioNota}</>}</span></dd>
+          </div>
+        </dl>
+        <a class="boton ficha__boton" href={inscripcion} {...(externo ? { rel: 'noopener', target: '_blank' } : {})}>{t('es', 'torneo.inscribete')}</a>
+      </div>
+      {tr.logo && <LogoTorneo logo={tr.logo} nombre={tr.nombre} fondo={fondoLogo(tr.logo)} class="ficha__logo" sizes="(min-width: 900px) 30vw, 60vw" />}
+    </div>
+  </section>
+
+  <section class="bloque incluye" data-capitulo="blanco" aria-labelledby="incluye-titulo">
+    <h2 id="incluye-titulo" class="bloque__titulo">{t('es', 'torneo.incluye')}</h2>
+    <ul role="list" class="incluye__lista">
+      {tr.incluye.map((i) => <li>{i}</li>)}
+    </ul>
+    {tr.destacado && <p class="incluye__destacado">{tr.destacado}</p>}
+    <a class="enlace incluye__equipacion" href={academia('#equipacion')}>{t('es', 'torneo.equipacion')}</a>
+  </section>
+
+  <SiCompleto datos={[tr.categorias]} donde={`${tr.slug}: categorías`}>
+    <section class="bloque categorias" data-capitulo="marino" aria-labelledby="categorias-titulo">
+      <h2 id="categorias-titulo" class="bloque__titulo">{t('es', 'torneo.categorias')}</h2>
+      {esPendiente(tr.categorias) && <p><Dato v={tr.categorias} donde={`${tr.slug}: categorías`} /></p>}
+      {formatos.map((f) => (
+        <div class="formato">
+          <h3 class="formato__nombre">{f}</h3>
+          <div class="formato__grupos">
+            {categorias.filter((g) => g.formato === f).map((g) => (
+              <div class="grupo">
+                <h4 class="grupo__genero">{g.genero === 'Masculina' ? t('es', 'torneo.masculina') : t('es', 'torneo.femenina')}</h4>
+                <ul role="list" class="grupo__lista">
+                  {g.categorias.map((c) => (
+                    <li class="categoria"><span class="categoria__codigo">{c.codigo}</span> <span class="categoria__nacimiento">{c.nacimiento}</span></li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </section>
+  </SiCompleto>
+
+  <SiCompleto datos={[tr.programa]} donde={`${tr.slug}: programa`}>
+    <section class="bloque programa" data-capitulo="azul" aria-labelledby="programa-titulo">
+      <h2 id="programa-titulo" class="bloque__titulo">{t('es', 'torneo.programa')}</h2>
+      {esPendiente(tr.programa) && <p><Dato v={tr.programa} donde={`${tr.slug}: programa`} /></p>}
+      <ol role="list" class="programa__dias">
+        {programa.map((d, i) => (
+          <li class="dia">
+            <p class="dia__numero" aria-hidden="true">{String(i + 1).padStart(2, '0')}</p>
+            <h3 class="dia__fecha"><time datetime={d.fecha}>{dia(d.fecha)}</time></h3>
+            <ul role="list" class="dia__actividades">
+              {d.actividades.map((a) => <li>{a}</li>)}
+            </ul>
+          </li>
+        ))}
+      </ol>
+      {tr.notas?.map((n) => <p class="programa__nota">{completo(n) ? n : <Dato v={n} donde={`${tr.slug}: nota del programa`} />}</p>)}
+    </section>
+  </SiCompleto>
+
+  <section class="bloque cierre" data-capitulo="amarillo" aria-labelledby="cierre-titulo">
+    <h2 id="cierre-titulo" class="bloque__titulo">{t('es', 'torneo.cierre')}</h2>
+    <a class="boton" href={inscripcion} {...(externo ? { rel: 'noopener', target: '_blank' } : {})}>{t('es', 'torneo.inscribete')}</a>
+    <p class="cierre__dudas" set:html={t('es', 'torneo.cierreTexto', { email: `<a class="enlace" href="mailto:${entidad.email}?subject=${encodeURIComponent(nombre)}">${entidad.email}</a>` })} />
+  </section>
+</Base>
+
+<style>
+  .ficha { padding: clamp(24px, 4vh, 48px) var(--margen) clamp(56px, 8vw, 112px); }
+  .ficha__volver { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font-weight: 500; }
+  .ficha__volver svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: square; }
+  .ficha__cuerpo {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    column-gap: 16px;
+    align-items: center;
+    margin-top: clamp(24px, 4vw, 56px);
+  }
+  .ficha__texto { grid-column: 1 / 8; display: grid; justify-items: start; gap: 28px; }
+  .ficha__nombre {
+    font-size: clamp(3.5rem, 1rem + 8vw, 10rem);
+    line-height: 0.85;
+    text-transform: uppercase;
+  }
+  .ficha__edicion { display: block; color: var(--azul); }
+  .ficha__datos { display: grid; gap: 6px; margin: 0; }
+  .ficha__datos dd { margin: 0; }
+  .ficha__fechas {
+    font-family: var(--fuente-display);
+    font-size: var(--step-sub);
+    font-weight: 700;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+  .ficha__lugar { font-size: var(--step-lead); font-weight: 500; }
+  .ficha__precio { margin-top: 14px; }
+  .ficha__euros {
+    font-family: var(--fuente-display);
+    font-size: var(--step-head);
+    font-weight: 700;
+    line-height: 0.9;
+    font-variant-numeric: tabular-nums;
+    color: var(--azul);
+  }
+  .ficha__por { font-size: var(--step-body); font-weight: 500; }
+  .ficha__logo { grid-column: 9 / 13; }
+
+  .incluye__lista {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px 32px;
+    margin-top: 48px;
+    font-size: var(--step-lead);
+    line-height: 1.3;
+  }
+  .incluye__lista li { position: relative; padding-left: 28px; max-width: 30ch; }
+  /* Marca de lista: un cuadrado plano del color de acento */
+  .incluye__lista li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.45em;
+    width: 12px;
+    height: 12px;
+    background: var(--acento);
+  }
+  .incluye__destacado {
+    margin-top: 48px;
+    max-width: 30ch;
+    font-family: var(--fuente-display);
+    font-size: var(--step-sub);
+    font-weight: 700;
+    line-height: 1;
+    text-transform: uppercase;
+    color: var(--azul);
+  }
+  .incluye__equipacion { display: inline-flex; align-items: center; min-height: 44px; margin-top: 32px; font-weight: 500; }
+
+  .formato { margin-top: 48px; }
+  .formato__nombre { font-size: var(--step-sub); text-transform: uppercase; color: var(--amarillo); }
+  .formato__grupos { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 20px; }
+  .grupo__genero {
+    font-family: var(--fuente-texto);
+    font-size: var(--step-body);
+    font-weight: 500;
+    letter-spacing: 0;
+    line-height: 1.3;
+  }
+  .grupo__lista { display: grid; margin-top: 8px; }
+  .categoria {
+    display: grid;
+    grid-template-columns: 4ch 1fr;
+    align-items: baseline;
+    gap: 16px;
+    padding-block: 10px;
+    border-top: 1px solid color-mix(in srgb, var(--blanco) 20%, transparent);
+  }
+  .categoria__codigo {
+    font-family: var(--fuente-display);
+    font-size: var(--step-lead);
+    font-weight: 700;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .programa__dias {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-top: 48px;
+  }
+  .dia { padding: 24px 20px 28px; background: var(--azul-hondo); }
+  .dia__numero {
+    font-family: var(--fuente-display);
+    font-size: var(--step-head);
+    font-weight: 700;
+    line-height: 0.8;
+    font-variant-numeric: tabular-nums;
+    color: var(--amarillo);
+  }
+  .dia__fecha { margin-top: 16px; font-size: var(--step-lead); text-transform: uppercase; }
+  .dia__actividades { display: grid; gap: 6px; margin-top: 12px; }
+  .programa__nota { margin-top: 32px; font-size: var(--step-lead); line-height: 1.35; max-width: 50ch; }
+
+  .cierre { display: grid; justify-items: start; gap: 28px; }
+  .cierre__dudas { font-size: var(--step-lead); line-height: 1.35; }
+
+  @media (max-width: 899px) {
+    .ficha__texto { grid-column: 1 / -1; }
+    .ficha__logo { grid-column: 1 / -1; grid-row: 1; width: min(60%, 280px); margin-bottom: 32px; }
+    .incluye__lista { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 599px) {
+    .ficha__nombre { font-size: 15vw; }
+    .incluye__lista, .formato__grupos { grid-template-columns: 1fr; }
+    .ficha__logo { width: 44%; margin-bottom: 24px; }
+    .ficha__texto { gap: 20px; }
+  }
+</style>

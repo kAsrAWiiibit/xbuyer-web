@@ -1,20 +1,22 @@
 ---
 /**
  * Barra fija y sencilla: monograma y marca de la página (vuelve al inicio), los apartados de la
- * página en escritorio y, siempre a la vista, el enlace a la otra marca.
+ * página y, siempre a la vista, el enlace a la otra marca. Un apartado con `hijos` es un desplegable
+ * (<details>: se abre y se cierra sin JavaScript; con él, se cierra al pulsar fuera o con Esc).
  */
 import { ruta } from '../lib/ruta';
 import { t, type Idioma } from '../i18n/ui';
 import LogoCup from './LogoCup.astro';
 import Monograma from './Monograma.astro';
 
-interface Enlace { href: string; texto: string }
+interface Enlace { href: string; texto: string; /** Segunda línea en el desplegable (fechas…) */ detalle?: string; actual?: boolean }
+interface Apartado extends Enlace { hijos?: Enlace[]; /** Último enlace del desplegable («Ver todos») */ todos?: Enlace }
 interface Props {
   marca: string;
   /** Color de la barra: el de la marca de la página */
   capitulo: 'azul' | 'amarillo' | 'marino';
   /** Apartados de esta página (solo en escritorio) */
-  enlaces?: Enlace[];
+  enlaces?: Apartado[];
   /** La otra marca */
   otra: Enlace;
   idioma?: Idioma;
@@ -32,12 +34,50 @@ const { marca, capitulo, enlaces = [], otra, idioma = 'es', logo = 'academy' } =
   {enlaces.length > 0 && (
     <nav class="cabecera__nav" aria-label="En esta página">
       <ul role="list">
-        {enlaces.map((e) => <li><a href={e.href}>{e.texto}</a></li>)}
+        {enlaces.map((e) =>
+          e.hijos ? (
+            <li>
+              <details class="menu" data-menu>
+                <summary class="menu__boton">{e.texto}<svg class="menu__flecha" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4l4 4 4-4" /></svg></summary>
+                <div class="menu__panel" data-capitulo={capitulo === 'amarillo' ? 'marino' : 'amarillo'}>
+                  <ul role="list" class="menu__lista">
+                    {e.hijos.map((h) => (
+                      <li>
+                        <a class="menu__enlace" href={h.href} aria-current={h.actual ? 'page' : undefined}>
+                          <span class="menu__texto">{h.texto}</span>
+                          {h.detalle && <span class="menu__detalle">{h.detalle}</span>}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                  {e.todos && <a class="menu__todos enlace" href={e.todos.href}>{e.todos.texto}</a>}
+                </div>
+              </details>
+            </li>
+          ) : (
+            <li><a href={e.href}>{e.texto}</a></li>
+          ),
+        )}
       </ul>
     </nav>
   )}
   <a class="cabecera__otra" href={otra.href}>{otra.texto}</a>
 </header>
+
+<script>
+  // Desplegables: uno abierto a la vez; se cierran al pulsar fuera, al elegir un enlace o con Esc
+  const menus = [...document.querySelectorAll<HTMLDetailsElement>('[data-menu]')];
+  for (const m of menus) {
+    m.addEventListener('toggle', () => { if (m.open) for (const o of menus) if (o !== m) o.open = false; });
+    m.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && m.open) { m.open = false; m.querySelector('summary')!.focus(); }
+    });
+    for (const a of m.querySelectorAll('a')) a.addEventListener('click', () => { m.open = false; });
+  }
+  document.addEventListener('click', (e) => {
+    for (const m of menus) if (m.open && !m.contains(e.target as Node)) m.open = false;
+  });
+</script>
 
 <style>
   .cabecera {
@@ -67,8 +107,8 @@ const { marca, capitulo, enlaces = [], otra, idioma = 'es', logo = 'academy' } =
   .cabecera__xb { width: 40px; height: auto; }
   /* Más alto que ancho que el monograma: misma altura óptica */
   .cabecera__xb--cup { width: 36px; }
-  .cabecera__nav ul { display: flex; gap: 28px; margin: 0; }
-  .cabecera__nav a {
+  .cabecera__nav > ul { display: flex; align-items: center; gap: 28px; margin: 0; }
+  .cabecera__nav > ul > li > a {
     display: inline-block;
     padding-block: 10px;
     font-weight: 500;
@@ -79,7 +119,7 @@ const { marca, capitulo, enlaces = [], otra, idioma = 'es', logo = 'academy' } =
     transition: text-decoration-color 180ms ease;
   }
   @media (hover: hover) and (pointer: fine) {
-    .cabecera__nav a:hover { text-decoration-color: currentColor; }
+    .cabecera__nav > ul > li > a:hover { text-decoration-color: currentColor; }
   }
   /* La otra marca: siempre visible, como un botón en la tinta de la barra */
   .cabecera__otra {
@@ -99,6 +139,53 @@ const { marca, capitulo, enlaces = [], otra, idioma = 'es', logo = 'academy' } =
   }
   .cabecera__otra:active { transform: scale(0.97); }
 
+  /* Desplegable */
+  .menu { position: relative; }
+  .menu__boton {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding-block: 10px;
+    font-weight: 500;
+    cursor: pointer;
+    list-style: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .menu__boton::-webkit-details-marker { display: none; }
+  .menu__flecha { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 2; transition: rotate 200ms var(--ease-out); }
+  .menu[open] .menu__flecha { rotate: 180deg; }
+  .menu__panel {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: -20px;
+    z-index: 60;
+    width: max-content;
+    min-width: 300px;
+    max-width: min(440px, calc(100vw - var(--margen) * 2));
+    padding: 12px 20px 16px;
+  }
+  .menu[open] .menu__panel { animation: menu-abre 180ms var(--ease-out); }
+  @keyframes menu-abre { from { opacity: 0; translate: 0 -6px; } }
+  .menu__lista { display: grid; margin: 0; }
+  .menu__enlace {
+    display: grid;
+    gap: 2px;
+    padding: 10px 0;
+    text-decoration: none;
+    border-bottom: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+  }
+  .menu__texto { font-family: var(--fuente-display); font-size: var(--step-lead); font-weight: 700; line-height: 1; text-transform: uppercase; }
+  .menu__detalle { font-size: var(--step-small); font-variant-numeric: tabular-nums; opacity: 0.85; }
+  .menu__enlace[aria-current='page'] .menu__texto { color: var(--tinta-2); }
+  @media (hover: hover) and (pointer: fine) {
+    .menu__enlace:hover .menu__texto { color: var(--tinta-2); }
+  }
+  .menu__todos { display: inline-flex; align-items: center; min-height: 44px; margin-top: 6px; font-weight: 500; }
+  @media (prefers-reduced-motion: reduce) {
+    .menu[open] .menu__panel { animation: none; }
+    .menu__flecha { transition: none; }
+  }
+
   @media (max-width: 899px) {
     /* Los apartados bajan a una segunda fila, siempre a la vista (se desliza si no caben) */
     :global(:root:has(.cabecera__nav)) { --cabecera: 108px; }
@@ -113,11 +200,27 @@ const { marca, capitulo, enlaces = [], otra, idioma = 'es', logo = 'academy' } =
       scrollbar-width: none;
     }
     .cabecera__nav::-webkit-scrollbar { display: none; }
-    .cabecera__nav ul { gap: 20px; white-space: nowrap; }
-    .cabecera__nav a { padding-block: 8px 10px; min-height: 44px; display: inline-flex; align-items: center; font-size: var(--step-small); text-decoration-color: currentColor; text-decoration-thickness: 1px; }
+    .cabecera__nav > ul { gap: 20px; }
+    /* `li { text-wrap: pretty }` (global.css) volvería a partir las líneas */
+    .cabecera__nav > ul > li { white-space: nowrap; }
+    .cabecera__nav > ul > li > a { padding-block: 8px 10px; min-height: 44px; display: inline-flex; align-items: center; font-size: var(--step-small); text-decoration-color: currentColor; text-decoration-thickness: 1px; }
     .cabecera__marca { font-size: var(--step-body); }
     .cabecera__xb { width: 32px; }
     .cabecera__xb--cup { width: 30px; }
     .cabecera__otra { padding: 0 12px; font-size: var(--step-small); }
+    .menu__boton { min-height: 44px; padding-block: 8px 10px; font-size: var(--step-small); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.3em; }
+    /* En el móvil, el desplegable ocupa el ancho bajo la barra (la fila de apartados se desliza y lo cortaría) */
+    .menu__panel {
+      position: fixed;
+      top: var(--cabecera);
+      left: 0;
+      right: 0;
+      width: auto;
+      max-width: none;
+      max-height: calc(100svh - var(--cabecera));
+      overflow-y: auto;
+      padding: 8px var(--margen) 20px;
+      white-space: normal;
+    }
   }
 </style>
