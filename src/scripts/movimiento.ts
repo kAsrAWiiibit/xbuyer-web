@@ -30,7 +30,11 @@ function entradas() {
   const titulos = conMovimiento ? [...document.querySelectorAll<HTMLElement>('main > section:not(:first-child) :is(h2, .equipacion__titulo)')] : [];
   for (const t of titulos) palabras(t);
 
-  const fotos = conMovimiento ? [...document.querySelectorAll<HTMLElement>('main > section:not(:first-child) .foto:has(img)')] : [];
+  // En la tira de Madrid del móvil las fotos llegan de lado: ahí no se revelan, para no parecer lentas
+  const enTira = matchMedia('(max-width: 599px)').matches;
+  const fotos = conMovimiento
+    ? [...document.querySelectorAll<HTMLElement>('main > section:not(:first-child) .foto:has(img)')].filter((f) => !(enTira && f.closest('.anterior__fotos')))
+    : [];
   for (const f of fotos) f.classList.add('foto--revela');
 
   const obs = new IntersectionObserver(
@@ -87,12 +91,18 @@ function palabras(titulo: HTMLElement) {
       } else if (hijo.nodeType === Node.ELEMENT_NODE && !(hijo as Element).classList.contains('solo-lector')) recorre(hijo);
     }
   };
+  // El lector de pantalla lee el título entero, no palabra a palabra
+  const texto = titulo.textContent?.replace(/\s+/g, ' ').trim();
   recorre(titulo);
+  if (texto && !titulo.hasAttribute('aria-label')) {
+    titulo.setAttribute('aria-label', texto);
+    for (const caja of titulo.querySelectorAll('.palabra')) caja.setAttribute('aria-hidden', 'true');
+  }
   titulo.classList.add('titulo-palabras');
 }
 
 // ── Inclinación 3D con brillo ─────────────────────────────────────────────
-interface Inclinable { el: HTMLElement; brillos: HTMLElement[]; rx: number; ry: number; tx: number; ty: number; s: number; ts: number; bx: number; by: number; activo: boolean }
+interface Inclinable { el: HTMLElement; brillos: HTMLElement[]; max: number; rx: number; ry: number; tx: number; ty: number; s: number; ts: number; activo: boolean }
 
 function inclinacion() {
   if (!conMovimiento) return;
@@ -102,13 +112,13 @@ function inclinacion() {
     '.pieza__fotos',
     '.torneo',
   ].join(', ');
-  const elementos = [...document.querySelectorAll<HTMLElement>(selector)];
+  // Los torneos solo con ratón: en táctil son una lista que se lee, no algo que se toca
+  const elementos = [...document.querySelectorAll<HTMLElement>(selector)].filter((el) => raton || !el.matches('.torneo'));
   if (!elementos.length) return;
-  const MAX = 6; // grados
   const lista: Inclinable[] = elementos.map((el) => {
     el.classList.add('inclina');
-    // El brillo va dentro de cada foto (recortado por su corte XB) o del propio torneo
-    const destinos = el.matches('.foto') ? [el] : el.querySelectorAll('.foto').length ? [...el.querySelectorAll<HTMLElement>('.foto')] : [el];
+    // El brillo va dentro de cada foto, recortado por su corte XB; los torneos no llevan brillo (cartel plano)
+    const destinos = el.matches('.foto') ? [el] : [...el.querySelectorAll<HTMLElement>('.foto')];
     const brillos = destinos.map((d) => {
       const b = document.createElement('span');
       b.className = 'brillo';
@@ -116,7 +126,8 @@ function inclinacion() {
       d.append(b);
       return b;
     });
-    return { el, brillos, rx: 0, ry: 0, tx: 0, ty: 0, s: 1, ts: 1, bx: 50, by: 50, activo: false };
+    // Grados como mucho: las fotos 3,5; los torneos, que son texto, 3 (más se desenfoca)
+    return { el, brillos, max: el.matches('.torneo') ? 3 : 3.5, rx: 0, ry: 0, tx: 0, ty: 0, s: 1, ts: 1, activo: false };
   });
 
   let animando = false;
@@ -143,8 +154,8 @@ function inclinacion() {
     const r = i.el.getBoundingClientRect();
     const px = Math.min(Math.max((x - r.left) / r.width, 0), 1);
     const py = Math.min(Math.max((y - r.top) / r.height, 0), 1);
-    i.ty = (px - 0.5) * 2 * MAX * fuerza;
-    i.tx = (0.5 - py) * 2 * MAX * fuerza;
+    i.ty = (px - 0.5) * 2 * i.max * fuerza;
+    i.tx = (0.5 - py) * 2 * i.max * fuerza;
     for (const b of i.brillos) {
       const rb = b.getBoundingClientRect();
       b.style.setProperty('--bx', `${(((x - rb.left) / rb.width) * 100).toFixed(1)}%`);
@@ -162,24 +173,21 @@ function inclinacion() {
     if (raton) {
       i.el.addEventListener('pointerenter', (e) => {
         if (e.pointerType !== 'mouse') return;
-        i.activo = true; i.ts = 1.015;
+        i.activo = true;
         i.el.classList.add('inclina--activa');
         apunta(i, e.clientX, e.clientY, 1);
       });
       i.el.addEventListener('pointermove', (e) => { if (i.activo && e.pointerType === 'mouse') apunta(i, e.clientX, e.clientY, 1); });
       i.el.addEventListener('pointerleave', () => suelta(i));
     }
-    // Al tocar: se hunde un poco hacia el dedo y vuelve al soltar (no impide hacer scroll)
+    // Al tocar: se inclina un poco hacia el dedo y vuelve al soltar o al empezar a hacer scroll
     i.el.addEventListener('pointerdown', (e) => {
-      if (e.pointerType === 'mouse') { i.ts = 0.99; arranca(); return; }
-      i.activo = true; i.ts = 0.985;
+      if (e.pointerType === 'mouse') return;
+      i.activo = true;
       i.el.classList.add('inclina--activa');
-      apunta(i, e.clientX, e.clientY, 0.6);
+      apunta(i, e.clientX, e.clientY, 0.5);
     });
-    const fin = (e: PointerEvent) => {
-      if (e.pointerType === 'mouse') { i.ts = i.activo ? 1.015 : 1; arranca(); return; }
-      suelta(i);
-    };
+    const fin = (e: PointerEvent) => { if (e.pointerType !== 'mouse') suelta(i); };
     i.el.addEventListener('pointerup', fin);
     i.el.addEventListener('pointercancel', fin);
   }
@@ -205,9 +213,9 @@ function imanes() {
         const alcance = Math.max(r.width, r.height) / 2 + 40;
         const d = Math.hypot(dx, dy);
         const f = d < alcance ? 1 - d / alcance : 0;
-        // Como mucho 6 px: el botón se acerca, no se escapa
-        s.tx = Math.max(-6, Math.min(6, dx * 0.18 * f));
-        s.ty = Math.max(-6, Math.min(6, dy * 0.18 * f));
+        // Como mucho 4 px: el botón se acerca, no se escapa
+        s.tx = Math.max(-4, Math.min(4, dx * 0.15 * f));
+        s.ty = Math.max(-4, Math.min(4, dy * 0.15 * f));
       } else { s.tx = 0; s.ty = 0; }
       s.x = hacia(s.x, s.tx, 0.2);
       s.y = hacia(s.y, s.ty, 0.2);
@@ -228,7 +236,8 @@ function imanes() {
 
 // ── Cursor: un balón pequeño que rueda y un aro que lo sigue ───────────────
 function cursor() {
-  if (!conMovimiento || !raton) return;
+  // En las páginas legales se lee y se copia texto: ahí, el cursor del sistema
+  if (!conMovimiento || !raton || document.querySelector('.legal')) return;
   const aro = document.createElement('div');
   aro.className = 'cursor';
   aro.setAttribute('aria-hidden', 'true');
@@ -270,7 +279,8 @@ function cursor() {
   document.addEventListener('pointerover', (e) => {
     const el = e.target as Element;
     const ampliable = el.closest('[data-ampliable]');
-    const escribe = el.closest('input, textarea, select, [contenteditable]');
+    // En el contacto y el pie se escribe o se copia (email, dirección): cursor del sistema
+    const escribe = el.closest('input, textarea, select, [contenteditable], .cupon, .pie');
     const enlace = !ampliable && !escribe && el.closest('a, button, [role="button"], label, summary');
     html.classList.toggle('cursor-enlace', !!enlace);
     html.classList.toggle('cursor-foto', !!ampliable);

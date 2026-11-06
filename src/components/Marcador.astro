@@ -174,7 +174,7 @@ const digitos = (n: number) => String(n).padStart(2, '0').split('').map(Number);
     .marcador { width: 100%; grid-template-columns: repeat(var(--celdas, 3), 1fr); }
     .marcador__celda { padding-inline: 8px; }
     .marcador__numero { font-size: clamp(2.75rem, 14vw, 4rem); gap: 3px; }
-    .marcador__etiqueta { font-size: var(--step-small); letter-spacing: 0.02em; }
+    .marcador__etiqueta { font-size: var(--step-small); letter-spacing: 0; }
   }
   @media (prefers-reduced-motion: reduce) {
     /* La bisagra de las fichas, a media altura */
