@@ -51,17 +51,24 @@ const ANIO_CATEGORIA = /^(\d{4})(?:, (.+))?$/;
 const slug = (s: string) =>
   s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
+const PALMARES = 'Palmarés';
+const DIFERENTE = 'Qué la hace diferente';
+/** Viñetas del palmarés que no son torneos */
+const NO_TORNEO = ['Titular', 'Texto'];
+
 export const academy = {
   nombre: ACADEMY,
-  queEs: campo(ACADEMY, 'Qué es'),
-  /** «No es una escuela…»: lo que va tras la primera frase de «Qué es» */
-  noEsEscuela: campo(ACADEMY, 'Qué es').split(/(?<=\.)\s+/).slice(1).join(' ') || falta('la segunda frase de «Qué es»'),
+  /** Frase de la tarjeta de la portada (y descripción de /academy/) */
+  frase: campo(ACADEMY, 'Frase de portada'),
+  quienes: campo(ACADEMY, 'Quiénes somos'),
   desde: sinPunto(vineta(ACADEMY, 'Desde')),
-  filosofia: mayuscula(campo(ACADEMY, 'Filosofía')),
   instagram: usuario(campo(ACADEMY, 'Instagram')),
-  faseOro: nota('Palmarés'),
+  faseOro: nota(PALMARES),
+  titularPalmares: sinPunto(campo(PALMARES, 'Titular')),
+  textoPalmares: campo(PALMARES, 'Texto'),
   /** Palmarés de más a menos títulos; una participación va al final y no cuenta como título */
-  palmares: pares('Palmarés')
+  palmares: pares(PALMARES)
+    .filter(({ etiqueta }) => !NO_TORNEO.includes(etiqueta))
     .map(({ etiqueta, valor }, i) => {
       // «15 veces campeones. 2025, B12. [pendiente: …]»: resultado, y luego año y categoría
       const { texto, pendiente: faltaDetalle } = sinPendiente(valor);
@@ -78,52 +85,30 @@ export const academy = {
         categoria: d?.[2] ? mayuscula(d[2]) : null,
         /** Lo que falta de año y categoría (no se muestra en producción) */
         faltaDetalle: faltaDetalle ? pendiente(faltaDetalle) : null,
-        hueco: `palmares-${slug(etiqueta)}`,
+        /** Logo del torneo en src/fotos/torneos/ (por el nombre, sin lo que va entre paréntesis) */
+        logo: `${slug(etiqueta.replace(/\s*\(.*\)$/, ''))}.png`,
         i,
       };
     })
     .sort((a, b) => b.titulos - a.titulos || a.i - b.i),
-  /** «Nueva piel», temporada 26/27: cada pieza tiene su hueco de foto (equipacion-jugador…) */
+  /** «Nueva piel», 2026/2027: las piezas y los extras, en src/data/equipacion.ts */
   equipacion: {
     nombre: sinPunto(campo(EQUIPACION, 'Nombre')),
-    temporada: mayuscula(nota(EQUIPACION) ?? falta('la temporada en el título de «Equipación (…)»')),
+    temporada: nota(EQUIPACION) ?? falta('la temporada en el título de «Equipación (…)»'),
     patrocinadorTecnico: sinPunto(campo(EQUIPACION, 'Patrocinador técnico')),
-    piezas: lista(campo(EQUIPACION, 'Piezas')).map((pieza) => ({ nombre: mayuscula(pieza), hueco: `equipacion-${slug(pieza)}` })),
+    incluida: campo(EQUIPACION, 'Incluida'),
   },
 };
 
 // ── Xbuyer Cup ──────────────────────────────────────────────────────────────────────
-const proximas = pares('Próximas ediciones').map(({ etiqueta, valor }) => {
-  const { texto, pendiente: sede } = sinPendiente(valor);
-  const f = fechas(texto);
-  return { ...lugar(etiqueta), etiqueta, fechas: mayuscula(f.texto), inicio: f.inicio!, fin: f.fin!, detalle: f.resto, sede: sede ? pendiente(sede) : null };
-});
-const principal = proximas[0] ?? falta('la primera de «Próximas ediciones»');
-const frases = principal.detalle.split(/\.\s+/).map(sinPunto);
-
-/** «Benjamín y Alevín (fútbol 8), Infantil y Cadete (fútbol 11)» */
-const formatos = [...(frases.find((f) => /\(fútbol \d+\)/.test(f)) ?? falta('las categorías de la edición principal')).matchAll(/(?:^|, )([^,(]+?) \((fútbol \d+)\)/g)].map(
-  (m) => ({ nombre: mayuscula(m[2]), categorias: m[1].split(' y ') }),
-);
-const equipos = Number((principal.detalle.match(/(\d+) equipos/) ?? falta('el número de equipos de la edición principal'))[1]);
-const sedes = (frases[0] ?? falta('las sedes de la edición principal')).split(' y ');
-
 export const cup = {
   nombre: CUP,
-  organiza: nota(CUP) ? mayuscula(nota(CUP)!) : null,
-  diferente: lista(campo(CUP, 'Qué la hace diferente')).map(mayuscula),
+  frase: campo(CUP, 'Frase de portada'),
+  /** «Los hermanos Buyer: la presencia de…» → título y texto */
+  diferente: pares(DIFERENTE).map(({ etiqueta, valor }) => ({ titulo: etiqueta, texto: mayuscula(valor) })),
   incluye: lista(campo(CUP, 'Qué incluye la inscripción')).map(mayuscula),
   cifras: dato(campo(CUP, 'Cifras de ediciones anteriores')),
   instagram: usuario(campo(CUP, 'Instagram')),
-  /** La edición de la página: la primera de «Próximas ediciones» */
-  edicion: {
-    ...principal,
-    sedes,
-    formatos,
-    equipos,
-    tieneApp: /app oficial/i.test(principal.detalle),
-  },
-  proximas: proximas.slice(1),
   anteriores: pares('Ediciones anteriores')
     .map(({ etiqueta, valor }) => {
       const { texto } = sinPendiente(valor);
@@ -138,7 +123,6 @@ export const cup = {
     appStore: pendiente('enlace de App Store') as Dato<string>,
     googlePlay: pendiente('enlace de Google Play') as Dato<string>,
   },
-  patrocinadorOficial: pendiente('patrocinador oficial') as Dato<string>,
 };
 
 export const general = {
@@ -149,3 +133,4 @@ export const general = {
 seccion(ACADEMY);
 seccion(CUP);
 seccion(EQUIPACION);
+seccion(DIFERENTE);
