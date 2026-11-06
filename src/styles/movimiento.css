@@ -55,7 +55,7 @@
 @media (prefers-reduced-motion: no-preference) {
   .foto--revela img {
     clip-path: polygon(0 0, 0 0, -40% 100%, 0 100%);
-    transition: clip-path 1000ms var(--ease-in-out);
+    transition: clip-path 850ms var(--ease-in-out);
   }
   .foto--revela.foto--vista img { clip-path: polygon(0 0, 140% 0, 100% 100%, 0 100%); }
 }

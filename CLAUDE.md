@@ -133,6 +133,12 @@ publicada; vista previa en un repositorio aparte (`kAsrAWiiibit/xbuyer-web-previ
 - [x] Bloque 1: referencias en `docs/referencias.md`. Lighthouse móvil antes (web publicada): rendimiento
   100/98/99/100/100/100 (inicio, academy, cup, aviso legal, privacidad, soporte), accesibilidad 100 en todas.
   Peso recorriendo la página entera en móvil: 73 / 258 / 389 / 70 / 71 / 71 KB.
-- [ ] Bloque 2: interactividad.
+- [x] Bloque 2: interactividad. Todo en `src/scripts/movimiento.ts` (un módulo, sin librerías) y
+  `src/styles/movimiento.css`, más `Visor.astro` (ampliar fotos con `galeria` en `Foto`), `Marcador.astro`
+  (bombillas, bisagra, vuelve a rodar al pasar el ratón) y `Campo.astro` (balón que sigue al puntero). Transiciones
+  entre páginas con View Transitions nativas (CSS, sin `ClientRouter`). `.mov` y `.llega` los pone un script en
+  el `<head>`; `.entradas` el módulo. Con «Reducir movimiento», solo fundidos. Vista previa:
+  `./scripts/publicar-vista-previa.sh` (build `npm run vista-previa`, `VISTA_PREVIA=1`: noindex, robots cerrado,
+  sin CNAME) → https://kasrawiiibit.github.io/xbuyer-web-preview/
 - [ ] Bloque 3: crítica, pulido y capturas.
 - [ ] Bloque 4: `docs/reunion-propuestas.md` e informe.
