@@ -165,7 +165,12 @@ abre un email a aexbuyer2026@gmail.com con el asunto del torneo y la build lo li
   - En la web: banda destacada en `/cup/` y en cada edición, más una línea en la portada de `/cup/`.
   - En la app: logo en `~/xbuyer-cup-app/xbuyer-cup-app/data/source/patrocinadores/synergy.png`, probado con
     `--dry-run`, y nota en su CLAUDE.md. Sin subir ni commit allí.
-- [x] Bloque 5: propuesta en `docs/propuesta-myteaminfo.md`. **No implementar hasta que la aprueben.**
+- [x] Bloque 5: propuesta en `docs/propuesta-myteaminfo.md`.
+  - **Decidido: MyTeamInfo para la edición de Barcelona (6–7 de febrero de 2027).** No implementar todavía.
+  - El desarrollo empieza el 9 de diciembre de 2026, justo después de Torrent.
+  - Fechas clave: prueba con un equipo el 7–8 de enero, envío de cuentas el 13 de enero, fecha límite de
+    plantillas el 29 de enero y borrado de DNI el 9 de marzo.
+  - Calendario completo en la propuesta.
 
 **Correcciones tras la revisión (7 de noviembre de 2026):**
 - **Torneos 2027:** fuera ITE Football; entra MIC7 (Salou, 11–13 de junio), que solo lleva descripción, fechas,
@@ -189,6 +194,13 @@ abre un email a aexbuyer2026@gmail.com con el asunto del torneo y la build lo li
     `contenido/normativa/`, fuera de git).
   - El resumen quita la frase pegada por error en el punto 6.
 - **Cabecera:** entre 900 y 1199 px, con seis apartados, el nombre se oculta y queda el logo.
+
+**Título con balón chutado (prototipo, solo en `/academy/`, 7 de noviembre de 2026):**
+- `src/components/TituloChute.astro`: el balón entra en arco, golpea la primera letra y las letras vuelan a su sitio.
+- Dura 1,25 s, solo al cargar y en CSS. Un script pequeño mide las letras antes de pintar.
+- Sin JavaScript o con «Reducir movimiento» no se anima. El nombre accesible va en `aria-label`.
+- Lighthouse móvil sin cambios: 99 y 100, LCP igual. Fotogramas en `.taste-skill/capturas-reunion/chute/`.
+- **Pendiente del visto bueno antes de ponerlo en `/` y `/cup/`.**
 
 **Pendiente de la organización (nuevo):**
 - Teléfono 615 72 25 83: la instrucción vino con las dos opciones sin elegir, así que sigue oculto hasta que se

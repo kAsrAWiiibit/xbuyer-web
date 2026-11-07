@@ -14,6 +14,7 @@ import Foto from '../../components/Foto.astro';
 import LogoTorneo from '../../components/LogoTorneo.astro';
 import Marcador from '../../components/Marcador.astro';
 import Monograma from '../../components/Monograma.astro';
+import TituloChute from '../../components/TituloChute.astro';
 import { academy, cup } from '../../data/contenido';
 import { extras, piezas as datosPiezas } from '../../data/equipacion';
 import { preinscripcion } from '../../data/preinscripcion';
@@ -73,7 +74,7 @@ const enlaces = menuAcademia((c) => t('es', c), { enPortada: true });
 
   <section class="portada" data-capitulo="amarillo" aria-labelledby="portada-titulo">
     <div class="portada__texto">
-      <h1 id="portada-titulo" class="portada__titulo"><span>Xbuyer Team</span> <span>Academy</span></h1>
+      <TituloChute id="portada-titulo" class="portada__titulo" lineas={['Xbuyer Team', 'Academy']} />
       <a class="boton portada__pre" href={ruta('/academy/preinscripcion/')}>{t('es', 'academy.preinscripcion.boton')}<span class="portada__temporada">{preinscripcion.temporada}</span></a>
     </div>
     <Monograma class="portada__xb" />
@@ -224,8 +225,7 @@ const enlaces = menuAcademia((c) => t('es', c), { enPortada: true });
     line-height: 0.85;
     text-transform: uppercase;
   }
-  .portada__titulo span { display: block; }
-  .portada__titulo span + span { color: var(--azul); }
+  .portada__titulo :global(.linea + .linea) { color: var(--azul); }
   .portada__xb { grid-column: 10 / 13; width: 100%; color: var(--azul); }
 
   .quienes { display: grid; grid-template-columns: repeat(12, 1fr); column-gap: 16px; align-items: start; }

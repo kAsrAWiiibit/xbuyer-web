@@ -1,0 +1,127 @@
+---
+/**
+ * Título de portada que entra con un balón chutado: el balón llega en arco desde la izquierda, golpea el principio
+ * del título y las letras salen disparadas desde ese punto hasta su sitio, con un poco de giro y estela; el balón
+ * rebota y cae fuera de la pantalla. Todo en 1,2 s como mucho, solo al cargar (no se repite al hacer scroll).
+ *
+ * - El título se lee entero desde el principio: `aria-label` en el <h1>, y el texto está en el HTML tal cual
+ *   (buscadores). Las letras sueltas y el balón son decoración (aria-hidden).
+ * - Sin JavaScript o con «Reducir movimiento» no hay animación: el título está quieto desde el principio.
+ * - Un script pequeño, justo después del título, mide dónde está cada letra antes de pintar y activa `.chute`; la
+ *   animación es CSS (solo transform y opacity), fuera del hilo principal.
+ *
+ * Tiempos (emil-design-eng): balón hasta el golpe 340 ms con salida fuerte; letras 640 ms con --ease-out
+ * (cubic-bezier(0.23, 1, 0.32, 1)) desde los 300 ms, escalonadas 14 ms; rebote y caída del balón 420 ms.
+ */
+interface Props {
+  /** Líneas del título (cada una en su línea) */
+  lineas: string[];
+  id?: string;
+  class?: string;
+}
+const { lineas, id, class: clase } = Astro.props;
+const texto = lineas.join(' ');
+let n = 0;
+// Cada línea, en palabras, y cada palabra, en letras (con su orden para el escalonado)
+const partes = lineas.map((l) => l.split(' ').map((p) => [...p].map((c) => ({ c, i: n++ }))));
+---
+<h1 id={id} class:list={['titulo-chute', clase]} aria-label={texto} data-chute>
+  <span class="balon" aria-hidden="true">
+    {['', 'balon__estela balon__estela--1', 'balon__estela balon__estela--2'].map((e) => (
+      <span class:list={['balon__x', e]}><span class="balon__y"><svg class="balon__svg" viewBox="0 0 40 40"><circle cx="20" cy="20" r="18.5" fill="#fff" stroke="currentColor" stroke-width="3" /><path d="M20 11l7 5-3 8h-8l-3-8z" fill="currentColor" /><path d="M20 11V2M27 16l8-3M24 24l5 7M16 24l-5 7M13 16l-8-3" stroke="currentColor" stroke-width="2.5" fill="none" /></svg></span></span>
+    ))}
+  </span>
+  {partes.map((palabras, l) => (
+    <>{l > 0 && ' '}<span class="linea" aria-hidden="true">
+      {palabras.map((letras, j) => (
+        <>{j > 0 && ' '}<span class="palabra">{letras.map((l) => <span class="letra" style={`--i: ${l.i}`}>{l.c}</span>)}</span></>
+      ))}
+    </span></>
+  ))}
+</h1>
+<script is:inline>
+  (function () {
+    var h = document.currentScript.previousElementSibling;
+    if (!h || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var letras = h.querySelectorAll('.letra');
+    if (!letras.length) return;
+    // Punto del golpe: dentro de la primera letra, a media altura
+    var p = letras[0].getBoundingClientRect();
+    var gx = p.left + p.width * 0.35, gy = p.top + p.height * 0.55;
+    for (var k = 0; k < letras.length; k++) {
+      var r = letras[k].getBoundingClientRect();
+      // Salen del golpe pero repartidas por la trayectoria: cada letra arranca a un 70 % de su distancia
+      letras[k].style.setProperty('--dx', ((gx - (r.left + r.width / 2)) * 0.7).toFixed(1) + 'px');
+      letras[k].style.setProperty('--dy', ((gy - (r.top + r.height / 2)) * 0.7).toFixed(1) + 'px');
+      letras[k].style.setProperty('--r', ((k % 3) - 1) * 28 - 18 + 'deg');
+    }
+    var hr = h.getBoundingClientRect();
+    h.style.setProperty('--gx', (gx - hr.left).toFixed(1) + 'px');
+    h.style.setProperty('--gy', (gy - hr.top).toFixed(1) + 'px');
+    // Desde el golpe hasta el borde izquierdo de la pantalla (de ahí sale el balón)
+    h.style.setProperty('--borde', (gx + 10).toFixed(1) + 'px');
+    h.classList.add('chute');
+    // Al acabar, fuera la clase: nada vuelve a animarse
+    setTimeout(function () { h.classList.remove('chute'); h.classList.add('chute--hecho'); }, 1300);
+  })();
+</script>
+
+<style>
+  .titulo-chute { position: relative; }
+  .linea { display: block; }
+  .palabra { display: inline-block; white-space: nowrap; }
+  .letra { display: inline-block; }
+
+  .balon { display: none; }
+  .chute .balon {
+    display: block;
+    position: absolute;
+    left: var(--gx);
+    top: var(--gy);
+    z-index: 2;
+    width: 0.4em;
+    height: 0.4em;
+    margin: -0.2em 0 0 -0.2em;
+    pointer-events: none;
+    color: var(--marino);
+  }
+  .balon__x, .balon__y, .balon__svg { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
+  .balon__estela--1 { opacity: 0.4; }
+  .balon__estela--2 { opacity: 0.16; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    /* Letras: desde el golpe hasta su sitio, estiradas en la dirección del vuelo */
+    .chute .letra {
+      transform-origin: 100% 50%;
+      animation: letra-sale 620ms cubic-bezier(0.23, 1, 0.32, 1) backwards;
+      animation-delay: calc(300ms + var(--i) * 14ms);
+    }
+    /* Balón: avanza (x) y sube y cae (y) por separado, así la trayectoria es un arco */
+    .chute .balon__x { animation: balon-x 760ms linear both; }
+    .chute .balon__y { animation: balon-y 760ms linear both; }
+    .chute .balon__svg { animation: balon-gira 760ms linear both; }
+    .chute .balon__estela--1, .chute .balon__estela--1 * { animation-delay: 28ms; }
+    .chute .balon__estela--2, .chute .balon__estela--2 * { animation-delay: 56ms; }
+  }
+  @keyframes letra-sale {
+    0% { opacity: 0; transform: translate(var(--dx), var(--dy)) rotate(var(--r)) scale(1.35, 0.8); }
+    14% { opacity: 1; }
+    100% { opacity: 1; transform: none; }
+  }
+  @keyframes balon-x {
+    0% { transform: translateX(calc(var(--borde) * -1 - 0.4em)); animation-timing-function: cubic-bezier(0.2, 0.6, 0.35, 1); }
+    45% { transform: translateX(0); animation-timing-function: cubic-bezier(0.25, 0.8, 0.5, 1); }
+    100% { transform: translateX(-0.9em); }
+  }
+  @keyframes balon-y {
+    0% { transform: translateY(1.8em); opacity: 1; animation-timing-function: cubic-bezier(0.1, 0.7, 0.4, 1); }
+    45% { transform: translateY(0); animation-timing-function: cubic-bezier(0.55, 0, 0.85, 0.35); }
+    85% { opacity: 1; }
+    100% { transform: translateY(80vh); opacity: 0; }
+  }
+  @keyframes balon-gira {
+    0% { transform: rotate(-420deg); }
+    45% { transform: rotate(0deg); }
+    100% { transform: rotate(-200deg); }
+  }
+</style>

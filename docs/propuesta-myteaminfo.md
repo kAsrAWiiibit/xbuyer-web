@@ -1,6 +1,7 @@
 # Propuesta: MyTeamInfo (zona privada de cada equipo)
 
-Estado: **propuesta, sin implementar**. Hace falta vuestro visto bueno, y las decisiones del final, antes de empezar.
+Estado: **decidido para la edición de Barcelona (6–7 de febrero de 2027)**. No se implementa todavía: el desarrollo
+empieza justo después del torneo de Torrent (5–7 de diciembre de 2026). Calendario abajo.
 
 ## Qué es
 
@@ -133,10 +134,33 @@ La política ya está marcada como borrador pendiente de revisión legal. Esto d
 Si hay prisa, una primera fase sin muñeco (colores elegidos de una lista) y sin exportar desde la app (solo
 script) baja a una semana.
 
+## Calendario (hacia atrás desde el 6 de febrero de 2027)
+
+| Fecha | Qué | Quién |
+| --- | --- | --- |
+| Mié 9 – vie 11 dic | Base de datos: rol `team`, equipaciones, `players_private` (DNI), historial, funciones y RLS, con sus pruebas | Desarrollo |
+| Lun 14 – vie 18 dic | Página `/equipos/`: entrar, cambiar contraseña, categoría y plantilla (altas, bajas, dorsales, DNI) | Desarrollo |
+| Lun 21 – mié 23 dic | Muñeco de equipaciones y aviso de colores parecidos | Desarrollo |
+| Lun 28 – mié 30 dic | Gestión en la app (estado de cada equipo, plantilla, exportar), creación de cuentas y borrado programado de DNI | Desarrollo |
+| Hasta el mié 30 dic | Textos nuevos de la política de privacidad, a revisión legal | Organización y quien revise la política |
+| Sáb 2 – lun 4 ene | Xbuyer Cup Madrid: no se publica nada nuevo esos días | — |
+| Jue 7 – vie 8 ene | **Prueba con un equipo real** (uno de la academia o un club de confianza): crea su plantilla y sus equipaciones desde el móvil y el ordenador | Organización y un delegado |
+| Lun 11 – mar 12 ene | Correcciones de la prueba. Política de privacidad revisada y publicada (sin ella no se piden DNI) | Desarrollo y organización |
+| **Mié 13 ene** | **Envío de cuentas** a los equipos inscritos hasta ese día; a los que se inscriban después, al confirmar su inscripción | Organización |
+| Mié 20 ene | Recordatorio a los equipos sin plantilla | Organización |
+| **Vie 29 ene, 23:59** | **Fecha límite** para rellenar plantillas y equipaciones. Después solo cambia la organización | Equipos |
+| Lun 1 – mié 3 feb | Revisión: plantillas completas, edades, choques de colores (se pide la segunda equipación donde haga falta) | Organización |
+| Jue 4 – vie 5 feb | Exportación final para el seguro y el control de edad. Plantillas y colores ya en la app | Organización |
+| **Sáb 6 – dom 7 feb** | **Xbuyer Cup Barcelona** | — |
+| Mar 9 mar | Borrado automático de los DNI (30 días después del torneo) y de las cuentas de equipo | Automático |
+
+**Margen:** entre las vacaciones y Madrid quedan unas dos semanas y media de trabajo efectivo, lo justo para lo
+estimado. Si algo se retrasa, se recorta la segunda fase (patrones de camiseta y exportar desde la app, que puede
+hacerse con un script) y no las fechas de los equipos.
+
 ## Lo que tenéis que decidir
 
-1. ¿Lo usamos ya en Madrid (2–4 de enero de 2027) y Barcelona (6–7 de febrero), o empezamos en la siguiente?
-   Para Madrid iría muy justo.
+1. ~~¿En qué edición empezamos?~~ Decidido: Barcelona (6–7 de febrero de 2027).
 2. ¿Qué datos de cada jugador pedimos además del DNI? ¿Año o fecha de nacimiento? ¿Foto? (Mejor que no.)
 3. ¿Cuántos días se guardan los DNI después del torneo? (Proponemos 30.)
 4. ¿Quién da las cuentas: vosotros a mano, o se crean al confirmar la inscripción?
