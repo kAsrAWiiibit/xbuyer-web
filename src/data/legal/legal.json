@@ -109,12 +109,20 @@
         "title": "¿Cómo se desempata en la clasificación?",
         "paragraphs": [
           "Victoria: 3 puntos. Empate: 1 punto. Si dos o más equipos empatan a puntos en el grupo, se desempata en este orden:",
-          "1. Enfrentamiento directo: puntos, diferencia de goles y goles a favor en los partidos entre los empatados (si empatan tres o más, una miniclasificación solo con ellos).",
-          "2. Diferencia de goles en el grupo.",
-          "3. Goles a favor en el grupo.",
-          "4. Juego limpio: pasa el que tenga menos puntos de tarjetas (amarilla 1 punto, roja 3 puntos; una doble amarilla cuenta como roja: 3 puntos).",
-          "5. Sorteo: si sigue el empate, lo hace la organización; hasta entonces la app pone \"Pendiente de sorteo\".",
-          "Para elegir a los mejores clasificados de distintos grupos (p. ej. los mejores terceros): puntos, diferencia de goles, goles a favor, juego limpio y sorteo."
+          "1. Diferencia general de goles (todos los partidos del grupo).",
+          "2. Más goles a favor.",
+          "3. Menos goles en contra.",
+          "4. Puntos en los enfrentamientos directos entre los empatados (si empatan tres o más, solo con los partidos entre ellos).",
+          "5. Juego limpio: pasa el que tenga menos puntos de tarjetas (amarilla 1 punto, roja 3 puntos; una doble amarilla cuenta como roja: 3 puntos).",
+          "6. Sorteo: si sigue el empate, lo hace la organización; hasta entonces la app pone \"Pendiente de sorteo\".",
+          "Para elegir a los mejores clasificados de distintos grupos (p. ej. los mejores terceros): puntos, diferencia de goles, goles a favor, menos goles en contra, juego limpio y sorteo.",
+          "En las eliminatorias, si hay empate al final del partido, tanda de 3 penaltis por equipo y, si sigue el empate, muerte súbita (uno por equipo hasta que uno marque y el otro falle)."
+        ]
+      },
+      {
+        "title": "¿Qué pasa con una tarjeta roja?",
+        "paragraphs": [
+          "Un jugador expulsado (roja directa o doble amarilla) no puede jugar el siguiente partido de su equipo."
         ]
       },
       {
