@@ -195,11 +195,14 @@ abre un email a aexbuyer2026@gmail.com con el asunto del torneo y la build lo li
   - El resumen quita la frase pegada por error en el punto 6.
 - **Cabecera:** entre 900 y 1199 px, con seis apartados, el nombre se oculta y queda el logo.
 
-**Título con balón chutado (prototipo, solo en `/academy/`, 7 de noviembre de 2026):**
-- `src/components/TituloChute.astro`: el balón entra en arco, golpea la primera letra y las letras vuelan a su sitio.
-- Dura 1,25 s, solo al cargar y en CSS. Un script pequeño mide las letras antes de pintar.
+**Título con chute (prototipo, solo en `/academy/`, 7 de noviembre de 2026; la versión con balón aparte se descartó):**
+- `src/components/TituloChute.astro`. Las letras del título empiezan apiñadas en una bola abajo a la derecha (en
+  el móvil, junto a la segunda línea). La bola recibe el golpe (se aplasta), vuela en arco girando y se abre en el
+  aire; cada letra frena hasta su sitio con giro y estela.
+- Dura 1,4 s, solo al cargar, con la Web Animations API y solo transform.
+- Espera a la fuente del título para medir; si tarda más de 700 ms, el título sale quieto.
 - Sin JavaScript o con «Reducir movimiento» no se anima. El nombre accesible va en `aria-label`.
-- Lighthouse móvil sin cambios: 99 y 100, LCP igual. Fotogramas en `.taste-skill/capturas-reunion/chute/`.
+- Lighthouse móvil sin cambios: 99 y 100, mismo LCP. Fotogramas en `.taste-skill/capturas-reunion/chute/`.
 - **Pendiente del visto bueno antes de ponerlo en `/` y `/cup/`.**
 
 **Pendiente de la organización (nuevo):**
