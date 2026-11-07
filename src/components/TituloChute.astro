@@ -1,9 +1,10 @@
 ---
 /**
  * Título de portada que entra como un chute. Al cargar, las letras del título están apiñadas en una bola (pequeñas,
- * giradas y solapadas, con su color) abajo, en el lado contrario al título, como un balón parado. La bola recibe el
- * golpe (se aplasta un instante), sale disparada en arco hacia el título girando y, en pleno vuelo, se abre: cada
- * letra sigue en la dirección del chute, con giro y una estela (se estira), y frena hasta encajar en su sitio.
+ * giradas y solapadas, con su color) en el lado izquierdo (abajo a la izquierda en el ordenador; a la izquierda del
+ * título en el móvil), como un balón parado. La bola recibe el golpe (se aplasta un instante), sale disparada hacia
+ * la derecha en arco, girando, y en pleno vuelo se abre: cada letra sigue hacia la derecha, con giro y una estela
+ * (se estira), y frena hasta encajar en su sitio, de izquierda a derecha.
  *
  * Tiempos (emil-design-eng), 1,4 s en total, solo al cargar (no se repite al hacer scroll):
  * - 0–220 ms: la bola, quieta (se ve como un balón).
@@ -71,14 +72,17 @@ const partes = lineas.map((l) => l.split(' ').map((p) => [...p]));
       var r = letras[k].getBoundingClientRect();
       P.push([r.left + r.width / 2, r.top + r.height / 2]);
     }
-    // La bola, parada abajo a la derecha (en el lado contrario al principio del título). En el móvil, a la altura de
-    // la segunda línea, que es más corta, para no tapar el botón de debajo
-    var B0 = zona.width < 600
-      ? [zona.right - R * 1.8, hr.bottom - R * 1.1]
-      : [zona.right - R * 1.6, zona.bottom - R * 1.6];
-    // Se abre en pleno vuelo, sobre el final del título
-    var tc = [hr.left + hr.width * 0.62, hr.top + hr.height * 0.5];
-    var B1 = [B0[0] + (tc[0] - B0[0]) * 0.72, B0[1] + (tc[1] - B0[1]) * 0.72];
+    // La bola, parada en el lado izquierdo: abajo a la izquierda en el ordenador; en el móvil, a la izquierda, a la
+    // altura del título (debajo está el botón)
+    var movil = zona.width < 600;
+    var B0 = movil
+      ? [zona.left + R * 1.4, hr.top + hr.height * 0.62]
+      : [zona.left + R * 2.2, zona.bottom - R * 1.6];
+    // El chute la lanza hacia la derecha y se abre en pleno vuelo, al principio del título: así las letras salen
+    // todas hacia la derecha y encajan de izquierda a derecha
+    var B1 = movil
+      ? [hr.left + hr.width * 0.3, hr.top + hr.height * 0.36]
+      : [hr.left + hr.width * 0.3, hr.top + hr.height * 0.5];
     // Arco: el punto de control, por encima de la recta (sube y cae como un balón)
     var dist = Math.hypot(B1[0] - B0[0], B1[1] - B0[1]);
     var C = [(B0[0] + B1[0]) / 2, Math.min(B0[1], B1[1]) - dist * 0.42];
@@ -86,7 +90,7 @@ const partes = lineas.map((l) => l.split(' ').map((p) => [...p]));
       var a = (1 - u) * (1 - u), b = 2 * (1 - u) * u, c = u * u;
       return [a * B0[0] + b * C[0] + c * B1[0], a * B0[1] + b * C[1] + c * B1[1]];
     };
-    var GIRO = -320; // efecto: la bola gira mientras vuela
+    var GIRO = 320; // efecto: la bola gira hacia donde va (a la derecha, en el sentido de las agujas del reloj)
 
     var tf = function (x, y, phi, sx, sy, rot, s) {
       return 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px) rotate(' + phi.toFixed(1) + 'deg) scale(' + sx.toFixed(3) + ',' + sy.toFixed(3) + ') rotate(' + (-phi).toFixed(1) + 'deg) rotate(' + rot.toFixed(1) + 'deg) scale(' + s.toFixed(3) + ')';
@@ -112,8 +116,8 @@ const partes = lineas.map((l) => l.split(' ').map((p) => [...p]));
       // Parada
       en(B0, o, 0, 1, 1, giroLetra, S0, 0, 'linear');
       en(B0, o, 0, 1, 1, giroLetra, S0, 0.157, 'cubic-bezier(0.23, 1, 0.32, 1)');
-      // Golpe desde la derecha: la bola se aplasta en horizontal y las letras también
-      en([B0[0] - R * 0.12, B0[1]], [o[0] * 0.66, o[1] * 1.2], 0, 0.72, 1.2, giroLetra, S0, 0.214, 'linear');
+      // Golpe desde la izquierda: la bola se aplasta en horizontal contra la bota y las letras también
+      en([B0[0] + R * 0.12, B0[1]], [o[0] * 0.66, o[1] * 1.2], 0, 0.72, 1.2, giroLetra, S0, 0.214, 'linear');
       // Vuelo en arco con giro: puntos repartidos para que arranque rápido y frene
       // (12 puntos: con menos, al girar la bola encogería entre uno y otro)
       var pasos = [];

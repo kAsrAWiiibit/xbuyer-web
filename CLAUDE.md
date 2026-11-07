@@ -196,9 +196,10 @@ abre un email a aexbuyer2026@gmail.com con el asunto del torneo y la build lo li
 - **Cabecera:** entre 900 y 1199 px, con seis apartados, el nombre se oculta y queda el logo.
 
 **Título con chute (prototipo, solo en `/academy/`, 7 de noviembre de 2026; la versión con balón aparte se descartó):**
-- `src/components/TituloChute.astro`. Las letras del título empiezan apiñadas en una bola abajo a la derecha (en
-  el móvil, junto a la segunda línea). La bola recibe el golpe (se aplasta), vuela en arco girando y se abre en el
-  aire; cada letra frena hasta su sitio con giro y estela.
+- `src/components/TituloChute.astro`. Las letras del título empiezan apiñadas en una bola en el lado izquierdo
+  (abajo a la izquierda en el ordenador; a la izquierda del título en el móvil). El chute la lanza hacia la
+  derecha: se aplasta, vuela en arco girando y se abre al principio del título. Cada letra sigue hacia la derecha
+  con giro y estela, y encaja de izquierda a derecha.
 - Dura 1,4 s, solo al cargar, con la Web Animations API y solo transform.
 - Espera a la fuente del título para medir; si tarda más de 700 ms, el título sale quieto.
 - Sin JavaScript o con «Reducir movimiento» no se anima. El nombre accesible va en `aria-label`.
@@ -206,11 +207,17 @@ abre un email a aexbuyer2026@gmail.com con el asunto del torneo y la build lo li
 - **Pendiente del visto bueno antes de ponerlo en `/` y `/cup/`.**
 
 **Pendiente de la organización (nuevo):**
-- Teléfono 615 72 25 83: la instrucción vino con las dos opciones sin elegir, así que sigue oculto hasta que se
-  confirme.
+- Teléfono de los PDF: **decidido, no se publica en ningún sitio de la web**.
 - Los PDF oficiales de normativa siguen con el error del punto 6; habría que corregirlos en el original.
 - Contradicciones entre cartel y reglamento, sin publicar: Infantil femenino en Madrid (no está en su reglamento)
-  y en Barcelona; Cadete en Barcelona (no está en el cartel).
+  y en Barcelona; Cadete en Barcelona (no está en el cartel). Aprobado: siguen ocultos hasta que la organización
+  lo confirme, igual que la G13 de la Yellow Cup. Yellow Cup sin logo (aprobado).
+
+**Siguiente:**
+1. Revisión de la vista previa entera con los dueños.
+2. Si la aprueban: fusionar `cambios-reunion` en `main` (despliega xbuyerteamacademy.com) y borrar el repositorio
+   de la vista previa (`kAsrAWiiibit/xbuyer-web-preview`).
+3. Si da el visto bueno al chute, ponerlo antes en `/` y `/cup/`.
 - Google Form de las ediciones de Madrid y Barcelona de la Cup.
 - Yellow Cup: programa con fechas correctas, lugar del acto inaugural y años de la G13.
 - Campo de la edición de Barcelona.
