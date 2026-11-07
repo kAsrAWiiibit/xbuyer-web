@@ -13,6 +13,7 @@ import Patrocinador from '../../components/Patrocinador.astro';
 import SiCompleto from '../../components/SiCompleto.astro';
 import { academy, cup } from '../../data/contenido';
 import { ediciones, type Edicion } from '../../data/cup-ediciones';
+import { normativa } from '../../data/normativa';
 import { principal } from '../../data/patrocinadores';
 import { t } from '../../i18n/ui';
 import Base from '../../layouts/Base.astro';
@@ -33,8 +34,10 @@ const abierta = ed.inscripcion === 'abierta';
 const inscripcion = abierta ? enlaceInscripcion(ed.formulario, t('es', 'edicion.asunto', { ciudad: ed.ciudad }), Astro.url.pathname) : null;
 const externo = inscripcion ? !inscripcion.startsWith('mailto:') : false;
 const appLista = Boolean(ed.app) && completo(cup.app.appStore) && completo(cup.app.googlePlay);
-const sede = completo(ed.sede) ? ed.sede : null;
-const comoLlegar = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${sede ?? ''} ${ed.localidad}`.trim())}`;
+const sedes = ed.sedes.filter(completo);
+const sedesPendientes = ed.sedes.filter(esPendiente);
+const sedesTexto = sedes.join(' y ');
+const comoLlegar = (lugar: string) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${lugar}, ${ed.localidad}`)}`;
 const otras = ediciones.filter((e) => e.slug !== ed.slug);
 
 const cup_ = (ancla: string) => ruta(`/cup/${ancla}`);
@@ -55,7 +58,7 @@ const evento = {
   endDate: ed.fin,
   eventStatus: 'https://schema.org/EventScheduled',
   eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
-  location: { '@type': 'Place', name: sede ?? ed.localidad, address: { '@type': 'PostalAddress', addressLocality: ed.localidad, addressCountry: 'ES' } },
+  location: (sedes.length ? sedes : [ed.localidad]).map((s) => ({ '@type': 'Place', name: s, address: { '@type': 'PostalAddress', addressLocality: ed.localidad, addressCountry: 'ES' } })),
   organizer: { '@type': 'SportsOrganization', name: academy.nombre, url: Astro.site ? new URL(ruta('/academy/'), Astro.site).href : undefined },
   sponsor: principal ? { '@type': 'Organization', name: principal.nombre, url: `https://www.instagram.com/${principal.instagram}/` } : undefined,
   image: Astro.site ? new URL(ruta('/compartir/cup.png'), Astro.site).href : undefined,
@@ -64,7 +67,7 @@ const categoriasTexto = ed.formatos.map((f) => `${f.nombre}: ${f.categorias.filt
 ---
 <Base
   titulo={`${cup.nombre} ${ed.ciudad} · ${fechas}`}
-  descripcion={`${cup.nombre} ${ed.ciudad}: ${fechas}, ${ed.localidad}${sede ? ` (${sede})` : ''}. ${categoriasTexto}.`}
+  descripcion={`${cup.nombre} ${ed.ciudad}: ${fechas}, ${ed.localidad}${sedesTexto ? ` (${sedesTexto})` : ''}. ${categoriasTexto}.`}
   compartir="cup"
 >
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(evento)} />
@@ -81,7 +84,7 @@ const categoriasTexto = ed.formatos.map((f) => `${f.nombre}: ${f.categorias.filt
           <span class="portada__ciudad">{ed.ciudad}</span>
         </h1>
         <p class="portada__fecha"><time datetime={ed.inicio}>{fechas}</time></p>
-        <p class="portada__sede">{ed.localidad}{sede && <><span aria-hidden="true"> · </span>{sede}</>}</p>
+        <p class="portada__sede">{ed.localidad}{sedesTexto && <><span aria-hidden="true"> · </span>{sedesTexto}</>}</p>
         <p class="portada__cuenta" data-cuenta={ed.inicio} data-fin={ed.fin} data-uno={t('es', 'cup.faltan.uno')} data-n={t('es', 'cup.faltan.n', { n: '{n}' })} data-hoy={t('es', 'cup.hoy')}></p>
       </div>
       <div class:list={['inscripcion', !abierta && 'inscripcion--cerrada']}>
@@ -136,17 +139,58 @@ const categoriasTexto = ed.formatos.map((f) => `${f.nombre}: ${f.categorias.filt
     <Campo class="categorias__campo" />
   </section>
 
-  <section class="bloque sede" data-capitulo="blanco" aria-labelledby="sede-titulo">
-    <h2 id="sede-titulo" class="bloque__titulo">{t('es', 'edicion.sede')}</h2>
-    <div class="sede__columnas">
-      <div>
-        {sede && <p class="sede__nombre">{sede}</p>}
-        <SiCompleto datos={[ed.sede]} donde={`${ed.slug}: campo`}>
-          {!sede && <p class="sede__nombre"><Dato v={ed.sede} donde={`${ed.slug}: campo`} /></p>}
-        </SiCompleto>
-        <p class="sede__localidad">{ed.localidad}</p>
-        <a class="enlace sede__mapa" href={comoLlegar} rel="noopener">{t('es', 'edicion.comoLlegar')}<span class="solo-lector"> a {sede ?? ed.localidad}</span></a>
+  <section class="bloque normativa" id="normativa" data-capitulo="amarillo" aria-labelledby="normativa-titulo">
+    <div class="normativa__cabeza">
+      <h2 id="normativa-titulo" class="bloque__titulo">{t('es', 'edicion.normativa')}</h2>
+      <p class="normativa__intro">{t('es', 'edicion.normativaIntro')}</p>
+    </div>
+    <div class="normativa__rejilla">
+      <div class="regla regla--duracion">
+        <h3 class="regla__titulo">{t('es', 'edicion.duracion')}</h3>
+        <dl class="duracion">
+          {ed.normativa.duracion.map((d) => (
+            <div><dt>{d.categorias}</dt><dd>{d.partes}</dd></div>
+          ))}
+        </dl>
+        <p class="duracion__descanso">{t('es', 'edicion.descanso')}</p>
       </div>
+      {normativa.map((r) => (
+        <div class="regla">
+          <h3 class="regla__titulo">{r.titulo}</h3>
+          {r.orden ? (
+            <ol class="regla__lista regla__lista--orden">{r.puntos.map((p) => <li>{p}</li>)}</ol>
+          ) : (
+            <ul role="list" class="regla__lista">{r.puntos.map((p) => <li>{p}</li>)}</ul>
+          )}
+        </div>
+      ))}
+    </div>
+    <a class="boton normativa__boton" href={ruta(`/normativa/${ed.normativa.pdf}`)} download>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v13M6 11l6 6 6-6M4 21h16" /></svg>{t('es', 'edicion.descargar')}
+    </a>
+  </section>
+
+  <section class="bloque sede" data-capitulo="blanco" aria-labelledby="sede-titulo">
+    <h2 id="sede-titulo" class="bloque__titulo">{sedes.length > 1 ? t('es', 'edicion.sedes') : t('es', 'edicion.sede')}</h2>
+    <div class="sede__columnas">
+      <ul role="list" class="sede__lista">
+        {sedes.map((lugar) => (
+          <li>
+            <p class="sede__nombre">{lugar}</p>
+            <p class="sede__localidad">{ed.localidad}</p>
+            <a class="enlace sede__mapa" href={comoLlegar(lugar)} rel="noopener">{t('es', 'edicion.comoLlegar')}<span class="solo-lector"> a {lugar}</span></a>
+          </li>
+        ))}
+        {sedesPendientes.map((p) => (
+          <SiCompleto datos={[p]} donde={`${ed.slug}: campo`}><li><p class="sede__nombre"><Dato v={p} donde={`${ed.slug}: campo`} /></p></li></SiCompleto>
+        ))}
+        {sedes.length === 0 && (
+          <li>
+            <p class="sede__localidad">{ed.localidad}</p>
+            <a class="enlace sede__mapa" href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(ed.localidad)}`} rel="noopener">{t('es', 'edicion.comoLlegar')}<span class="solo-lector"> a {ed.localidad}</span></a>
+          </li>
+        )}
+      </ul>
       {(ed.apoyo.length > 0 || ed.colaboradores.length > 0) && (
         <dl class="sede__apoyos">
           {ed.apoyo.length > 0 && <div><dt>{t('es', 'edicion.apoyo')}</dt>{ed.apoyo.map((a) => <dd>{a}</dd>)}</div>}
@@ -294,7 +338,42 @@ const categoriasTexto = ed.formatos.map((f) => `${f.nombre}: ${f.categorias.filt
     text-transform: uppercase;
   }
 
+  /* Protocolo y normativa: fichas del reglamento y el PDF */
+  .normativa__cabeza { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 16px 48px; }
+  .normativa__intro { max-width: 36ch; font-size: var(--step-lead); line-height: 1.3; }
+  .normativa__rejilla { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 48px; }
+  .regla { padding: 24px 20px 28px; background: var(--blanco); }
+  .regla--duracion { grid-column: span 2; background: var(--marino); color: var(--blanco); }
+  .regla__titulo { font-size: clamp(1.5rem, 1.1rem + 1vw, 2.25rem); text-transform: uppercase; }
+  .regla--duracion .regla__titulo { color: var(--amarillo); }
+  .regla__lista { display: grid; gap: 10px; margin: 16px 0 0; padding: 0; line-height: 1.4; }
+  .regla__lista li { position: relative; padding-left: 20px; }
+  .regla__lista li::before { content: ''; position: absolute; left: 0; top: 0.55em; width: 8px; height: 8px; background: var(--azul); }
+  .regla__lista--orden { counter-reset: paso; list-style: none; }
+  .regla__lista--orden li { counter-increment: paso; padding-left: 28px; }
+  .regla__lista--orden li::before {
+    content: counter(paso);
+    top: 0;
+    width: auto;
+    height: auto;
+    background: none;
+    font-family: var(--fuente-display);
+    font-weight: 700;
+    font-size: 1.15em;
+    color: var(--azul);
+  }
+  .duracion { display: grid; gap: 18px; margin: 18px 0 0; }
+  .duracion dt { font-weight: 500; }
+  .duracion dd { margin: 2px 0 0; font-family: var(--fuente-display); font-size: var(--step-sub); font-weight: 700; line-height: 1; text-transform: uppercase; }
+  .duracion__descanso { margin-top: 16px; }
+  /* La última ficha (protocolo) ocupa la fila entera, en dos columnas */
+  .regla:last-child { grid-column: 1 / -1; }
+  .regla:last-child .regla__lista { grid-template-columns: 1fr 1fr; column-gap: 32px; }
+  .normativa__boton { margin-top: 40px; }
+  .normativa__boton svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: square; }
+
   .sede__columnas { display: grid; grid-template-columns: 1fr 1fr; gap: 40px 32px; margin-top: 48px; }
+  .sede__lista { display: grid; gap: 32px; align-content: start; }
   .sede__nombre {
     font-family: var(--fuente-display);
     font-size: var(--step-sub);
@@ -337,6 +416,9 @@ const categoriasTexto = ed.formatos.map((f) => `${f.nombre}: ${f.categorias.filt
   .contacto { display: grid; padding-block: clamp(48px, 7vw, 112px); }
   .contacto :global(.cupon) { width: min(100%, 1120px); justify-self: center; }
 
+  @media (max-width: 1099px) {
+    .normativa__rejilla { grid-template-columns: 1fr 1fr; }
+  }
   @media (max-width: 899px) {
     .portada__texto, .inscripcion { grid-column: 1 / -1; }
     .inscripcion { margin-top: 40px; }
@@ -345,6 +427,9 @@ const categoriasTexto = ed.formatos.map((f) => `${f.nombre}: ${f.categorias.filt
     .categorias__campo { position: static; width: 100%; margin-top: 40px; color: var(--azul); --grosor: 0.4; }
   }
   @media (max-width: 599px) {
-    .incluye__lista, .categorias__formatos, .sede__columnas { grid-template-columns: 1fr; }
+    .incluye__lista, .categorias__formatos, .sede__columnas, .normativa__rejilla { grid-template-columns: 1fr; }
+    .regla--duracion { grid-column: auto; }
+    .regla:last-child .regla__lista { grid-template-columns: 1fr; }
+    .normativa__boton { width: 100%; }
   }
 </style>

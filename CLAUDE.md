@@ -167,9 +167,36 @@ abre un email a aexbuyer2026@gmail.com con el asunto del torneo y la build lo li
     `--dry-run`, y nota en su CLAUDE.md. Sin subir ni commit allí.
 - [x] Bloque 5: propuesta en `docs/propuesta-myteaminfo.md`. **No implementar hasta que la aprueben.**
 
+**Correcciones tras la revisión (7 de noviembre de 2026):**
+- **Torneos 2027:** fuera ITE Football; entra MIC7 (Salou, 11–13 de junio), que solo lleva descripción, fechas,
+  lugar e inscripción.
+  - La Villarreal pasa a «Yellow Cup» (`/academy/torneos/yellow-cup/`) con las categorías y lo que incluye su PDF.
+  - Siguen ocultos el programa, el lugar del acto inaugural y la G13 («nacidas en 2016 y 2014» en el PDF).
+  - Sin su logo, porque lleva el escudo del Villarreal CF.
+  - Cada torneo tiene su `descripcion` y su Google Form en `formulario`.
+  - Nombres según la lista oficial: «Copa UniQ Andorra», «MadCup».
+- **Valencia:** dos sedes, Sant Gregori y Parc Central (`sedes` en `cup-ediciones.ts`), cada una con su «Cómo
+  llegar».
+- **Preinscripción:** `/academy/preinscripcion/` (`src/data/preinscripcion.ts`), pestaña en el menú (`menuAcademia`
+  en `src/lib/torneos.ts`) y botón en la portada de la academia.
+- **Palmarés:** vitrina de trofeos (`src/fotos/trofeos/`).
+  - Recortados con rembg (BiRefNet) de `contenido/fotos/palmares/IMG_2689` y `2690`, imágenes autorizadas por la
+    organización.
+  - Flotan y giran con CSS; en el móvil, carrusel deslizable; con «Reducir movimiento», quietos.
+- **Protocolo y normativa** en cada edición:
+  - El resumen común está en `src/data/normativa.ts`; la duración de los partidos va en cada edición.
+  - Los PDF se descargan desde `public/normativa/` (solo cambia el título interno; los originales están en
+    `contenido/normativa/`, fuera de git).
+  - El resumen quita la frase pegada por error en el punto 6.
+- **Cabecera:** entre 900 y 1199 px, con seis apartados, el nombre se oculta y queda el logo.
+
 **Pendiente de la organización (nuevo):**
-- Enlaces de los Google Form: 8 torneos, Madrid y Barcelona.
-- Villarreal Yellow Cup: PDF, programa con fechas correctas, lugar del acto inaugural y categorías.
+- Teléfono 615 72 25 83: la instrucción vino con las dos opciones sin elegir, así que sigue oculto hasta que se
+  confirme.
+- Los PDF oficiales de normativa siguen con el error del punto 6; habría que corregirlos en el original.
+- Contradicciones entre cartel y reglamento, sin publicar: Infantil femenino en Madrid (no está en su reglamento)
+  y en Barcelona; Cadete en Barcelona (no está en el cartel).
+- Google Form de las ediciones de Madrid y Barcelona de la Cup.
+- Yellow Cup: programa con fechas correctas, lugar del acto inaugural y años de la G13.
 - Campo de la edición de Barcelona.
 - Si hay Infantil femenino en Valencia, Madrid y Barcelona.
-- Si el teléfono 615 72 25 83 de los PDF se publica en la web.

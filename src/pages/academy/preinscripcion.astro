@@ -1,0 +1,81 @@
+---
+/**
+ * Preinscripción en la academia para la temporada: el texto de la organización y un botón grande al Google Form
+ * (src/data/preinscripcion.ts).
+ */
+import Cabecera from '../../components/Cabecera.astro';
+import Monograma from '../../components/Monograma.astro';
+import { academy, cup } from '../../data/contenido';
+import { preinscripcion as pre } from '../../data/preinscripcion';
+import { t } from '../../i18n/ui';
+import Base from '../../layouts/Base.astro';
+import { ruta } from '../../lib/ruta';
+import { menuAcademia } from '../../lib/torneos';
+
+const enlaces = menuAcademia((c) => t('es', c), { actual: 'preinscripcion' });
+---
+<Base titulo={`${pre.titulo} · ${pre.temporada} · ${academy.nombre}`} descripcion={`${pre.parrafos[0]} ${pre.parrafos[1]}`} colorTema="#FFED00" compartir="academy">
+  <Cabecera slot="cabecera" marca={academy.nombre} capitulo="amarillo" enlaces={enlaces} otra={{ href: ruta('/cup/'), texto: cup.nombre }} />
+
+  <section class="pre" data-capitulo="amarillo" aria-labelledby="pre-titulo">
+    <div class="pre__texto">
+      <h1 id="pre-titulo" class="pre__titulo"><span>{pre.titulo}</span> <span class="pre__temporada">{pre.temporada}</span></h1>
+      <p class="pre__bienvenida">{pre.bienvenida}</p>
+      {pre.parrafos.map((p) => <p class="pre__parrafo">{p}</p>)}
+      <a class="boton pre__boton" href={pre.formulario} rel="noopener" target="_blank">
+        {pre.boton}<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6" /></svg>
+      </a>
+    </div>
+    <Monograma class="pre__xb" />
+  </section>
+
+  <section class="bloque cierre" data-capitulo="marino" aria-label={pre.lema}>
+    <p class="cierre__lema">{pre.lema}</p>
+    <p class="cierre__texto">{pre.cierre}</p>
+    <a class="boton" href={pre.formulario} rel="noopener" target="_blank">{pre.boton}</a>
+  </section>
+</Base>
+
+<style>
+  .pre {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    column-gap: 16px;
+    align-items: center;
+    min-height: calc(100svh - var(--cabecera));
+    padding: clamp(48px, 7vh, 96px) var(--margen);
+  }
+  .pre__texto { grid-column: 1 / 9; display: grid; justify-items: start; gap: 20px; }
+  .pre__titulo { font-size: clamp(3.5rem, 1rem + 8vw, 10rem); line-height: 0.85; text-transform: uppercase; }
+  .pre__titulo span { display: block; }
+  .pre__temporada { margin-top: 12px; font-size: var(--step-sub); color: var(--azul); }
+  .pre__bienvenida {
+    margin-top: 16px;
+    font-family: var(--fuente-display);
+    font-size: var(--step-sub);
+    font-weight: 700;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+  .pre__parrafo { max-width: 52ch; font-size: var(--step-lead); line-height: 1.4; }
+  /* El botón, más grande que los demás: es la única acción de la página */
+  .pre__boton { min-height: 72px; margin-top: 16px; padding: 0 36px; font-size: var(--step-lead); }
+  .pre__boton svg { width: 28px; height: 28px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: square; transition: translate 200ms var(--ease-out); }
+  @media (hover: hover) and (pointer: fine) {
+    .pre__boton:hover svg { translate: 4px 0; }
+  }
+  .pre__xb { grid-column: 10 / 13; width: 100%; color: var(--azul); }
+
+  .cierre { display: grid; justify-items: start; gap: 20px; }
+  .cierre__lema { max-width: 22ch; font-family: var(--fuente-display); font-size: var(--step-head); font-weight: 700; line-height: 0.9; text-transform: uppercase; }
+  .cierre__texto { font-size: var(--step-lead); color: var(--amarillo); }
+
+  @media (max-width: 899px) {
+    .pre { min-height: 0; }
+    .pre__texto { grid-column: 1 / -1; }
+    .pre__xb { display: none; }
+  }
+  @media (max-width: 599px) {
+    .pre__boton { width: 100%; }
+  }
+</style>

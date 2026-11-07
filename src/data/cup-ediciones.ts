@@ -7,6 +7,8 @@
  * - `formulario`: el enlace del Google Form de la edición. Mientras sea pendiente(), el botón abre un email a la
  *   organización con la edición en el asunto.
  * - Lo marcado con pendiente() no se muestra en producción (Infantil femenino, hasta que la organización lo confirme).
+ *   Contradicciones entre cartel y reglamento, sin publicar: Madrid (el reglamento no trae Infantil femenino) y
+ *   Barcelona (el reglamento trae Cadete, que el cartel no lleva).
  */
 import { pendiente, type Dato } from '../lib/pendiente';
 
@@ -15,7 +17,8 @@ export interface Edicion {
   slug: string;
   ciudad: string;
   localidad: string;
-  sede: Dato<string>;
+  /** Campos donde se juega (cada uno con su «Cómo llegar») */
+  sedes: Dato<string>[];
   inicio: string;
   fin: string;
   inscripcion: 'abierta' | 'cerrada';
@@ -25,6 +28,8 @@ export interface Edicion {
   equipos?: number;
   /** Tiene la app oficial del torneo (calendario, resultados y directo) */
   app?: boolean;
+  /** Resumen del reglamento: la duración de los partidos (lo demás es común, src/data/normativa.ts) y el PDF oficial */
+  normativa: { pdf: string; duracion: { categorias: string; partes: string }[] };
   /** «Con el apoyo de» */
   apoyo: string[];
   colaboradores: string[];
@@ -37,7 +42,7 @@ export const ediciones: Edicion[] = [
     slug: 'valencia',
     ciudad: 'Valencia',
     localidad: 'Torrent',
-    sede: 'Campo de Fútbol Sant Gregori',
+    sedes: ['Campo de Fútbol Sant Gregori', 'Parc Central'],
     inicio: '2026-12-05',
     fin: '2026-12-07',
     inscripcion: 'cerrada',
@@ -48,6 +53,13 @@ export const ediciones: Edicion[] = [
     ],
     equipos: 60,
     app: true,
+    normativa: {
+      pdf: 'normativa-valencia.pdf',
+      duracion: [
+        { categorias: 'Benjamín y Alevín (fútbol 8)', partes: 'Dos partes de 20 minutos' },
+        { categorias: 'Infantil y Cadete (fútbol 11)', partes: 'Dos partes de 25 minutos' },
+      ],
+    },
     apoyo: [],
     colaboradores: ['Ajuntament de Torrent', 'Sport Management'],
   },
@@ -55,7 +67,7 @@ export const ediciones: Edicion[] = [
     slug: 'madrid',
     ciudad: 'Madrid',
     localidad: 'Paracuellos de Jarama',
-    sede: 'Campo de Fútbol Paracuellos',
+    sedes: ['Campo de Fútbol Paracuellos'],
     inicio: '2027-01-02',
     fin: '2027-01-04',
     inscripcion: 'abierta',
@@ -64,6 +76,13 @@ export const ediciones: Edicion[] = [
       { nombre: 'Fútbol 7', categorias: ['Benjamín', 'Alevín', infantilFemenino] },
       { nombre: 'Fútbol 11', categorias: ['Infantil', 'Cadete'] },
     ],
+    normativa: {
+      pdf: 'normativa-madrid.pdf',
+      duracion: [
+        { categorias: 'Benjamín y Alevín (fútbol 7)', partes: 'Dos partes de 20 minutos' },
+        { categorias: 'Infantil y Cadete (fútbol 11)', partes: 'Dos partes de 25 minutos' },
+      ],
+    },
     apoyo: ['Ayuntamiento de Paracuellos de Jarama'],
     colaboradores: [],
   },
@@ -71,7 +90,7 @@ export const ediciones: Edicion[] = [
     slug: 'barcelona',
     ciudad: 'Barcelona',
     localidad: 'Sant Vicenç dels Horts',
-    sede: pendiente('campo de la edición de Barcelona'),
+    sedes: [pendiente('campo de la edición de Barcelona')],
     inicio: '2027-02-06',
     fin: '2027-02-07',
     inscripcion: 'abierta',
@@ -80,6 +99,13 @@ export const ediciones: Edicion[] = [
       { nombre: 'Fútbol 7', categorias: ['Benjamín sub-9', 'Benjamín sub-10', 'Alevín sub-11', 'Alevín sub-12', infantilFemenino] },
       { nombre: 'Fútbol 11', categorias: ['Infantil sub-13', 'Infantil sub-14'] },
     ],
+    normativa: {
+      pdf: 'normativa-barcelona.pdf',
+      duracion: [
+        { categorias: 'Benjamín y Alevín (fútbol 7)', partes: 'Dos partes de 15 minutos' },
+        { categorias: 'Infantil (fútbol 11)', partes: 'Dos partes de 20 minutos' },
+      ],
+    },
     apoyo: ["Ajuntament de Sant Vicenç dels Horts"],
     colaboradores: [],
   },

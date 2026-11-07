@@ -5,6 +5,7 @@
  */
 import Cabecera from '../../../components/Cabecera.astro';
 import Dato from '../../../components/Dato.astro';
+import Pendiente from '../../../components/Pendiente.astro';
 import LogoTorneo from '../../../components/LogoTorneo.astro';
 import SiCompleto from '../../../components/SiCompleto.astro';
 import { academy, cup, entidad } from '../../../data/contenido';
@@ -14,7 +15,7 @@ import Base from '../../../layouts/Base.astro';
 import { dia, euros, rango } from '../../../lib/fechas';
 import { completo, esPendiente } from '../../../lib/pendiente';
 import { ruta } from '../../../lib/ruta';
-import { enlaceInscripcion, fondoLogo, menuTorneos, nombreCompleto } from '../../../lib/torneos';
+import { enlaceInscripcion, fondoLogo, menuAcademia, nombreCompleto } from '../../../lib/torneos';
 
 export function getStaticPaths() {
   return torneos.map((torneo) => ({ params: { torneo: torneo.slug }, props: { torneo } }));
@@ -27,18 +28,12 @@ const fechas = rango(tr.inicio, tr.fin);
 const inscripcion = enlaceInscripcion(tr.formulario, t('es', 'torneo.asunto', { torneo: `${nombre} 2027` }), Astro.url.pathname);
 const externo = !inscripcion.startsWith('mailto:');
 
-const categorias = completo(tr.categorias) ? tr.categorias : [];
+const categorias = tr.categorias && completo(tr.categorias) ? tr.categorias : [];
 const formatos = [...new Set(categorias.map((g) => g.formato))];
-const programa = completo(tr.programa) ? tr.programa : [];
+const programa = tr.programa && completo(tr.programa) ? tr.programa : [];
 
 const academia = (ancla: string) => ruta(`/academy/${ancla}`);
-const enlaces = [
-  { href: academia('#quienes'), texto: t('es', 'nav.quienes') },
-  { href: academia('#torneos'), texto: t('es', 'nav.torneos'), ...menuTorneos(tr.slug), todos: { href: academia('#torneos'), texto: t('es', 'nav.verTodos') } },
-  { href: academia('#palmares'), texto: t('es', 'nav.palmares') },
-  { href: academia('#equipacion'), texto: t('es', 'nav.equipacion') },
-  { href: academia('#contacto'), texto: t('es', 'nav.contacto') },
-];
+const enlaces = menuAcademia((c) => t('es', c), { actual: tr.slug });
 
 // Datos estructurados del torneo para los buscadores
 const evento = {
@@ -51,12 +46,13 @@ const evento = {
   eventStatus: 'https://schema.org/EventScheduled',
   eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
   location: { '@type': 'Place', name: tr.lugar, address: { '@type': 'PostalAddress', addressLocality: tr.lugar } },
-  offers: { '@type': 'Offer', price: tr.precio, priceCurrency: 'EUR', url: Astro.site ? new URL(Astro.url.pathname, Astro.site).href : undefined },
+  description: tr.descripcion,
+  offers: tr.precio ? { '@type': 'Offer', price: tr.precio, priceCurrency: 'EUR', url: Astro.site ? new URL(Astro.url.pathname, Astro.site).href : undefined } : undefined,
 };
 ---
 <Base
   titulo={`${nombre} 2027 · ${academy.nombre}`}
-  descripcion={`${nombre}: ${fechas}, ${tr.lugar}. ${euros(tr.precio)}${tr.precioNota ? ` (${tr.precioNota.toLowerCase()})` : ''}. ${tr.incluye.slice(3, 6).join(', ')}.`}
+  descripcion={`${nombre}: ${fechas}, ${tr.lugar}.${tr.precio ? ` ${euros(tr.precio)}${tr.precioNota ? ` (${tr.precioNota.toLowerCase()})` : ''}.` : ''} ${tr.descripcion.split('. ')[0]}.`}
   colorTema="#FFED00"
   compartir="academy"
 >
@@ -73,10 +69,10 @@ const evento = {
         <dl class="ficha__datos">
           <div><dt class="solo-lector">Fechas</dt><dd class="ficha__fechas"><time datetime={tr.inicio}>{fechas}</time></dd></div>
           <div><dt class="solo-lector">Lugar</dt><dd class="ficha__lugar">{tr.lugar}</dd></div>
-          <div class="ficha__precio">
+          {tr.precio && <div class="ficha__precio">
             <dt class="solo-lector">Precio</dt>
             <dd><span class="ficha__euros">{euros(tr.precio)}</span> <span class="ficha__por">{t('es', 'torneo.porJugador')}{tr.precioNota && <>. {tr.precioNota}</>}</span></dd>
-          </div>
+          </div>}
         </dl>
         <a class="boton ficha__boton" href={inscripcion} {...(externo ? { rel: 'noopener', target: '_blank' } : {})}>{t('es', 'torneo.inscribete')}</a>
       </div>
@@ -84,19 +80,25 @@ const evento = {
     </div>
   </section>
 
-  <section class="bloque incluye" data-capitulo="blanco" aria-labelledby="incluye-titulo">
-    <h2 id="incluye-titulo" class="bloque__titulo">{t('es', 'torneo.incluye')}</h2>
-    <ul role="list" class="incluye__lista">
-      {tr.incluye.map((i) => <li>{i}</li>)}
-    </ul>
+  <section class="bloque presentacion" data-capitulo="blanco" aria-label={t('es', 'torneo.presentacion')}>
+    <p class="presentacion__texto">{tr.descripcion}</p>
     {tr.destacado && <p class="incluye__destacado">{tr.destacado}</p>}
-    <a class="enlace incluye__equipacion" href={academia('#equipacion')}>{t('es', 'torneo.equipacion')}</a>
   </section>
 
-  <SiCompleto datos={[tr.categorias]} donde={`${tr.slug}: categorías`}>
+  {tr.incluye && (
+    <section class="bloque incluye" data-capitulo="blanco" aria-labelledby="incluye-titulo">
+      <h2 id="incluye-titulo" class="bloque__titulo">{t('es', 'torneo.incluye')}</h2>
+      <ul role="list" class="incluye__lista">
+        {tr.incluye.map((i) => <li>{i}</li>)}
+      </ul>
+      <a class="enlace incluye__equipacion" href={academia('#equipacion')}>{t('es', 'torneo.equipacion')}</a>
+    </section>
+  )}
+
+  {tr.categorias && <SiCompleto datos={[tr.categorias]} donde={`${tr.slug}: categorías`}>
     <section class="bloque categorias" data-capitulo="marino" aria-labelledby="categorias-titulo">
       <h2 id="categorias-titulo" class="bloque__titulo">{t('es', 'torneo.categorias')}</h2>
-      {esPendiente(tr.categorias) && <p><Dato v={tr.categorias} donde={`${tr.slug}: categorías`} /></p>}
+      {esPendiente(tr.categorias!) && <p><Dato v={tr.categorias!} donde={`${tr.slug}: categorías`} /></p>}
       {formatos.map((f) => (
         <div class="formato">
           <h3 class="formato__nombre">{f}</h3>
@@ -105,9 +107,9 @@ const evento = {
               <div class="grupo">
                 <h4 class="grupo__genero">{g.genero === 'Masculina' ? t('es', 'torneo.masculina') : t('es', 'torneo.femenina')}</h4>
                 <ul role="list" class="grupo__lista">
-                  {g.categorias.map((c) => (
+                  {g.categorias.map((c) => completo(c) ? (
                     <li class="categoria"><span class="categoria__codigo">{c.codigo}</span> <span class="categoria__nacimiento">{c.nacimiento}</span></li>
-                  ))}
+                  ) : <Pendiente nota={c.pendiente} donde={`${tr.slug}: ${c.pendiente}`} />)}
                 </ul>
               </div>
             ))}
@@ -115,12 +117,12 @@ const evento = {
         </div>
       ))}
     </section>
-  </SiCompleto>
+  </SiCompleto>}
 
-  <SiCompleto datos={[tr.programa]} donde={`${tr.slug}: programa`}>
+  {tr.programa && <SiCompleto datos={[tr.programa]} donde={`${tr.slug}: programa`}>
     <section class="bloque programa" data-capitulo="azul" aria-labelledby="programa-titulo">
       <h2 id="programa-titulo" class="bloque__titulo">{t('es', 'torneo.programa')}</h2>
-      {esPendiente(tr.programa) && <p><Dato v={tr.programa} donde={`${tr.slug}: programa`} /></p>}
+      {esPendiente(tr.programa!) && <p><Dato v={tr.programa!} donde={`${tr.slug}: programa`} /></p>}
       <ol role="list" class="programa__dias">
         {programa.map((d, i) => (
           <li class="dia">
@@ -134,7 +136,7 @@ const evento = {
       </ol>
       {tr.notas?.map((n) => <p class="programa__nota">{completo(n) ? n : <Dato v={n} donde={`${tr.slug}: nota del programa`} />}</p>)}
     </section>
-  </SiCompleto>
+  </SiCompleto>}
 
   <section class="bloque cierre" data-capitulo="amarillo" aria-labelledby="cierre-titulo">
     <h2 id="cierre-titulo" class="bloque__titulo">{t('es', 'torneo.cierre')}</h2>
@@ -183,6 +185,9 @@ const evento = {
   .ficha__por { font-size: var(--step-body); font-weight: 500; }
   .ficha__logo { grid-column: 9 / 13; }
 
+  .presentacion:has(+ .incluye) { padding-bottom: 0; }
+  .presentacion__texto { max-width: 52ch; font-size: var(--step-lead); line-height: 1.4; }
+  .presentacion + .incluye { padding-top: clamp(56px, 7vw, 104px); }
   .incluye__lista {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -203,7 +208,7 @@ const evento = {
     background: var(--acento);
   }
   .incluye__destacado {
-    margin-top: 48px;
+    margin-top: 40px;
     max-width: 30ch;
     font-family: var(--fuente-display);
     font-size: var(--step-sub);

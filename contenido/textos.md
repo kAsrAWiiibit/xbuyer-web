@@ -12,8 +12,8 @@
 - Titular: Más de 20 títulos en menos de 3 años.
 - Texto: Una trayectoria que demuestra nuestro compromiso con la formación, el talento y la competición.
 - Costa Daurada Cup: 15 veces campeones. 2025, B12. [pendiente: año y categoría de los otros títulos]
-- Copa UNIQ Andorra: 3 veces campeones. 2026. [pendiente: categoría y años de los otros títulos]
-- MADCUP: subcampeones. 2025, masculino. [pendiente: categoría]
+- Copa UniQ Andorra: 3 veces campeones. 2026. [pendiente: categoría y años de los otros títulos]
+- MadCup: subcampeones. 2025, masculino. [pendiente: categoría]
 - Central Cup (Torrent): campeones. 2025, S10.
 - MEDCUP: campeones. 2025, S12.
 - Swit Cup: campeones. 2025, U14.

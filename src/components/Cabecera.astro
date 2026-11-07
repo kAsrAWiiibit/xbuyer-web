@@ -28,7 +28,7 @@ const { marca, capitulo, enlaces = [], otra, idioma = 'es', logo = 'academy' } =
 <header class="cabecera" data-capitulo={capitulo}>
   <a class="cabecera__marca" href={ruta('/')}>
     {logo === 'cup' ? <LogoCup class="cabecera__xb cabecera__xb--cup" /> : <Monograma class="cabecera__xb" />}
-    <span>{marca}</span>
+    <span class="cabecera__nombre">{marca}</span>
     <span class="solo-lector">({t(idioma, 'nav.inicio')})</span>
   </a>
   {enlaces.length > 0 && (
@@ -55,7 +55,7 @@ const { marca, capitulo, enlaces = [], otra, idioma = 'es', logo = 'academy' } =
               </details>
             </li>
           ) : (
-            <li><a href={e.href}>{e.texto}</a></li>
+            <li><a href={e.href} aria-current={e.actual ? 'page' : undefined}>{e.texto}</a></li>
           ),
         )}
       </ul>
@@ -184,6 +184,13 @@ const { marca, capitulo, enlaces = [], otra, idioma = 'es', logo = 'academy' } =
   @media (prefers-reduced-motion: reduce) {
     .menu[open] .menu__panel { animation: none; }
     .menu__flecha { transition: none; }
+  }
+
+  /* Tableta apaisada: con seis apartados no cabe el nombre; queda el logo, que también lleva al inicio */
+  @media (min-width: 900px) and (max-width: 1199px) {
+    .cabecera:has(.cabecera__nav) { gap: 20px; }
+    .cabecera:has(.cabecera__nav) .cabecera__nombre { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    .cabecera__nav > ul { gap: 20px; }
   }
 
   @media (max-width: 899px) {

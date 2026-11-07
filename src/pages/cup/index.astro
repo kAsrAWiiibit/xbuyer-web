@@ -80,7 +80,7 @@ const fotosDe = (ciudad: string, fechas: string) =>
             <span class="edicion__estado">{e.inscripcion === 'abierta' ? t('es', 'cup.abiertas') : t('es', 'cup.cerradas')}</span>
             <span class="edicion__ciudad">{e.ciudad}</span>
             <span class="edicion__fechas"><time datetime={e.inicio}>{rango(e.inicio, e.fin)}</time></span>
-            <span class="edicion__lugar">{e.localidad}{completo(e.sede) && <>{' · '}{e.sede}</>}</span>
+            <span class="edicion__lugar">{[e.localidad, ...e.sedes.filter(completo)].join(' · ')}</span>
             <span class="edicion__ver">{t('es', 'cup.verEdicion')}<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6" /></svg></span>
           </a>
         </li>

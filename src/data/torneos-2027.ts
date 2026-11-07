@@ -5,15 +5,15 @@
  * (/academy/torneos/<slug>/) salen de este archivo.
  *
  * - Fechas en ISO (AAAA-MM-DD); el día de la semana se calcula, no se escribe.
- * - `formulario`: el enlace del Google Form de inscripción. Mientras sea pendiente(), el botón «Inscríbete» abre
- *   un email a la academia con el nombre del torneo en el asunto.
+ * - `formulario`: el enlace del Google Form de inscripción (si fuera pendiente(), el botón abriría un email a la
+ *   academia con el nombre del torneo en el asunto).
  * - Lo que no está confirmado va con pendiente(): en producción no se muestra.
  */
 import { pendiente, type Dato } from '../lib/pendiente';
 
 export type Formato = 'Fútbol 11' | 'Fútbol 8' | 'Fútbol 7';
 export interface Categoria { codigo: string; nacimiento: string }
-export interface GrupoCategorias { genero: 'Masculina' | 'Femenina'; formato: Formato; categorias: Categoria[] }
+export interface GrupoCategorias { genero: 'Masculina' | 'Femenina'; formato: Formato; categorias: Dato<Categoria>[] }
 export interface Dia { fecha: string; actividades: string[] }
 export interface Torneo {
   slug: string;
@@ -23,15 +23,17 @@ export interface Torneo {
   inicio: string;
   fin: string;
   lugar: string;
-  /** En euros, por jugador */
-  precio: number;
+  /** Texto de presentación del torneo (de la organización) */
+  descripcion: string;
+  /** En euros, por jugador (sin precio: no se muestra) */
+  precio?: number;
   /** Aclaración junto al precio */
   precioNota?: string;
   /** Archivo en src/fotos/torneos/ (null: solo el nombre) */
   logo: string | null;
-  incluye: string[];
-  categorias: Dato<GrupoCategorias[]>;
-  programa: Dato<Dia[]>;
+  incluye?: string[];
+  categorias?: Dato<GrupoCategorias[]>;
+  programa?: Dato<Dia[]>;
   /** Avisos del programa (dónde se juegan las finales…) */
   notas?: Dato<string>[];
   /** Una frase sobre el torneo, si la organización la ha dado */
@@ -54,7 +56,6 @@ const costaDaurada: GrupoCategorias[] = [
 const f7Masculina = { genero: 'Masculina', formato: 'Fútbol 7', categorias: [nacidos('B12', 2015), nacidos('B11', 2016), nacidos('B10', 2017), nacidos('B9', 2018), nacidos('B8', 2019)] } as const satisfies GrupoCategorias;
 const f7Femenina = { genero: 'Femenina', formato: 'Fútbol 7', categorias: [nacidas('G14', 2013), nacidas('G12', 2015)] } as const satisfies GrupoCategorias;
 
-const correo = (que: string) => pendiente(`enlace del formulario de inscripción (${que})`) as Dato<string>;
 
 export const torneos: Torneo[] = [
   {
@@ -80,7 +81,9 @@ export const torneos: Torneo[] = [
       { fecha: '2027-03-25', actividades: ['Playoffs y finales', 'Entrega de medallas y trofeos', 'Recogida de los equipos'] },
     ],
     notas: ['Finales en el Nàstic Stadium (G20, G17, B16 y B15) y en el Fútbol Salou Sports Center.'],
-    formulario: correo('Costa Daurada Cup, Semana Santa'),
+    descripcion:
+      'Xbuyer Team Academy participará en la Costa Daurada Cup 2027, un torneo internacional de fútbol base que tendrá lugar en Salou del 21 al 25 de marzo. Nuestros jugadores representarán a la academia en una competición que reunirá equipos de diferentes lugares, disfrutando de unos días de fútbol, convivencia y grandes experiencias dentro y fuera del campo.',
+    formulario: 'https://forms.gle/uoMMPqLdCUV3jzUL7',
   },
   {
     slug: '1900-cup',
@@ -105,38 +108,13 @@ export const torneos: Torneo[] = [
       { fecha: '2027-03-27', actividades: ['Fases finales'] },
       { fecha: '2027-03-28', actividades: ['Finales', 'Entrega de medallas y trofeos'] },
     ],
-    formulario: correo('1900 Cup'),
-  },
-  {
-    slug: 'ite-football',
-    nombre: 'ITE Football',
-    inicio: '2027-03-25',
-    fin: '2027-03-28',
-    lugar: "Terres de l'Ebre",
-    precio: 535,
-    logo: 'ite-football.png',
-    incluye: [
-      'Inscripción al torneo', 'Seguro médico', 'Entrenadores titulados', '4 partidos garantizados', '4 días y 3 noches en albergue',
-      'Régimen de pensión completa', 'Traslados a los campos de juego', '2 entrenamientos previos', 'Equipación oficial Adidas de juego y paseo',
-    ],
-    categorias: [
-      { genero: 'Masculina', formato: 'Fútbol 11', categorias: [nacidos('B16', 2011), nacidos('B15', 2012), nacidos('B14', 2013), nacidos('B13', 2014)] },
-      { genero: 'Femenina', formato: 'Fútbol 11', categorias: [nacidas('G16', 2011)] },
-      f7Masculina,
-      f7Femenina,
-    ],
-    programa: [
-      { fecha: '2027-03-25', actividades: ['Llegada y recogida de documentos', 'Ceremonia de apertura del torneo'] },
-      { fecha: '2027-03-26', actividades: ['Partidos de clasificación'] },
-      { fecha: '2027-03-27', actividades: ['Fases eliminatorias'] },
-      // En el PDF pone «Jueves, 25 de marzo»: es el domingo 28 (confirmado por la organización)
-      { fecha: '2027-03-28', actividades: ['Fases eliminatorias', 'Finales', 'Entrega de medallas y trofeos', 'Recogida de los equipos'] },
-    ],
-    formulario: correo('ITE Football'),
+    descripcion:
+      'Xbuyer Team Academy estará presente en la 1900 Cup 2027, un torneo internacional de fútbol base que se celebrará en Barcelona del 25 al 28 de marzo. Nuestros equipos competirán representando a la academia, compartiendo cuatro días de fútbol, convivencia y grandes experiencias junto a jugadores y equipos de diferentes procedencias.',
+    formulario: 'https://forms.gle/vHLutm48MNVaUcs96',
   },
   {
     slug: 'copa-uniq-andorra',
-    nombre: 'Copa UNIQ Andorra',
+    nombre: 'Copa UniQ Andorra',
     inicio: '2027-06-04',
     fin: '2027-06-06',
     lugar: 'Andorra',
@@ -153,11 +131,25 @@ export const torneos: Torneo[] = [
       // En el PDF pone «Domingo, 06 de marzo»: es junio
       { fecha: '2027-06-06', actividades: ['Fases eliminatorias', 'Finales', 'Entrega de medallas y trofeos', 'Recogida de los equipos'] },
     ],
-    formulario: correo('Copa UNIQ Andorra'),
+    descripcion:
+      'Xbuyer Team Academy participará en la Copa UniQ Andorra 2027, un torneo internacional de fútbol base que se celebrará en Andorra del 4 al 6 de junio. Nuestros equipos representarán a la academia en esta competición, disfrutando de varios días de fútbol, convivencia y nuevas experiencias deportivas junto a equipos de diferentes procedencias.',
+    formulario: 'https://forms.gle/SLBYqBJLgMjd8vW86',
+  },
+  {
+    // Sin PDF: solo descripción, fechas, lugar e inscripción
+    slug: 'mic7',
+    nombre: 'MIC7',
+    inicio: '2027-06-11',
+    fin: '2027-06-13',
+    lugar: 'Salou (Tarragona)',
+    logo: null,
+    descripcion:
+      'Xbuyer Team Academy participará en la MIC7 2027, un torneo internacional de fútbol base que se celebrará en Salou del 11 al 13 de junio. Nuestros equipos representarán a la academia en esta competición, compartiendo varios días de fútbol, convivencia y nuevas experiencias junto a equipos de diferentes lugares.',
+    formulario: 'https://forms.gle/u7FKX72g4UdtrwXy8',
   },
   {
     slug: 'madcup',
-    nombre: 'MADCUP',
+    nombre: 'MadCup',
     inicio: '2027-06-18',
     fin: '2027-06-23',
     lugar: 'Madrid',
@@ -182,25 +174,37 @@ export const torneos: Torneo[] = [
       { fecha: '2027-06-22', actividades: ['Eliminatorias'] },
       { fecha: '2027-06-23', actividades: ['Finales', 'Entrega de trofeos'] },
     ],
-    formulario: correo('MADCUP'),
+    descripcion:
+      'Xbuyer Team Academy participará en la MadCup 2027, uno de los torneos internacionales de fútbol base más destacados, que se celebrará en Madrid del 18 al 23 de junio. Nuestros equipos representarán a la academia en esta gran cita deportiva, compartiendo días de competición, convivencia y experiencias inolvidables junto a equipos de diferentes países.',
+    formulario: 'https://forms.gle/3tufDNfK5hxWNwFz9',
   },
   {
-    // Sin PDF propio: datos del resumen de la organización. El programa del PDF tenía fechas de «marzo» y el acto
-    // inaugural en el «RCDE Stadium»: no se publica hasta que lo confirmen.
-    slug: 'villarreal-yellow-cup',
-    nombre: 'Villarreal Yellow Cup',
+    // Del PDF de la organización. Su programa tiene fechas de «marzo» y el acto inaugural sale en el «RCDE Stadium» (en el
+    // programa, en el Estadio de la Cerámica): ni el programa ni el lugar del acto se publican hasta que lo confirmen.
+    slug: 'yellow-cup',
+    nombre: 'Yellow Cup',
     inicio: '2027-06-24',
     fin: '2027-06-27',
     lugar: 'Vila-real (Castellón)',
     precio: 655,
+    // Su logo lleva el escudo del Villarreal CF: sin escudos de otros clubes, va solo el nombre
     logo: null,
     incluye: [
-      'Inscripción al torneo', 'Seguro médico', 'Entrenadores titulados', '4 días y 3 noches en hotel', 'Visita al Estadio de la Cerámica',
+      'Inscripción al torneo', 'Seguro médico', 'Entrenadores titulados', '4 partidos garantizados', '4 días y 3 noches en hotel',
+      'Régimen de pensión completa', 'Visita al Estadio de la Cerámica', '2 entrenamientos previos', 'Acto inaugural',
       'Equipación oficial Adidas de juego y paseo',
     ],
-    categorias: pendiente('categorías de la Villarreal Yellow Cup'),
-    programa: pendiente('programa de la Villarreal Yellow Cup (el PDF tiene fechas de marzo) y lugar del acto inaugural'),
-    formulario: correo('Villarreal Yellow Cup'),
+    categorias: [
+      { genero: 'Masculina', formato: 'Fútbol 11', categorias: [{ codigo: 'B16', nacimiento: 'Nacidos en 2011 y 2012' }, nacidos('B14', 2013), nacidos('B13', 2014)] },
+      { genero: 'Femenina', formato: 'Fútbol 11', categorias: [{ codigo: 'G16', nacimiento: 'Nacidas en 2011 y 2012' }, { codigo: 'G14', nacimiento: 'Nacidas en 2013 y 2014' }] },
+      { genero: 'Masculina', formato: 'Fútbol 7', categorias: [nacidos('B12', 2015), nacidos('B11', 2016), nacidos('B10', 2017), nacidos('B9', 2018), { codigo: 'B8', nacimiento: 'Nacidos en 2019 y 2020' }] },
+      // En el PDF: «G13: Nacidas en 2016 y 2014» (se salta 2015)
+      { genero: 'Femenina', formato: 'Fútbol 7', categorias: [pendiente('G13 de la Yellow Cup: el PDF dice «nacidas en 2016 y 2014»')] },
+    ],
+    programa: pendiente('programa de la Yellow Cup (el PDF tiene fechas de marzo) y lugar del acto inaugural'),
+    descripcion:
+      'Xbuyer Team Academy participará en la Yellow Cup 2027, un torneo internacional de fútbol base que se celebrará en Castellón del 24 al 27 de junio. Nuestros equipos representarán a la academia en esta competición, compartiendo varios días de fútbol, convivencia y grandes experiencias deportivas junto a equipos de diferentes procedencias.',
+    formulario: 'https://forms.gle/KAHMwR89idPfYvzu9',
   },
   {
     slug: 'costa-daurada-cup-verano',
@@ -223,7 +227,9 @@ export const torneos: Torneo[] = [
       { fecha: '2027-06-29', actividades: ['Partidos de clasificación', 'Playoffs'] },
       { fecha: '2027-06-30', actividades: ['Playoffs', 'Finales', 'Entrega de medallas y trofeos', 'Recogida de los equipos'] },
     ],
-    formulario: correo('Costa Daurada Cup, verano'),
+    descripcion:
+      'Xbuyer Team Academy participará en la Costa Daurada Cup 2027, un torneo internacional de fútbol base que se celebrará en Salou del 27 al 30 de junio. Nuestros equipos representarán a la academia en esta competición, disfrutando de varios días de fútbol, convivencia y grandes experiencias deportivas junto a equipos de diferentes procedencias.',
+    formulario: 'https://forms.gle/ZU4xpu93rvgSujdy9',
   },
   {
     slug: 'donosti-cup',
@@ -254,7 +260,9 @@ export const torneos: Torneo[] = [
       { fecha: '2027-07-11', actividades: ['Finales', 'Recogida de jugadores'] },
     ],
     destacado: 'Desde 1992, 5.000 clubes y 80 países han participado en la Donosti Cup.',
-    formulario: correo('Donosti Cup'),
+    descripcion:
+      'Xbuyer Team Academy participará en la Donosti Cup 2027, uno de los torneos internacionales de fútbol base más reconocidos, que se celebrará en Donostia-San Sebastián del 5 al 11 de julio. Nuestros equipos representarán a la academia en esta gran cita deportiva, disfrutando de una semana de competición, convivencia y experiencias inolvidables junto a equipos de diferentes países.',
+    formulario: 'https://forms.gle/RnT3N1CGJN89hRni8',
   },
 ];
 
@@ -262,7 +270,7 @@ export const torneos: Torneo[] = [
 for (const [i, t] of torneos.entries()) {
   if (t.fin < t.inicio) throw new Error(`torneos-2027: ${t.slug} acaba antes de empezar`);
   if (i > 0 && t.inicio < torneos[i - 1].inicio) throw new Error(`torneos-2027: ${t.slug} no va en orden de fechas`);
-  if (Array.isArray(t.programa))
+  if (t.programa && Array.isArray(t.programa))
     for (const d of t.programa) if (d.fecha < t.inicio || d.fecha > t.fin) throw new Error(`torneos-2027: ${t.slug}, el día ${d.fecha} cae fuera del torneo`);
   if (torneos.findIndex((o) => o.slug === t.slug) !== i) throw new Error(`torneos-2027: slug repetido ${t.slug}`);
 }
