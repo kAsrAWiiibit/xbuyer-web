@@ -1,7 +1,8 @@
 # BACKLOG
 
 > **RESUME HERE** (11 de noviembre de 2026): los cambios aprobados por los dueños están publicados en
-> https://xbuyerteamacademy.com (rama `cambios-reunion` fusionada en `main`; vista previa borrada). Siguiente:
+> https://xbuyerteamacademy.com (rama `cambios-reunion` fusionada en `main`). Falta borrar el repositorio de la vista
+> previa `kAsrAWiiibit/xbuyer-web-preview` (gh necesita `gh auth refresh -h github.com -s delete_repo`). Siguiente:
 > enlaces de los Google Form de la Cup Madrid y Barcelona (pegarlos en `formulario:` de `src/data/cup-ediciones.ts`,
 > `npm run formularios`, build y revisar el bloque `#inscripcion`). Ver «Pendiente de la organización».
 
