@@ -9,7 +9,7 @@ import { existsSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync 
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { DOMINIO } from '../src/data/sitio.mjs';
+import { DOMINIO, VISTA_PREVIA } from '../src/data/sitio.mjs';
 import { BORRADORES } from './borradores.mjs';
 
 const REGISTRO = '.pendientes.jsonl';
@@ -47,7 +47,11 @@ export default function pendientes() {
         const out = fileURLToPath(dir);
         if (DOMINIO) writeFileSync(join(out, 'CNAME'), `${DOMINIO}\n`);
         else logger.warn('Sin dominio propio (src/data/sitio.mjs): no se escribe CNAME.');
-        if (!BORRADORES) sitemap(out, sitio, base);
+        if (VISTA_PREVIA) {
+          // Vista previa: nada de sitemap y robots.txt que cierra la puerta (cada página lleva noindex)
+          writeFileSync(join(out, 'robots.txt'), 'User-agent: *\nDisallow: /\n');
+          writeFileSync(join(out, '.nojekyll'), '');
+        } else if (!BORRADORES) sitemap(out, sitio, base);
 
         if (BORRADORES) return logger.info('Build de borradores: los [pendiente] se ven a propósito.');
 

@@ -1,0 +1,151 @@
+---
+/**
+ * Título de portada que entra como un chute. Al cargar, las letras del título están apiñadas en una bola (pequeñas,
+ * giradas y solapadas, con su color) en el lado izquierdo (abajo a la izquierda en el ordenador; a la izquierda del
+ * título en el móvil), como un balón parado. La bola recibe el golpe (se aplasta un instante), sale disparada hacia
+ * la derecha en arco, girando, y en pleno vuelo se abre: cada letra sigue hacia la derecha, con giro y una estela
+ * (se estira), y frena hasta encajar en su sitio, de izquierda a derecha.
+ *
+ * Tiempos (emil-design-eng), 1,4 s en total, solo al cargar (no se repite al hacer scroll):
+ * - 0–220 ms: la bola, quieta (se ve como un balón).
+ * - 220–300 ms: el golpe: se aplasta contra la bota (ease-out).
+ * - 300–620 ms: el vuelo en arco con giro; arranque rápido y frenada (la velocidad la dan los puntos de la curva).
+ * - 620–1400 ms: la bola se abre y cada letra frena hasta su sitio con --ease-out, cubic-bezier(0.23, 1, 0.32, 1).
+ * Solo transform (Web Animations API, en el compositor): no mueve nada de la página ni retrasa la carga.
+ *
+ * - El título se lee entero desde el principio: está en el HTML y en el `aria-label` del <h1>. Las letras sueltas
+ *   son decoración (aria-hidden).
+ * - Sin JavaScript o con «Reducir movimiento», el título está quieto desde el principio.
+ */
+interface Props {
+  /** Líneas del título (cada una en su línea) */
+  lineas: string[];
+  id?: string;
+  class?: string;
+  /** Etiqueta del título: h1 en las portadas de sección; h2 en los dos caminos de la portada de la web */
+  as?: 'h1' | 'h2';
+}
+const { lineas, id, class: clase, as: Etiqueta = 'h1' } = Astro.props;
+const texto = lineas.join(' ');
+// Cada línea, en palabras, y cada palabra, en letras
+const partes = lineas.map((l) => l.split(' ').map((p) => [...p]));
+---
+<Etiqueta id={id} class:list={['titulo-chute', clase]} aria-label={texto}>
+  {partes.map((palabras, l) => (
+    <>{l > 0 && ' '}<span class="linea" aria-hidden="true">
+      {palabras.map((letras, j) => (
+        <>{j > 0 && ' '}<span class="palabra">{letras.map((c) => <span class="letra">{c}</span>)}</span></>
+      ))}
+    </span></>
+  ))}
+</Etiqueta>
+<script is:inline>
+(function () {
+  var h = document.currentScript.previousElementSibling;
+  (function () {
+    if (!h || !h.animate || !document.fonts || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    // Las posiciones se miden con la fuente del título ya cargada (está precargada). Mientras, el título espera
+    // invisible; si la fuente tarda más de 700 ms, se enseña quieto, sin animación.
+    h.style.visibility = 'hidden';
+    var hecho = false;
+    var mostrar = function () { h.style.visibility = ''; };
+    var plazo = setTimeout(function () { hecho = true; mostrar(); }, 700);
+    document.fonts.load('700 1em "Barlow Condensed"').then(function () {
+      if (hecho) return;
+      clearTimeout(plazo);
+      hecho = true;
+      requestAnimationFrame(function () { chuta(h); mostrar(); });
+    }, function () { if (!hecho) { hecho = true; clearTimeout(plazo); mostrar(); } });
+  })();
+  function chuta(h) {
+    var letras = h.querySelectorAll('.letra');
+    var n = letras.length;
+    if (!n) return;
+    var zona = (h.closest('section') || h.parentElement).getBoundingClientRect();
+    var hr = h.getBoundingClientRect();
+    var em = parseFloat(getComputedStyle(h).fontSize);
+    var T = 1400;
+    var S0 = 0.36; // tamaño de cada letra dentro de la bola
+    var R = Math.min(em * 0.42, zona.width * 0.16); // radio de la bola
+
+    // Dónde está cada letra en su sitio (centro)
+    var P = [];
+    for (var k = 0; k < n; k++) {
+      var r = letras[k].getBoundingClientRect();
+      P.push([r.left + r.width / 2, r.top + r.height / 2]);
+    }
+    // La bola, parada en el lado izquierdo: abajo a la izquierda en el ordenador; en el móvil, a la izquierda, a la
+    // altura del título (debajo está el botón)
+    var movil = zona.width < 600;
+    var B0 = movil
+      ? [zona.left + R * 1.4, hr.top + hr.height * 0.62]
+      : [zona.left + R * 2.2, zona.bottom - R * 1.6];
+    // El chute la lanza hacia la derecha y se abre en pleno vuelo, al principio del título: así las letras salen
+    // todas hacia la derecha y encajan de izquierda a derecha
+    var B1 = movil
+      ? [hr.left + hr.width * 0.3, hr.top + hr.height * 0.36]
+      : [hr.left + hr.width * 0.3, hr.top + hr.height * 0.5];
+    // Arco: el punto de control, por encima de la recta (sube y cae como un balón)
+    var dist = Math.hypot(B1[0] - B0[0], B1[1] - B0[1]);
+    var C = [(B0[0] + B1[0]) / 2, Math.min(B0[1], B1[1]) - dist * 0.42];
+    var arco = function (u) {
+      var a = (1 - u) * (1 - u), b = 2 * (1 - u) * u, c = u * u;
+      return [a * B0[0] + b * C[0] + c * B1[0], a * B0[1] + b * C[1] + c * B1[1]];
+    };
+    var GIRO = 320; // efecto: la bola gira hacia donde va (a la derecha, en el sentido de las agujas del reloj)
+
+    var tf = function (x, y, phi, sx, sy, rot, s) {
+      return 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px) rotate(' + phi.toFixed(1) + 'deg) scale(' + sx.toFixed(3) + ',' + sy.toFixed(3) + ') rotate(' + (-phi).toFixed(1) + 'deg) rotate(' + rot.toFixed(1) + 'deg) scale(' + s.toFixed(3) + ')';
+    };
+    var rota = function (o, g) {
+      var a = (g * Math.PI) / 180, c = Math.cos(a), s = Math.sin(a);
+      return [o[0] * c - o[1] * s, o[0] * s + o[1] * c];
+    };
+
+    for (k = 0; k < n; k++) {
+      // Sitio de la letra dentro de la bola (reparto de girasol: llena el círculo sin huecos)
+      var rr = R * 0.82 * Math.sqrt((k + 0.5) / n);
+      var ang = k * 2.39996;
+      var o = [Math.cos(ang) * rr, Math.sin(ang) * rr];
+      var giroLetra = ((k * 47) % 90) - 45;
+      var p = P[k];
+      var kf = [];
+      var en = function (centro, off, phi, sx, sy, rot, s, t, easing) {
+        var f = { transform: tf(centro[0] + off[0] - p[0], centro[1] + off[1] - p[1], phi, sx, sy, rot, s), offset: t };
+        if (easing) f.easing = easing;
+        kf.push(f);
+      };
+      // Parada
+      en(B0, o, 0, 1, 1, giroLetra, S0, 0, 'linear');
+      en(B0, o, 0, 1, 1, giroLetra, S0, 0.157, 'cubic-bezier(0.23, 1, 0.32, 1)');
+      // Golpe desde la izquierda: la bola se aplasta en horizontal contra la bota y las letras también
+      en([B0[0] + R * 0.12, B0[1]], [o[0] * 0.66, o[1] * 1.2], 0, 0.72, 1.2, giroLetra, S0, 0.214, 'linear');
+      // Vuelo en arco con giro: puntos repartidos para que arranque rápido y frene
+      // (12 puntos: con menos, al girar la bola encogería entre uno y otro)
+      var pasos = [];
+      for (var q = 1; q <= 12; q++) pasos.push(q / 12);
+      for (var i = 0; i < pasos.length; i++) {
+        var u = 1 - Math.pow(1 - pasos[i], 2.2);
+        var g = GIRO * u;
+        en(arco(u), rota(o, g), 0, 1, 1, giroLetra + g, S0 + 0.08 * u, 0.214 + 0.229 * pasos[i], 'linear');
+      }
+      // Se abre: la letra sale en la dirección del chute, estirada (estela), y frena hasta su sitio
+      var ini = arco(1), off1 = rota(o, GIRO);
+      var x1 = ini[0] + off1[0], y1 = ini[1] + off1[1];
+      var phi = (Math.atan2(p[1] - y1, p[0] - x1) * 180) / Math.PI;
+      // Los fotogramas del vuelo, con el mismo ángulo de estela (sin estirar) para que la transformación sea continua
+      for (var f = 0; f < kf.length; f++) kf[f].transform = kf[f].transform.replace(/rotate\(0\.0deg\) scale\(([^)]*)\) rotate\(-?0\.0deg\)/, 'rotate(' + phi.toFixed(1) + 'deg) scale($1) rotate(' + (-phi).toFixed(1) + 'deg)');
+      var m = 0.16; // un poco de recorrido ya estirada
+      kf.push({ transform: tf((x1 - p[0]) * (1 - m), (y1 - p[1]) * (1 - m), phi, 1.45, 0.72, (giroLetra + GIRO) * 0.55, 0.62), offset: 0.52, easing: 'cubic-bezier(0.23, 1, 0.32, 1)' });
+      kf.push({ transform: tf(0, 0, phi, 1, 1, 0, 1), offset: 1 });
+      letras[k].animate(kf, { duration: T, fill: 'backwards' });
+    }
+  }
+})();
+</script>
+
+<style>
+  .linea { display: block; }
+  .palabra { display: inline-block; white-space: nowrap; }
+  .letra { display: inline-block; }
+</style>

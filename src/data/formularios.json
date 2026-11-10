@@ -1,0 +1,1104 @@
+{
+  "_ayuda": "Generado con «npm run formularios» a partir de los Google Forms. No se edita a mano.",
+  "https://forms.gle/3tufDNfK5hxWNwFz9": {
+    "url": "https://forms.gle/3tufDNfK5hxWNwFz9",
+    "accion": "https://docs.google.com/forms/d/e/1FAIpQLSehtlrR8Xif798QAcNN8nHjYaCAiaKMRBhaYFMhybqNO86eMQ/formResponse",
+    "marco": "https://docs.google.com/forms/d/e/1FAIpQLSehtlrR8Xif798QAcNN8nHjYaCAiaKMRBhaYFMhybqNO86eMQ/viewform?embedded=true",
+    "titulo": "MADCUP 2027",
+    "modo": "propio",
+    "campos": [
+      {
+        "tipo": "texto",
+        "entrada": "entry.1466435772",
+        "titulo": "Nombre completo",
+        "descripcion": null,
+        "obligatorio": true
+      },
+      {
+        "tipo": "fecha",
+        "entrada": "entry.773139211",
+        "titulo": "Fecha de nacimiento",
+        "descripcion": null,
+        "obligatorio": true
+      },
+      {
+        "tipo": "texto",
+        "entrada": "entry.262106050",
+        "titulo": "DNI / NIE / Pasaporte",
+        "descripcion": null,
+        "obligatorio": true
+      },
+      {
+        "tipo": "casillas",
+        "entrada": "entry.1089392455",
+        "titulo": "Posición/es de juego",
+        "descripcion": null,
+        "obligatorio": true,
+        "opciones": [
+          "Portero/a",
+          "Lateral derecho",
+          "Central",
+          "Lateral izquiero",
+          "Pivote",
+          "Interior",
+          "Media punta",
+          "Extremo",
+          "Delantero/a"
+        ],
+        "otro": false
+      },
+      {
+        "tipo": "radio",
+        "entrada": "entry.639379582",
+        "titulo": "Talla de la ropa de juego y paseo (tallaje adidas)",
+        "descripcion": null,
+        "obligatorio": true,
+        "opciones": [
+          "140 - equivale a 3XS",
+          "152 - equivale a 2XS",
+          "164 - equivale XS",
+          "S",
+          "M",
+          "L",
+          "XL"
+        ],
+        "otro": false
+      },
+      {
+        "tipo": "casillas",
+        "entrada": "entry.304995393",
+        "titulo": "Selecciona tu categoría (Masculino)",
+        "descripcion": null,
+        "obligatorio": false,
+        "opciones": [
+          "B9 - BENJAMÍN nacido en 2018",
+          "B10 - BENJAMÍN nacido en 2017",
+          "B11 - ALEVÍN nacido en 2016",
+          "B12 - ALEVÍN nacido en 2015",
+          "B13 - INFANTIL nacido en 2014",
+          "B14 - INFANTIL nacido en 2013",
+          "B15 - CADETE nacido en 2012",
+          "B16 - CADETE nacido en 2011"
+        ],
+        "otro": false
+      },
+      {
+        "tipo": "casillas",
+        "entrada": "entry.876464618",
+        "titulo": "Selecciona tu categoría (Femenino)",
+        "descripcion": null,
+        "obligatorio": false,
+        "opciones": [
+          "G10 - BENJAMÍN nacidas en 2017 y 2018",
+          "G12 - ALEVÍN nacidas en 2016 y 2015",
+          "G14 - INFANTIL nacidas en 2014 y 2013",
+          "G16 - CADETE nacidas en 2012 y 2011",
+          "G19 - JUVENIL nacidas en 2010 y 2008"
+        ],
+        "otro": false
+      },
+      {
+        "tipo": "texto",
+        "entrada": "entry.1555305233",
+        "titulo": "Elige 3 dorsales",
+        "descripcion": null,
+        "obligatorio": true
+      },
+      {
+        "tipo": "texto",
+        "entrada": "entry.476029363",
+        "titulo": "Alergias o intolerancias alimentarias",
+        "descripcion": null,
+        "obligatorio": false
+      },
+      {
+        "tipo": "radio",
+        "entrada": "entry.1734559766",
+        "titulo": "Consentimiento de uso de imágenes",
+        "descripcion": null,
+        "obligatorio": true,
+        "opciones": [
+          "Autorizo el uso de imágenes del participante.",
+          "No autorizo el uso de imágenes del participante."
+        ],
+        "otro": false
+      },
+      {
+        "tipo": "casillas",
+        "entrada": "entry.195287018",
+        "titulo": "Política de Cancelación y Devoluciones",
+        "descripcion": null,
+        "obligatorio": true,
+        "enlaces": [
+          {
+            "texto": "Política de Cancelación y Devoluciones",
+            "href": "https://docs.google.com/document/d/1Bv64pryDAE0wnqmgB0KDaW625DiMl-vgMp69_wk6ZiI/edit?tab=t.0"
+          }
+        ],
+        "opciones": [
+          "He leído y acepto la Política de Cancelación y Devoluciones de XBuyer Team Academy."
+        ],
+        "otro": false
+      }
+    ]
+  },
+  "https://forms.gle/KAHMwR89idPfYvzu9": {
+    "url": "https://forms.gle/KAHMwR89idPfYvzu9",
+    "accion": "https://docs.google.com/forms/d/e/1FAIpQLScwgsmugqsC80fTnyJ0JfIejWF_8-E9kVNVJHzjqnCCnV_k7Q/formResponse",
+    "marco": "https://docs.google.com/forms/d/e/1FAIpQLScwgsmugqsC80fTnyJ0JfIejWF_8-E9kVNVJHzjqnCCnV_k7Q/viewform?embedded=true",
+    "titulo": "YELLOW CUP 2027",
+    "modo": "propio",
+    "campos": [
+      {
+        "tipo": "texto",
+        "entrada": "entry.1466435772",
+        "titulo": "Nombre completo",
+        "descripcion": null,
+        "obligatorio": true
+      },
+      {
+        "tipo": "fecha",
+        "entrada": "entry.773139211",
+        "titulo": "Fecha de nacimiento",
+        "descripcion": null,
+        "obligatorio": true
+      },
+      {
+        "tipo": "texto",
+        "entrada": "entry.262106050",
+        "titulo": "DNI / NIE / Pasaporte",
+        "descripcion": null,
+        "obligatorio": true
+      },
+      {
+        "tipo": "casillas",
+        "entrada": "entry.1089392455",
+        "titulo": "Posición/es de juego",
+        "descripcion": null,
+        "obligatorio": true,
+        "opciones": [
+          "Portero/a",
+          "Lateral derecho",
+          "Central",
+          "Lateral izquiero",
+          "Pivote",
+          "Interior",
+          "Media punta",
+          "Extremo",
+          "Delantero/a"
+        ],
+        "otro": false
+      },
+      {
+        "tipo": "radio",
+        "entrada": "entry.639379582",
+        "titulo": "Talla de la ropa de juego y paseo (tallaje adidas)",
+        "descripcion": null,
+        "obligatorio": true,
+        "opciones": [
+          "140 - equivale a 3XS",
+          "152 - equivale a 2XS",
+          "164 - equivale XS",
+          "S",
+          "M",
+          "L",
+          "XL"
+        ],
+        "otro": false
+      },
+      {
+        "tipo": "casillas",
+        "entrada": "entry.304995393",
+        "titulo": "Selecciona tu categoría (Masculino)",
+        "descripcion": null,
+        "obligatorio": false,
+        "opciones": [
+          "B8 - PREBENJAMÍN nacido en 2019 y 2020",
+          "B9 - BENJAMÍN nacido en 2018",
+          "B10 - BENJAMÍN nacido en 2017",
+          "B11 - ALEVÍN nacido en 2016",
+          "B12 - ALEVÍN nacido en 2015",
+          "B13 - INFANTIL nacido en 2014",
+          "B14 - INFANTIL nacido en 2013",
+          "B15 - CADETE nacido en 2012",
+          "B16 - CADETE nacido en 2011"
+        ],
+        "otro": false
+      },
+      {
+        "tipo": "casillas",
+        "entrada": "entry.876464618",
+        "titulo": "Selecciona tu categoría (Femenino)",
+        "descripcion": null,
+        "obligatorio": false,
+        "opciones": [
+          "G13 - ALEVÍN nacidas en 2016 y 2014",
+          "G14 - INFANTIL nacidas en 2014 y 2013",
+          "G16 - CADETE nacidas en 2012 y 2011"
+        ],
+        "otro": false
+      },
+      {
+        "tipo": "texto",
+        "entrada": "entry.1555305233",
+        "titulo": "Elige 3 dorsales",
+        "descripcion": null,
+        "obligatorio": true
+      },
+      {
+        "tipo": "texto",
+        "entrada": "entry.476029363",
+        "titulo": "Alergias o intolerancias alimentarias",
+        "descripcion": null,
+        "obligatorio": false
+      },
+      {
+        "tipo": "radio",
+        "entrada": "entry.1734559766",
+        "titulo": "Consentimiento de uso de imágenes",
+        "descripcion": null,
+        "obligatorio": true,
+        "opciones": [
+          "Autorizo el uso de imágenes del participante.",
+          "No autorizo el uso de imágenes del participante."
+        ],
+        "otro": false
+      },
+      {
+        "tipo": "casillas",
+        "entrada": "entry.195287018",
+        "titulo": "Política de Cancelación y Devoluciones",
+        "descripcion": null,
+        "obligatorio": true,
+        "enlaces": [
+          {
+            "texto": "Política de Cancelación y Devoluciones",
+            "href": "https://docs.google.com/document/d/1Bv64pryDAE0wnqmgB0KDaW625DiMl-vgMp69_wk6ZiI/edit?tab=t.0"
+          }
+        ],
+        "opciones": [
+          "He leído y acepto la Política de Cancelación y Devoluciones de XBuyer Team Academy."
+        ],
+        "otro": false
+      }
+    ]
+  },
+  "https://forms.gle/RnT3N1CGJN89hRni8": {
+    "url": "https://forms.gle/RnT3N1CGJN89hRni8",
+    "accion": "https://docs.google.com/forms/d/e/1FAIpQLScos083Jk2m0Hc1SfmZazC5D2i-rhYB8igLEjz33Zifw6MI4Q/formResponse",
+    "marco": "https://docs.google.com/forms/d/e/1FAIpQLScos083Jk2m0Hc1SfmZazC5D2i-rhYB8igLEjz33Zifw6MI4Q/viewform?embedded=true",
+    "titulo": "DONOSTI CUP 2027",
+    "modo": "propio",
+    "campos": [
+      {
+        "tipo": "texto",
+        "entrada": "entry.1466435772",
+        "titulo": "Nombre completo",
+        "descripcion": null,
+        "obligatorio": true
+      },
+      {
+        "tipo": "fecha",
+        "entrada": "entry.773139211",
+        "titulo": "Fecha de nacimiento",
+        "descripcion": null,
+        "obligatorio": true
+      },
+      {
+        "tipo": "texto",
+        "entrada": "entry.262106050",
+        "titulo": "DNI / NIE / Pasaporte",
+        "descripcion": null,
+        "obligatorio": true
+      },
+      {
+        "tipo": "casillas",
+        "entrada": "entry.1089392455",
+        "titulo": "Posición/es de juego",
+        "descripcion": null,
+        "obligatorio": true,
+        "opciones": [
+          "Portero/a",
+          "Lateral derecho",
+          "Central",
+          "Lateral izquiero",
+          "Pivote",
+          "Interior",
+          "Media punta",
+          "Extremo",
+          "Delantero/a"
+        ],
+        "otro": false
+      },
+      {
+        "tipo": "radio",
+        "entrada": "entry.639379582",
+        "titulo": "Talla de la ropa de juego y paseo (tallaje adidas)",
+        "descripcion": null,
+        "obligatorio": true,
+        "opciones": [
+          "140 - equivale a 3XS",
+          "152 - equivale a 2XS",
+          "164 - equivale XS",
+          "S",
+          "M",
+          "L",
+          "XL"
+        ],
+        "otro": false
+      },
+      {
+        "tipo": "casillas",
+        "entrada": "entry.304995393",
+        "titulo": "Selecciona tu categoría (Masculino)",
+        "descripcion": null,
+        "obligatorio": false,
+        "opciones": [
+          "B9 - BENJAMÍN nacido en 2018",
+          "B10 - BENJAMÍN nacido en 2017",
+          "B11 - ALEVÍN nacido en 2016",
+          "B12 - ALEVÍN nacido en 2015",
+          "B13 - INFANTIL nacido en 2014",
+          "B14 - INFANTIL nacido en 2013",
+          "B15 - CADETE nacido en 2012",
+          "B16 - CADETE nacido en 2011",
+          "B18 - JUVENIL nacidos en 2010 y 2009"
+        ],
+        "otro": false
+      },
+      {
+        "tipo": "casillas",
+        "entrada": "entry.876464618",
+        "titulo": "Selecciona tu categoría (Femenino)",
+        "descripcion": null,
+        "obligatorio": false,
+        "opciones": [
+          "G10 - BENJAMÍN nacidas en 2017 y 2018",
+          "G12 - ALEVÍN nacidas en 2016 y 2015",
+          "G14 - INFANTIL nacidas en 2014 y 2013",
+          "G16 - CADETE nacidas en 2012 y 2011",
+          "G18 - JUVENIL nacidas en 2010 y 2009"
+        ],
+        "otro": false
+      },
+      {
+        "tipo": "texto",
+        "entrada": "entry.1555305233",
+        "titulo": "Elige 3 dorsales",
+        "descripcion": null,
+        "obligatorio": true
+      },
+      {
+        "tipo": "texto",
+        "entrada": "entry.476029363",
+        "titulo": "Alergias o intolerancias alimentarias",
+        "descripcion": null,
+        "obligatorio": false
+      },
+      {
+        "tipo": "radio",
+        "entrada": "entry.1734559766",
+        "titulo": "Consentimiento de uso de imágenes",
+        "descripcion": null,
+        "obligatorio": true,
+        "opciones": [
+          "Autorizo el uso de imágenes del participante.",
+          "No autorizo el uso de imágenes del participante."
+        ],
+        "otro": false
+      },
+      {
+        "tipo": "casillas",
+        "entrada": "entry.195287018",
+        "titulo": "Política de Cancelación y Devoluciones",
+        "descripcion": null,
+        "obligatorio": true,
+        "enlaces": [
+          {
+            "texto": "Política de Cancelación y Devoluciones",
+            "href": "https://docs.google.com/document/d/1Bv64pryDAE0wnqmgB0KDaW625DiMl-vgMp69_wk6ZiI/edit?tab=t.0"
+          }
+        ],
+        "opciones": [
+          "He leído y acepto la Política de Cancelación y Devoluciones de XBuyer Team Academy."
+        ],
+        "otro": false
+      }
+    ]
+  },
+  "https://forms.gle/SLBYqBJLgMjd8vW86": {
+    "url": "https://forms.gle/SLBYqBJLgMjd8vW86",
+    "accion": "https://docs.google.com/forms/d/e/1FAIpQLSfudaF3DSpoT3ZD4MEhnxItAV90BD72nGfOohGlzzpcLHFMYA/formResponse",
+    "marco": "https://docs.google.com/forms/d/e/1FAIpQLSfudaF3DSpoT3ZD4MEhnxItAV90BD72nGfOohGlzzpcLHFMYA/viewform?embedded=true",
+    "titulo": "COPA UNIQ ANDORRA 2027",
+    "modo": "propio",
+    "campos": [
+      {
+        "tipo": "texto",
+        "entrada": "entry.1466435772",
+        "titulo": "Nombre completo",
+        "descripcion": null,
+        "obligatorio": true
+      },
+      {
+        "tipo": "fecha",
+        "entrada": "entry.773139211",
+        "titulo": "Fecha de nacimiento",
+        "descripcion": null,
+        "obligatorio": true
+      },
+      {
+        "tipo": "texto",
+        "entrada": "entry.262106050",
+        "titulo": "DNI / NIE / Pasaporte",
+        "descripcion": null,
+        "obligatorio": true
+      },
+      {
+        "tipo": "casillas",
+        "entrada": "entry.1089392455",
+        "titulo": "Posición/es de juego",
+        "descripcion": null,
+        "obligatorio": true,
+        "opciones": [
+          "Portero/a",
+          "Lateral derecho",
+          "Central",
+          "Lateral izquiero",
+          "Pivote",
+          "Interior",
+          "Media punta",
+          "Extremo",
+          "Delantero/a"
+        ],
+        "otro": false
+      },
+      {
+        "tipo": "radio",
+        "entrada": "entry.639379582",
+        "titulo": "Talla de la ropa de juego y paseo (tallaje adidas)",
+        "descripcion": null,
+        "obligatorio": true,
+        "opciones": [
+          "140 - equivale a 3XS",
+          "152 - equivale a 2XS",
+          "164 - equivale XS",
+          "S",
+          "M",
+          "L",
+          "XL"
+        ],
+        "otro": false
+      },
+      {
+        "tipo": "casillas",
+        "entrada": "entry.304995393",
+        "titulo": "Selecciona tu categoría (Masculino)",
+        "descripcion": null,
+        "obligatorio": false,
+        "opciones": [
+          "B8 - PREBENJAMÍN nacido en 2019",
+          "B9 - BENJAMÍN nacido en 2018",
+          "B10 - BENJAMÍN nacido en 2017",
+          "B11 - ALEVÍN nacido en 2016",
+          "B12 - ALEVÍN nacido en 2015"
+        ],
+        "otro": false
+      },
+      {
+        "tipo": "casillas",
+        "entrada": "entry.876464618",
+        "titulo": "Selecciona tu categoría (Femenino)",
+        "descripcion": null,
+        "obligatorio": false,
+        "opciones": [
+          "G12 - ALEVÍN nacidas en 2016 y 2015",
+          "G14 - INFANTIL nacidas en 2014 y 2013"
+        ],
+        "otro": false
+      },
+      {
+        "tipo": "texto",
+        "entrada": "entry.1555305233",
+        "titulo": "Elige 3 dorsales",
+        "descripcion": null,
+        "obligatorio": true
+      },
+      {
+        "tipo": "texto",
+        "entrada": "entry.476029363",
+        "titulo": "Alergias o intolerancias alimentarias",
+        "descripcion": null,
+        "obligatorio": false
+      },
+      {
+        "tipo": "radio",
+        "entrada": "entry.1734559766",
+        "titulo": "Consentimiento de uso de imágenes",
+        "descripcion": null,
+        "obligatorio": true,
+        "opciones": [
+          "Autorizo el uso de imágenes del participante.",
+          "No autorizo el uso de imágenes del participante."
+        ],
+        "otro": false
+      },
+      {
+        "tipo": "casillas",
+        "entrada": "entry.195287018",
+        "titulo": "Política de Cancelación y Devoluciones",
+        "descripcion": null,
+        "obligatorio": true,
+        "enlaces": [
+          {
+            "texto": "Política de Cancelación y Devoluciones",
+            "href": "https://docs.google.com/document/d/1Bv64pryDAE0wnqmgB0KDaW625DiMl-vgMp69_wk6ZiI/edit?tab=t.0"
+          }
+        ],
+        "opciones": [
+          "He leído y acepto la Política de Cancelación y Devoluciones de XBuyer Team Academy."
+        ],
+        "otro": false
+      }
+    ]
+  },
+  "https://forms.gle/ZU4xpu93rvgSujdy9": {
+    "url": "https://forms.gle/ZU4xpu93rvgSujdy9",
+    "accion": "https://docs.google.com/forms/d/e/1FAIpQLSfJP04F6pgWxyEGjJXbGDaKXyIk_VO02UxI5cKdOukeSe3pbQ/formResponse",
+    "marco": "https://docs.google.com/forms/d/e/1FAIpQLSfJP04F6pgWxyEGjJXbGDaKXyIk_VO02UxI5cKdOukeSe3pbQ/viewform?embedded=true",
+    "titulo": "COSTA DAURADA CUP 2027 V.E",
+    "modo": "propio",
+    "campos": [
+      {
+        "tipo": "texto",
+        "entrada": "entry.1466435772",
+        "titulo": "Nombre completo",
+        "descripcion": null,
+        "obligatorio": true
+      },
+      {
+        "tipo": "fecha",
+        "entrada": "entry.773139211",
+        "titulo": "Fecha de nacimiento",
+        "descripcion": null,
+        "obligatorio": true
+      },
+      {
+        "tipo": "texto",
+        "entrada": "entry.262106050",
+        "titulo": "DNI / NIE / Pasaporte",
+        "descripcion": null,
+        "obligatorio": true
+      },
+      {
+        "tipo": "casillas",
+        "entrada": "entry.1089392455",
+        "titulo": "Posición/es de juego",
+        "descripcion": null,
+        "obligatorio": true,
+        "opciones": [
+          "Portero/a",
+          "Lateral derecho",
+          "Central",
+          "Lateral izquiero",
+          "Pivote",
+          "Interior",
+          "Media punta",
+          "Extremo",
+          "Delantero/a"
+        ],
+        "otro": false
+      },
+      {
+        "tipo": "radio",
+        "entrada": "entry.639379582",
+        "titulo": "Talla de la ropa de juego y paseo (tallaje adidas)",
+        "descripcion": null,
+        "obligatorio": true,
+        "opciones": [
+          "140 - equivale a 3XS",
+          "152 - equivale a 2XS",
+          "164 - equivale XS",
+          "S",
+          "M",
+          "L",
+          "XL"
+        ],
+        "otro": false
+      },
+      {
+        "tipo": "casillas",
+        "entrada": "entry.304995393",
+        "titulo": "Selecciona tu categoría (Masculino)",
+        "descripcion": null,
+        "obligatorio": false,
+        "opciones": [
+          "B9 - BENJAMÍN nacido en 2018",
+          "B10 - BENJAMÍN nacido en 2017",
+          "B11 - ALEVÍN nacido en 2016",
+          "B12 - ALEVÍN nacido en 2015",
+          "B13 - INFANTIL nacido en 2014",
+          "B14 - INFANTIL nacido en 2013",
+          "B15 - CADETE nacido en 2012",
+          "B16 - CADETE nacido en 2011",
+          "B19 - JUVENIL nacido en 2008 2009 2010"
+        ],
+        "otro": false
+      },
+      {
+        "tipo": "casillas",
+        "entrada": "entry.876464618",
+        "titulo": "Selecciona tu categoría (Femenino)",
+        "descripcion": null,
+        "obligatorio": false,
+        "opciones": [
+          "G10 - BENJAMÍN nacidas en 2017 y 2018",
+          "G12 - ALEVÍN nacidas en 2016 y 2015",
+          "G14 - INFANTIL nacidas en 2014 y 2013",
+          "G16 - CADETE nacidas en 2012 y 2011",
+          "G17 - JUVENIL nacidas en 2010 y 2009",
+          "G19 - JUVENIL nacidas en 2010 y 2008"
+        ],
+        "otro": false
+      },
+      {
+        "tipo": "texto",
+        "entrada": "entry.1555305233",
+        "titulo": "Elige 3 dorsales",
+        "descripcion": null,
+        "obligatorio": true
+      },
+      {
+        "tipo": "texto",
+        "entrada": "entry.476029363",
+        "titulo": "Alergias o intolerancias alimentarias",
+        "descripcion": null,
+        "obligatorio": false
+      },
+      {
+        "tipo": "radio",
+        "entrada": "entry.1734559766",
+        "titulo": "Consentimiento de uso de imágenes",
+        "descripcion": null,
+        "obligatorio": true,
+        "opciones": [
+          "Autorizo el uso de imágenes del participante.",
+          "No autorizo el uso de imágenes del participante."
+        ],
+        "otro": false
+      },
+      {
+        "tipo": "casillas",
+        "entrada": "entry.195287018",
+        "titulo": "Política de Cancelación y Devoluciones",
+        "descripcion": null,
+        "obligatorio": true,
+        "enlaces": [
+          {
+            "texto": "Política de Cancelación y Devoluciones",
+            "href": "https://docs.google.com/document/d/1Bv64pryDAE0wnqmgB0KDaW625DiMl-vgMp69_wk6ZiI/edit?tab=t.0"
+          }
+        ],
+        "opciones": [
+          "He leído y acepto la Política de Cancelación y Devoluciones de XBuyer Team Academy."
+        ],
+        "otro": false
+      }
+    ]
+  },
+  "https://forms.gle/u7FKX72g4UdtrwXy8": {
+    "url": "https://forms.gle/u7FKX72g4UdtrwXy8",
+    "accion": "https://docs.google.com/forms/d/e/1FAIpQLSfwfbr3GVk5lp65_cwC3y3Wv11qjVUBg0jHfpEObTtGs7MxLw/formResponse",
+    "marco": "https://docs.google.com/forms/d/e/1FAIpQLSfwfbr3GVk5lp65_cwC3y3Wv11qjVUBg0jHfpEObTtGs7MxLw/viewform?embedded=true",
+    "titulo": "MIC7 2027",
+    "modo": "propio",
+    "campos": [
+      {
+        "tipo": "texto",
+        "entrada": "entry.1466435772",
+        "titulo": "Nombre completo",
+        "descripcion": null,
+        "obligatorio": true
+      },
+      {
+        "tipo": "fecha",
+        "entrada": "entry.773139211",
+        "titulo": "Fecha de nacimiento",
+        "descripcion": null,
+        "obligatorio": true
+      },
+      {
+        "tipo": "texto",
+        "entrada": "entry.262106050",
+        "titulo": "DNI / NIE / Pasaporte",
+        "descripcion": null,
+        "obligatorio": true
+      },
+      {
+        "tipo": "casillas",
+        "entrada": "entry.1089392455",
+        "titulo": "Posición/es de juego",
+        "descripcion": null,
+        "obligatorio": true,
+        "opciones": [
+          "Portero/a",
+          "Lateral derecho",
+          "Central",
+          "Lateral izquiero",
+          "Pivote",
+          "Interior",
+          "Media punta",
+          "Extremo",
+          "Delantero/a"
+        ],
+        "otro": false
+      },
+      {
+        "tipo": "radio",
+        "entrada": "entry.639379582",
+        "titulo": "Talla de la ropa de juego y paseo (tallaje adidas)",
+        "descripcion": null,
+        "obligatorio": true,
+        "opciones": [
+          "140 - equivale a 3XS",
+          "152 - equivale a 2XS",
+          "164 - equivale XS",
+          "S",
+          "M",
+          "L",
+          "XL"
+        ],
+        "otro": false
+      },
+      {
+        "tipo": "casillas",
+        "entrada": "entry.304995393",
+        "titulo": "Selecciona tu categoría (Masculino)",
+        "descripcion": null,
+        "obligatorio": false,
+        "opciones": [
+          "B8 - PREBENJAMÍN nacido en 2019",
+          "B9 - BENJAMÍN nacido en 2018",
+          "B10 - BENJAMÍN nacido en 2017",
+          "B11 - ALEVÍN nacido en 2016",
+          "B12 - ALEVÍN nacido en 2015"
+        ],
+        "otro": false
+      },
+      {
+        "tipo": "texto",
+        "entrada": "entry.1555305233",
+        "titulo": "Elige 3 dorsales",
+        "descripcion": null,
+        "obligatorio": true
+      },
+      {
+        "tipo": "texto",
+        "entrada": "entry.476029363",
+        "titulo": "Alergias o intolerancias alimentarias",
+        "descripcion": null,
+        "obligatorio": false
+      },
+      {
+        "tipo": "radio",
+        "entrada": "entry.1734559766",
+        "titulo": "Consentimiento de uso de imágenes",
+        "descripcion": null,
+        "obligatorio": true,
+        "opciones": [
+          "Autorizo el uso de imágenes del participante.",
+          "No autorizo el uso de imágenes del participante."
+        ],
+        "otro": false
+      },
+      {
+        "tipo": "casillas",
+        "entrada": "entry.195287018",
+        "titulo": "Política de Cancelación y Devoluciones",
+        "descripcion": null,
+        "obligatorio": true,
+        "enlaces": [
+          {
+            "texto": "Política de Cancelación y Devoluciones",
+            "href": "https://docs.google.com/document/d/1Bv64pryDAE0wnqmgB0KDaW625DiMl-vgMp69_wk6ZiI/edit?tab=t.0"
+          }
+        ],
+        "opciones": [
+          "He leído y acepto la Política de Cancelación y Devoluciones de XBuyer Team Academy."
+        ],
+        "otro": false
+      }
+    ]
+  },
+  "https://forms.gle/uoMMPqLdCUV3jzUL7": {
+    "url": "https://forms.gle/uoMMPqLdCUV3jzUL7",
+    "accion": "https://docs.google.com/forms/d/e/1FAIpQLSe9pSeZjIV9STTe8Oh1l9c9Qx6DLoeTs--QtJClnW7fHPgIUw/formResponse",
+    "marco": "https://docs.google.com/forms/d/e/1FAIpQLSe9pSeZjIV9STTe8Oh1l9c9Qx6DLoeTs--QtJClnW7fHPgIUw/viewform?embedded=true",
+    "titulo": "COSTA DAURADA CUP 2027 S.S",
+    "modo": "propio",
+    "campos": [
+      {
+        "tipo": "texto",
+        "entrada": "entry.1466435772",
+        "titulo": "Nombre completo",
+        "descripcion": null,
+        "obligatorio": true
+      },
+      {
+        "tipo": "fecha",
+        "entrada": "entry.773139211",
+        "titulo": "Fecha de nacimiento",
+        "descripcion": null,
+        "obligatorio": true
+      },
+      {
+        "tipo": "texto",
+        "entrada": "entry.262106050",
+        "titulo": "DNI / NIE / Pasaporte",
+        "descripcion": null,
+        "obligatorio": true
+      },
+      {
+        "tipo": "casillas",
+        "entrada": "entry.1089392455",
+        "titulo": "Posición/es de juego",
+        "descripcion": null,
+        "obligatorio": true,
+        "opciones": [
+          "Portero/a",
+          "Lateral derecho",
+          "Central",
+          "Lateral izquiero",
+          "Pivote",
+          "Interior",
+          "Media punta",
+          "Extremo",
+          "Delantero/a"
+        ],
+        "otro": false
+      },
+      {
+        "tipo": "radio",
+        "entrada": "entry.639379582",
+        "titulo": "Talla de la ropa de juego y paseo (tallaje adidas)",
+        "descripcion": null,
+        "obligatorio": true,
+        "opciones": [
+          "140 - equivale a 3XS",
+          "152 - equivale a 2XS",
+          "164 - equivale XS",
+          "S",
+          "M",
+          "L",
+          "XL"
+        ],
+        "otro": false
+      },
+      {
+        "tipo": "casillas",
+        "entrada": "entry.304995393",
+        "titulo": "Selecciona tu categoría (Masculino)",
+        "descripcion": null,
+        "obligatorio": false,
+        "opciones": [
+          "B9 - BENJAMÍN nacido en 2018",
+          "B10 - BENJAMÍN nacido en 2017",
+          "B11 - ALEVÍN nacido en 2016",
+          "B12 - ALEVÍN nacido en 2015",
+          "B13 - INFANTIL nacido en 2014",
+          "B14 - INFANTIL nacido en 2013",
+          "B15 - CADETE nacido en 2012",
+          "B16 - CADETE nacido en 2011",
+          "B19 - JUVENIL nacido en 2008 2009 2010"
+        ],
+        "otro": false
+      },
+      {
+        "tipo": "casillas",
+        "entrada": "entry.876464618",
+        "titulo": "Selecciona tu categoría (Femenino)",
+        "descripcion": null,
+        "obligatorio": false,
+        "opciones": [
+          "G10 - BENJAMÍN nacidas en 2017 y 2018",
+          "G12 - ALEVÍN nacidas en 2016 y 2015",
+          "G14 - INFANTIL nacidas en 2014 y 2013",
+          "G16 - CADETE nacidas en 2012 y 2011",
+          "G17 - JUVENIL nacidas en 2010 y 2009",
+          "G19 - JUVENIL nacidas en 2010 y 2008"
+        ],
+        "otro": false
+      },
+      {
+        "tipo": "texto",
+        "entrada": "entry.1555305233",
+        "titulo": "Elige 3 dorsales",
+        "descripcion": null,
+        "obligatorio": true
+      },
+      {
+        "tipo": "texto",
+        "entrada": "entry.476029363",
+        "titulo": "Alergias o intolerancias alimentarias",
+        "descripcion": null,
+        "obligatorio": false
+      },
+      {
+        "tipo": "radio",
+        "entrada": "entry.1734559766",
+        "titulo": "Consentimiento de uso de imágenes",
+        "descripcion": null,
+        "obligatorio": true,
+        "opciones": [
+          "Autorizo el uso de imágenes del participante.",
+          "No autorizo el uso de imágenes del participante."
+        ],
+        "otro": false
+      },
+      {
+        "tipo": "casillas",
+        "entrada": "entry.195287018",
+        "titulo": "Política de Cancelación y Devoluciones",
+        "descripcion": null,
+        "obligatorio": true,
+        "enlaces": [
+          {
+            "texto": "Política de Cancelación y Devoluciones",
+            "href": "https://docs.google.com/document/d/1Bv64pryDAE0wnqmgB0KDaW625DiMl-vgMp69_wk6ZiI/edit?tab=t.0"
+          }
+        ],
+        "opciones": [
+          "He leído y acepto la Política de Cancelación y Devoluciones de XBuyer Team Academy."
+        ],
+        "otro": false
+      }
+    ]
+  },
+  "https://forms.gle/vHLutm48MNVaUcs96": {
+    "url": "https://forms.gle/vHLutm48MNVaUcs96",
+    "accion": "https://docs.google.com/forms/d/e/1FAIpQLSdpHxAiqv7LthWEZzw5_w0xnWByF73jwE8RLSIbt-jiyVhSgQ/formResponse",
+    "marco": "https://docs.google.com/forms/d/e/1FAIpQLSdpHxAiqv7LthWEZzw5_w0xnWByF73jwE8RLSIbt-jiyVhSgQ/viewform?embedded=true",
+    "titulo": "1900 CUP 2027",
+    "modo": "propio",
+    "campos": [
+      {
+        "tipo": "texto",
+        "entrada": "entry.1466435772",
+        "titulo": "Nombre completo",
+        "descripcion": null,
+        "obligatorio": true
+      },
+      {
+        "tipo": "fecha",
+        "entrada": "entry.773139211",
+        "titulo": "Fecha de nacimiento",
+        "descripcion": null,
+        "obligatorio": true
+      },
+      {
+        "tipo": "texto",
+        "entrada": "entry.262106050",
+        "titulo": "DNI / NIE / Pasaporte",
+        "descripcion": null,
+        "obligatorio": true
+      },
+      {
+        "tipo": "casillas",
+        "entrada": "entry.1089392455",
+        "titulo": "Posición/es de juego",
+        "descripcion": null,
+        "obligatorio": true,
+        "opciones": [
+          "Portero/a",
+          "Lateral derecho",
+          "Central",
+          "Lateral izquiero",
+          "Pivote",
+          "Interior",
+          "Media punta",
+          "Extremo",
+          "Delantero/a"
+        ],
+        "otro": false
+      },
+      {
+        "tipo": "radio",
+        "entrada": "entry.639379582",
+        "titulo": "Talla de la ropa de juego y paseo (tallaje adidas)",
+        "descripcion": null,
+        "obligatorio": true,
+        "opciones": [
+          "140 - equivale a 3XS",
+          "152 - equivale a 2XS",
+          "164 - equivale XS",
+          "S",
+          "M",
+          "L",
+          "XL"
+        ],
+        "otro": false
+      },
+      {
+        "tipo": "casillas",
+        "entrada": "entry.304995393",
+        "titulo": "Selecciona tu categoría (Masculino)",
+        "descripcion": null,
+        "obligatorio": false,
+        "opciones": [
+          "B8 - PREBENJAMÍN nacido en 2019",
+          "B9 - BENJAMÍN nacido en 2018",
+          "B10 - BENJAMÍN nacido en 2017",
+          "B11 - ALEVÍN nacido en 2016",
+          "B12 - ALEVÍN nacido en 2015",
+          "B13 - INFANTIL nacido en 2014",
+          "B14 - INFANTIL nacido en 2013",
+          "B15 - CADETE nacido en 2012"
+        ],
+        "otro": false
+      },
+      {
+        "tipo": "texto",
+        "entrada": "entry.1555305233",
+        "titulo": "Elige 3 dorsales",
+        "descripcion": null,
+        "obligatorio": true
+      },
+      {
+        "tipo": "texto",
+        "entrada": "entry.476029363",
+        "titulo": "Alergias o intolerancias alimentarias",
+        "descripcion": null,
+        "obligatorio": false
+      },
+      {
+        "tipo": "radio",
+        "entrada": "entry.1734559766",
+        "titulo": "Consentimiento de uso de imágenes",
+        "descripcion": null,
+        "obligatorio": true,
+        "opciones": [
+          "Autorizo el uso de imágenes del participante.",
+          "No autorizo el uso de imágenes del participante."
+        ],
+        "otro": false
+      },
+      {
+        "tipo": "casillas",
+        "entrada": "entry.195287018",
+        "titulo": "Política de Cancelación y Devoluciones",
+        "descripcion": null,
+        "obligatorio": true,
+        "enlaces": [
+          {
+            "texto": "Política de Cancelación y Devoluciones",
+            "href": "https://docs.google.com/document/d/1Bv64pryDAE0wnqmgB0KDaW625DiMl-vgMp69_wk6ZiI/edit?tab=t.0"
+          }
+        ],
+        "opciones": [
+          "He leído y acepto la Política de Cancelación y Devoluciones de XBuyer Team Academy."
+        ],
+        "otro": false
+      }
+    ]
+  }
+}

@@ -9,7 +9,10 @@ npm run dev          # desarrollo: se ven las marcas [pendiente]
 npm run build        # producción (dist/): oculta lo pendiente y avisa de qué ha ocultado
 npm run borradores   # build con las marcas [pendiente] visibles (dist-borradores/), para revisar
 npm run preview      # sirve dist/ en local
+npm run formularios  # vuelve a leer los Google Forms de inscripción (src/data/formularios.json); no envía nada
 ```
+
+Arquitectura y páginas: `SNAPSHOT.md`. Pendientes: `BACKLOG.md`.
 
 ## Páginas
 

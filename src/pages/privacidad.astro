@@ -1,12 +1,14 @@
 ---
 import { textosLegales as legal } from '../lib/legal';
 import Legal from '../layouts/Legal.astro';
+import { seccionesWeb } from '../data/privacidad-web';
 const [titulo] = legal.privacy.title.split(' · ');
 const slug = (t: string) => t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-const secciones = legal.privacy.sections.map((s) => ({ ...s, id: s.id ?? slug(s.title) }));
+// Las de la app (legal.json) y, después, las de la web (inscripciones con Google Forms)
+const secciones = [...legal.privacy.sections.map((s) => ({ ...s, id: s.id ?? slug(s.title) })), ...seccionesWeb];
 const indice = [...secciones.map((s) => ({ id: s.id, titulo: s.title })), { id: 'contacto', titulo: 'Contacto' }];
 ---
-<Legal titulo={titulo} tituloPagina={legal.privacy.title} descripcion={`Política de privacidad de la app ${legal.tournament}.`} subtitulo={`De la app ${legal.tournament}.`} aviso={legal.draft} indice={indice}>
+<Legal titulo={titulo} tituloPagina={legal.privacy.title} descripcion={`Política de privacidad de la app ${legal.tournament} y de las inscripciones desde la web.`} subtitulo={`De la app ${legal.tournament} y de las inscripciones desde la web.`} aviso={legal.draft} indice={indice}>
   {secciones.map((s) => (
     <section id={s.id}>
       <h2>{s.title}</h2>

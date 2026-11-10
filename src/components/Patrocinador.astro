@@ -1,0 +1,51 @@
+---
+/**
+ * Patrocinador principal de la Xbuyer Cup (src/data/patrocinadores.ts), destacado: su logo grande y el enlace a
+ * su Instagram. En /cup/ y en la página de cada edición.
+ */
+import { enlaceInstagram, principal } from '../data/patrocinadores';
+import { t, type Idioma } from '../i18n/ui';
+import Synergy from './logos/Synergy.astro';
+
+interface Props { idioma?: Idioma; id?: string; capitulo?: 'blanco' | 'amarillo' | 'marino' | 'azul'; compacto?: boolean }
+const { idioma = 'es', id, capitulo = 'blanco', compacto = false } = Astro.props;
+const logos = { synergy: Synergy };
+---
+{principal && (
+  <section class:list={['patrocinador', compacto && 'patrocinador--compacto']} id={id} data-capitulo={capitulo} aria-labelledby={`${id ?? 'patrocinador'}-titulo`}>
+    <h2 class="patrocinador__titulo" id={`${id ?? 'patrocinador'}-titulo`}>{t(idioma, 'cup.patrocinador')}</h2>
+    <a class="patrocinador__logo" href={enlaceInstagram(principal.instagram)} rel="noopener">
+      {(() => { const Logo = logos[principal.id as keyof typeof logos]; return <Logo titulo={principal.nombre} class="patrocinador__svg" />; })()}
+    </a>
+    <a class="patrocinador__instagram enlace" href={enlaceInstagram(principal.instagram)} rel="noopener">
+      @{principal.instagram}<span class="solo-lector"> ({t(idioma, 'patrocinador.instagram', { nombre: principal.nombre })})</span>
+    </a>
+  </section>
+)}
+
+<style>
+  .patrocinador {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 24px 48px;
+    padding: clamp(48px, 7vw, 96px) var(--margen);
+  }
+  .patrocinador__titulo {
+    font-family: var(--fuente-texto);
+    font-size: var(--step-lead);
+    font-weight: 500;
+    letter-spacing: 0;
+    line-height: 1.2;
+  }
+  .patrocinador__logo { display: block; width: clamp(200px, 26vw, 360px); color: var(--tinta); transition: transform 160ms var(--ease-out); }
+  .patrocinador__logo:active { transform: scale(0.98); }
+  .patrocinador__svg { width: 100%; height: auto; }
+  .patrocinador__instagram { justify-self: end; display: inline-flex; align-items: center; min-height: 44px; font-weight: 500; }
+  .patrocinador--compacto { padding-block: clamp(32px, 4vw, 56px); }
+  .patrocinador--compacto .patrocinador__logo { width: clamp(150px, 16vw, 220px); }
+  @media (max-width: 699px) {
+    .patrocinador { grid-template-columns: 1fr; justify-items: start; gap: 20px; }
+    .patrocinador__instagram { justify-self: start; }
+  }
+</style>

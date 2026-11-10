@@ -11,3 +11,8 @@ contenido/.DS_Store
 dist-noche/
 .impeccable/
 dist-ghio/
+dist-vista-previa/
+# Material de la organización con fotos de menores o de terceros: nunca al repositorio
+contenido/torneos-2027/
+contenido/cup-ediciones/
+contenido/normativa/

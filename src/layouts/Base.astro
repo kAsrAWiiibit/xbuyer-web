@@ -8,6 +8,7 @@ import fuenteTitulos from '@fontsource/barlow-condensed/files/barlow-condensed-l
 import fuenteTexto from '@fontsource/barlow/files/barlow-latin-400-normal.woff2?url';
 
 import Pie from '../components/Pie.astro';
+import { VISTA_PREVIA } from '../data/sitio.mjs';
 import { t, type Idioma } from '../i18n/ui';
 
 interface Props {
@@ -23,7 +24,9 @@ interface Props {
   /** Huecos de foto de la página: sus autores salen en el pie */
   fotos?: string[];
 }
-const { titulo, descripcion, idioma = 'es', colorTema = '#1863B8', compartir = 'inicio', indexar = true, fotos = [] } = Astro.props;
+const { titulo, descripcion, idioma = 'es', colorTema = '#1863B8', compartir = 'inicio', fotos = [] } = Astro.props;
+// La vista previa nunca se indexa
+const indexar = Astro.props.indexar !== false && !VISTA_PREVIA;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const absoluta = (ruta: string) => (Astro.site ? new URL(ruta, Astro.site).href : ruta);
 const canonica = Astro.site && indexar ? absoluta(Astro.url.pathname) : undefined;
@@ -40,7 +43,7 @@ const imagen = absoluta(`${base}/compartir/${compartir}.png`);
     <meta name="description" content={descripcion} />
     {canonica && <link rel="canonical" href={canonica} />}
     <meta name="theme-color" content={colorTema} />
-    {!indexar && <meta name="robots" content="noindex" />}
+    {!indexar && <meta name="robots" content={VISTA_PREVIA ? 'noindex, nofollow' : 'noindex'} />}
     <link rel="icon" href={`${base}/favicon.svg`} type="image/svg+xml" />
     <link rel="apple-touch-icon" href={`${base}/apple-touch-icon.png`} />
     {Astro.site && <link rel="sitemap" href={absoluta(`${base}/sitemap.xml`)} />}

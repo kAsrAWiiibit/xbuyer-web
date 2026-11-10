@@ -1,0 +1,456 @@
+---
+/**
+ * Formulario de inscripción integrado en la página, con la estética de la web. Envía las respuestas al Google Form
+ * del torneo (llegan a su hoja de cálculo como siempre): mismas preguntas, opciones y obligatorias, leídas del propio
+ * formulario con `npm run formularios` (src/data/formularios.json).
+ *
+ * - Modo «propio»: nuestro formulario. Con JavaScript, comprueba las respuestas, envía sin salir de la página y
+ *   enseña «enviado» o el error. Contra envíos repetidos: el botón se bloquea mientras envía, un campo trampa para
+ *   robots, y si desde el mismo móvil ya se envió una inscripción con el mismo DNI (o nombre) para este torneo, pide
+ *   confirmación antes de enviarla otra vez (en el navegador solo se guarda una huella SHA-256, nunca el DNI).
+ *   Sin JavaScript, el formulario se envía directamente al Google Form en otra pestaña.
+ * - Modo «marco»: el Google Form dentro de un marco (cuando pide iniciar sesión, subir archivos, tiene secciones…).
+ *
+ * Los textos de las preguntas y opciones son los del Google Form. Lo que se envía es exactamente su valor; solo se
+ * corrige al mostrarlo alguna errata (CORRECCIONES).
+ */
+import { entidad } from '../data/entidad';
+import { t } from '../i18n/ui';
+import type { Campo, Formulario } from '../lib/formularios';
+import { ruta } from '../lib/ruta';
+
+interface Props {
+  formulario: Formulario;
+  /** Nombre del torneo, para los mensajes («… para la MadCup 2027») */
+  torneo: string;
+  /** Prefijo de los id de los campos */
+  id: string;
+}
+const { formulario: f, torneo, id } = Astro.props;
+
+/** Erratas del Google Form que se corrigen solo al mostrarlas (se envía el valor original) */
+const CORRECCIONES: Record<string, string> = { 'Lateral izquiero': 'Lateral izquierdo' };
+const ver = (texto: string) => CORRECCIONES[texto] ?? texto;
+/** «B12 - ALEVÍN nacido en 2015» → código destacado y el resto */
+const partes = (texto: string) => {
+  const m = ver(texto).match(/^(\S+) - (.+)$/);
+  return m ? { codigo: m[1], resto: m[2] } : { codigo: null, resto: ver(texto) };
+};
+const hoy = new Date().toISOString().slice(0, 10);
+const campos = (f.campos ?? []) as Campo[];
+// Lo que identifica a un jugador para avisar de un envío repetido: el documento y, si no hay, el nombre
+const clave = (c: Campo) => c.tipo === 'texto' && /dni|nie|pasaporte|nombre/i.test(c.titulo ?? '');
+const esNombre = (c: Campo) => c.tipo === 'texto' && /nombre/i.test(c.titulo ?? '');
+const hayObligatorias = campos.some((c) => 'obligatorio' in c && c.obligatorio);
+const privacidad = ruta('/privacidad/#inscripciones');
+---
+<div class="inscripcion-form" data-inscripcion data-accion={f.accion} data-torneo={torneo} data-email={entidad.email}>
+  {f.modo === 'marco' ? (
+    <div class="marco-form">
+      <iframe src={f.marco} title={t('es', 'inscripcion.marco', { torneo })} loading="lazy"></iframe>
+      <p class="marco-form__fuera"><a class="enlace" href={f.marco.replace('?embedded=true', '')} rel="noopener" target="_blank">{t('es', 'inscripcion.abrirFuera')}</a></p>
+    </div>
+  ) : (
+    <>
+      <form class="ins" action={f.accion} method="post" target="_blank" data-form>
+        {hayObligatorias && <p class="ins__nota"><span aria-hidden="true">*</span> {t('es', 'inscripcion.obligatorias')}</p>}
+        {campos.map((c, i) => {
+          const cid = `${id}-${i}`;
+          const err = `${cid}-error`;
+          const titulo = <>{ver(c.titulo ?? '')}{'obligatorio' in c && c.obligatorio && <span class="campo__obligatorio" aria-hidden="true"> *</span>}</>;
+          const ayuda = (c.descripcion || c.enlaces?.length) && (
+            <div class="campo__ayuda" id={`${cid}-ayuda`}>
+              {c.descripcion && <p>{c.descripcion}</p>}
+              {c.enlaces?.map((e) => <p><a class="enlace" href={e.href} rel="noopener" target="_blank">{t('es', 'inscripcion.leer', { documento: e.texto })}</a></p>)}
+            </div>
+          );
+          const describe = [ayuda && `${cid}-ayuda`, err].filter(Boolean).join(' ');
+          const error = <p class="campo__error" id={err} hidden data-error></p>;
+
+          if (c.tipo === 'titulo') return <div class="ins__titulo"><h3>{c.titulo}</h3>{ayuda}</div>;
+
+          if (c.tipo === 'radio' || c.tipo === 'casillas' || c.tipo === 'escala') {
+            const tipo = c.tipo === 'casillas' ? 'checkbox' : 'radio';
+            return (
+              <fieldset class:list={['campo', `campo--${c.tipo}`]} data-campo={c.tipo} data-obligatorio={c.obligatorio ? '' : undefined} aria-describedby={describe}>
+                <legend class="campo__titulo">{titulo}</legend>
+                {ayuda}
+                {c.tipo === 'escala' && c.extremos.some(Boolean) && <p class="campo__extremos"><span>{c.extremos[0]}</span><span>{c.extremos[1]}</span></p>}
+                <div class="opciones">
+                  {c.opciones.map((o) => {
+                    const p = partes(o);
+                    return (
+                      <label class="opcion">
+                        <input type={tipo} name={c.entrada} value={o} required={c.obligatorio && (tipo === 'radio' || c.opciones.length === 1)} />
+                        <span class="opcion__texto">{p.codigo && <strong>{p.codigo}</strong>} {p.resto}</span>
+                      </label>
+                    );
+                  })}
+                  {'otro' in c && c.otro && (
+                    <label class="opcion opcion--otro">
+                      <input type={tipo} name={c.entrada} value="__other_option__" data-otro />
+                      <span class="opcion__texto">{t('es', 'inscripcion.otro')}</span>
+                      <input type="text" class="opcion__otro" name={`${c.entrada}.other_option_response`} aria-label={`${ver(c.titulo ?? '')}: ${t('es', 'inscripcion.otro')}`} />
+                    </label>
+                  )}
+                </div>
+                {error}
+              </fieldset>
+            );
+          }
+
+          return (
+            <div class="campo" data-campo={c.tipo} data-obligatorio={c.obligatorio ? '' : undefined}>
+              <label class="campo__titulo" for={cid}>{titulo}</label>
+              {ayuda}
+              {c.tipo === 'parrafo' ? (
+                <textarea id={cid} name={c.entrada} rows="3" required={c.obligatorio} aria-describedby={describe}></textarea>
+              ) : c.tipo === 'desplegable' ? (
+                <select id={cid} name={c.entrada} required={c.obligatorio} aria-describedby={describe}>
+                  <option value="">{t('es', 'inscripcion.elige')}</option>
+                  {c.opciones.map((o) => <option value={o}>{ver(o)}</option>)}
+                </select>
+              ) : (
+                <input
+                  id={cid}
+                  name={c.entrada}
+                  type={{ texto: 'text', fecha: 'date', hora: 'time', email: 'email' }[c.tipo]}
+                  required={c.obligatorio}
+                  aria-describedby={describe}
+                  autocomplete={c.tipo === 'email' ? 'email' : 'off'}
+                  max={c.tipo === 'fecha' ? hoy : undefined}
+                  data-fecha={c.tipo === 'fecha' ? '' : undefined}
+                  data-clave={clave(c) ? '' : undefined}
+                  data-nombre={esNombre(c) ? '' : undefined}
+                />
+              )}
+              {error}
+            </div>
+          );
+        })}
+
+        <!-- Trampa para robots: una persona no la ve ni la rellena (no se envía al formulario) -->
+        <div class="ins__trampa" aria-hidden="true">
+          <label>Web <input type="text" tabindex="-1" autocomplete="off" data-trampa /></label>
+        </div>
+
+        <p class="ins__privacidad">{t('es', 'inscripcion.privacidad')} <a class="enlace" href={privacidad}>{t('es', 'pie.privacidad')}</a>.</p>
+        <p class="ins__aviso" role="alert" hidden data-aviso></p>
+        <button class="boton ins__enviar" type="submit" data-enviar data-enviando={t('es', 'inscripcion.enviando')}>{t('es', 'inscripcion.enviar')}</button>
+      </form>
+
+      <div class="ins__hecho" hidden tabindex="-1" data-hecho>
+        <p class="ins__hecho-titulo">{t('es', 'inscripcion.hecho')}</p>
+        <p class="ins__hecho-texto" data-hecho-texto></p>
+        <p>{t('es', 'inscripcion.hechoDudas')} <a class="enlace" href={`mailto:${entidad.email}?subject=${encodeURIComponent(torneo)}`}>{entidad.email}</a>.</p>
+        <button type="button" class="enlace ins__otra" data-otra>{t('es', 'inscripcion.otra')}</button>
+      </div>
+    </>
+  )}
+</div>
+
+<script>
+  import { t } from '../i18n/ui';
+
+  const CLAVE = 'xb-inscripciones';
+  const ESPERA = 20_000;
+  const leerEnvios = (): Record<string, number> => {
+    try { return JSON.parse(localStorage.getItem(CLAVE) ?? '{}'); } catch { return {}; }
+  };
+  const guardarEnvio = (huella: string) => {
+    try { localStorage.setItem(CLAVE, JSON.stringify({ ...leerEnvios(), [huella]: Date.now() })); } catch { /* sin almacenamiento: no pasa nada */ }
+  };
+  async function huellaDe(texto: string) {
+    if (!crypto?.subtle) return null;
+    const bytes = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(texto));
+    return [...new Uint8Array(bytes)].map((b) => b.toString(16).padStart(2, '0')).join('');
+  }
+  const normal = (s: string) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[\s.-]/g, '').toLowerCase();
+
+  for (const caja of document.querySelectorAll<HTMLElement>('[data-inscripcion]')) {
+    const form = caja.querySelector<HTMLFormElement>('[data-form]');
+    if (!form) continue;
+    const { accion = '', torneo = '' } = caja.dataset;
+    const hecho = caja.querySelector<HTMLElement>('[data-hecho]')!;
+    const aviso = form.querySelector<HTMLElement>('[data-aviso]')!;
+    const boton = form.querySelector<HTMLButtonElement>('[data-enviar]')!;
+    const textoBoton = boton.textContent ?? '';
+    const campos = [...form.querySelectorAll<HTMLElement>('[data-campo]')];
+    // Con JavaScript, las comprobaciones son nuestras y se envía sin salir de la página
+    form.noValidate = true;
+    form.removeAttribute('target');
+    let enviando = false;
+    let confirmado = false;
+
+    const marcar = (campo: HTMLElement, mensaje: string | null) => {
+      const error = campo.querySelector<HTMLElement>('[data-error]')!;
+      error.textContent = mensaje ?? '';
+      error.hidden = !mensaje;
+      campo.toggleAttribute('data-mal', Boolean(mensaje));
+      for (const control of campo.querySelectorAll('input, select, textarea')) {
+        if (mensaje) control.setAttribute('aria-invalid', 'true');
+        else control.removeAttribute('aria-invalid');
+      }
+    };
+    const fallo = (campo: HTMLElement): string | null => {
+      const tipo = campo.dataset.campo;
+      const obligatorio = campo.hasAttribute('data-obligatorio');
+      if (tipo === 'radio' || tipo === 'casillas' || tipo === 'escala') {
+        const marcadas = [...campo.querySelectorAll<HTMLInputElement>('input[type=radio], input[type=checkbox]')].filter((i) => i.checked);
+        const otro = marcadas.find((i) => i.hasAttribute('data-otro'));
+        if (otro && !campo.querySelector<HTMLInputElement>('.opcion__otro')!.value.trim()) return t('es', 'inscripcion.faltaOtro');
+        if (obligatorio && marcadas.length === 0) return t('es', tipo === 'casillas' ? 'inscripcion.faltaCasilla' : 'inscripcion.faltaOpcion');
+        return null;
+      }
+      const control = campo.querySelector<HTMLInputElement>('input, select, textarea')!;
+      const valor = control.value.trim();
+      if (obligatorio && !valor) return t('es', tipo === 'desplegable' ? 'inscripcion.faltaOpcion' : 'inscripcion.falta');
+      if (valor && (tipo === 'fecha' || tipo === 'email' || tipo === 'hora') && !control.checkValidity()) return t('es', tipo === 'email' ? 'inscripcion.malEmail' : 'inscripcion.malFecha');
+      return null;
+    };
+
+    // Al corregir, el error se va
+    form.addEventListener('input', (e) => {
+      confirmado = false;
+      const campo = (e.target as HTMLElement).closest<HTMLElement>('[data-campo]');
+      if (campo?.hasAttribute('data-mal')) marcar(campo, fallo(campo));
+    });
+    form.addEventListener('change', (e) => {
+      const campo = (e.target as HTMLElement).closest<HTMLElement>('[data-campo]');
+      if (campo?.hasAttribute('data-mal')) marcar(campo, fallo(campo));
+      // Escribir en «Otro» marca su opción
+      const otro = (e.target as HTMLElement).closest('.opcion--otro')?.querySelector<HTMLInputElement>('[data-otro]');
+      if (otro && (e.target as HTMLInputElement).classList.contains('opcion__otro') && (e.target as HTMLInputElement).value.trim()) otro.checked = true;
+    });
+
+    const avisar = (texto: string | null) => {
+      aviso.textContent = texto ?? '';
+      aviso.hidden = !texto;
+    };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (enviando) return;
+      // Un robot que rellena la trampa ve «enviado», pero no se manda nada
+      const trampa = form.querySelector<HTMLInputElement>('[data-trampa]');
+      if (trampa?.value) return terminar('');
+
+      const malos = campos.filter((c) => { const m = fallo(c); marcar(c, m); return Boolean(m); });
+      if (malos.length) {
+        avisar(malos.length === 1 ? t('es', 'inscripcion.revisaUna') : t('es', 'inscripcion.revisa', { n: malos.length }));
+        malos[0].querySelector<HTMLElement>('input, select, textarea')?.focus();
+        malos[0].scrollIntoView({ block: 'center', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+        return;
+      }
+
+      // ¿Ya se envió desde este dispositivo una inscripción del mismo jugador para este torneo?
+      const claves = [...form.querySelectorAll<HTMLInputElement>('[data-clave]')].map((i) => normal(i.value)).filter(Boolean);
+      const huella = claves.length ? await huellaDe(`${accion}|${claves.join('|')}`) : null;
+      const antes = huella ? leerEnvios()[huella] : undefined;
+      if (antes && !confirmado) {
+        confirmado = true;
+        avisar(t('es', 'inscripcion.repetida', { fecha: new Date(antes).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' }) }));
+        boton.focus();
+        return;
+      }
+
+      const datos = new URLSearchParams();
+      for (const [nombre, valor] of new FormData(form)) {
+        if (typeof valor !== 'string') continue;
+        const control = form.querySelector<HTMLInputElement>(`[name="${CSS.escape(nombre)}"]`);
+        if (control?.hasAttribute('data-fecha') && valor) {
+          // Las fechas, como las manda el Google Form: año, mes y día por separado
+          const [a, m, d] = valor.split('-');
+          datos.append(`${nombre}_year`, String(Number(a)));
+          datos.append(`${nombre}_month`, String(Number(m)));
+          datos.append(`${nombre}_day`, String(Number(d)));
+        } else if (valor.trim() || !nombre.endsWith('.other_option_response')) {
+          datos.append(nombre, valor.trim());
+        }
+      }
+      datos.append('fvv', '1');
+      datos.append('pageHistory', '0');
+
+      enviando = true;
+      confirmado = false;
+      boton.disabled = true;
+      boton.setAttribute('aria-busy', 'true');
+      boton.textContent = boton.dataset.enviando ?? textoBoton;
+      avisar(null);
+      const corte = new AbortController();
+      const reloj = setTimeout(() => corte.abort(), ESPERA);
+      try {
+        // Google no deja leer la respuesta desde otra web (no-cors): si la petición llega, la respuesta está dentro
+        await fetch(accion, { method: 'POST', mode: 'no-cors', body: datos, signal: corte.signal });
+        if (huella) guardarEnvio(huella);
+        const nombre = form.querySelector<HTMLInputElement>('[data-nombre]')?.value.trim() ?? '';
+        terminar(nombre);
+      } catch {
+        avisar(t('es', 'inscripcion.errorEnvio', { email: caja.dataset.email ?? '' }));
+      } finally {
+        clearTimeout(reloj);
+        enviando = false;
+        boton.disabled = false;
+        boton.removeAttribute('aria-busy');
+        boton.textContent = textoBoton;
+      }
+    });
+
+    function terminar(nombre: string) {
+      const texto = hecho.querySelector<HTMLElement>('[data-hecho-texto]')!;
+      texto.textContent = nombre ? t('es', 'inscripcion.hechoTexto', { nombre, torneo }) : t('es', 'inscripcion.hechoTextoSinNombre', { torneo });
+      form!.hidden = true;
+      hecho.hidden = false;
+      hecho.focus({ preventScroll: true });
+      hecho.scrollIntoView({ block: 'center', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    }
+
+    hecho.querySelector('[data-otra]')?.addEventListener('click', () => {
+      form.reset();
+      for (const c of campos) marcar(c, null);
+      avisar(null);
+      hecho.hidden = true;
+      form.hidden = false;
+      form.querySelector<HTMLElement>('input, select, textarea')?.focus();
+    });
+  }
+</script>
+
+<style>
+  .inscripcion-form {
+    --error: #b3001b;
+    width: 100%;
+  }
+  .ins { display: grid; gap: 36px; }
+  .ins[hidden], .ins__hecho[hidden], .ins__aviso[hidden], .campo__error[hidden] { display: none; }
+  .ins__nota { font-size: var(--step-small); font-weight: 500; }
+
+  .campo { display: grid; gap: 10px; min-width: 0; margin: 0; padding: 0; border: 0; }
+  .campo__titulo {
+    padding: 0;
+    font-family: var(--fuente-display);
+    font-size: clamp(1.375rem, 1.15rem + 0.6vw, 1.75rem);
+    font-weight: 700;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+  .campo__obligatorio { color: var(--tinta-2); }
+  .campo__ayuda { display: grid; gap: 4px; font-size: var(--step-body); line-height: 1.4; }
+  .campo__ayuda a { display: inline-flex; align-items: center; min-height: 44px; }
+  .campo__extremos { display: flex; justify-content: space-between; font-size: var(--step-small); }
+
+  .campo input:not([type=radio], [type=checkbox]),
+  .campo select,
+  .campo textarea {
+    width: 100%;
+    min-height: 56px;
+    padding: 12px 14px;
+    border: 2px solid var(--marino);
+    border-radius: 0;
+    background: var(--blanco);
+    color: var(--marino);
+    font-size: max(16px, var(--step-body));
+    transition: border-color 160ms ease, box-shadow 160ms ease;
+  }
+  .campo input[type=date] { appearance: none; -webkit-appearance: none; text-align: left; }
+  .campo select {
+    appearance: none;
+    padding-right: 48px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230c0433' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 22px;
+  }
+  .campo textarea { resize: vertical; min-height: 104px; }
+  .campo :is(input, select, textarea):focus-visible { outline: 3px solid var(--azul); outline-offset: 0; }
+
+  /* Opciones: fichas planas que se pulsan enteras; la marcada se rellena de marino */
+  .opciones { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr)); gap: 8px; }
+  .campo--escala .opciones { grid-template-columns: repeat(auto-fit, minmax(56px, 1fr)); }
+  .opcion {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 56px;
+    padding: 12px 14px;
+    border: 2px solid var(--marino);
+    background: var(--blanco);
+    color: var(--marino);
+    line-height: 1.25;
+    cursor: pointer;
+    transition: background-color 160ms ease, color 160ms ease, transform 160ms var(--ease-out);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .opcion:active { transform: scale(0.98); }
+  .opcion input[type=radio], .opcion input[type=checkbox] {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    margin: 0;
+    border: 2px solid currentColor;
+    border-radius: 0;
+    background: var(--blanco);
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+  }
+  .opcion input[type=radio] { border-radius: 50%; }
+  .opcion input:checked { border-color: var(--amarillo); background: var(--amarillo); }
+  .opcion input[type=checkbox]:checked::after {
+    content: '';
+    width: 12px;
+    height: 7px;
+    margin-top: -3px;
+    border: solid var(--marino);
+    border-width: 0 0 3px 3px;
+    rotate: -45deg;
+  }
+  .opcion input[type=radio]:checked::after { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--marino); }
+  .opcion:has(input:checked) { background: var(--marino); color: var(--blanco); }
+  .opcion:has(input:focus-visible) { outline: 3px solid var(--azul); outline-offset: 2px; }
+  .opcion input:focus-visible { outline: none; }
+  .opcion__texto strong { font-family: var(--fuente-display); font-size: 1.2em; font-weight: 700; margin-right: 2px; }
+  .opcion--otro { flex-wrap: wrap; }
+  .opcion--otro .opcion__otro { flex: 1 1 140px; min-height: 44px; }
+  @media (hover: hover) and (pointer: fine) {
+    .opcion:hover:not(:has(input:checked)) { background: var(--amarillo-claro); }
+  }
+
+  /* Errores: borde y texto en rojo, con el mensaje debajo */
+  .campo[data-mal] :is(input:not([type=radio], [type=checkbox]), select, textarea), .campo[data-mal] .opcion { border-color: var(--error); }
+  .campo__error, .ins__aviso { color: var(--error); font-weight: 500; line-height: 1.35; }
+  .campo__error::before, .ins__aviso::before { content: '! '; font-weight: 700; }
+  .ins__aviso { padding: 14px 16px; background: var(--blanco); border-left: 6px solid var(--error); }
+
+  .ins__titulo h3 { font-size: var(--step-sub); text-transform: uppercase; }
+  .ins__privacidad { font-size: var(--step-small); line-height: 1.45; max-width: 60ch; }
+  .ins__enviar { justify-self: start; min-width: min(100%, 320px); }
+  .ins__enviar:disabled { cursor: progress; opacity: 0.75; }
+
+  .ins__trampa { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+  .ins__hecho { display: grid; gap: 16px; padding: 32px 28px; background: var(--marino); color: var(--blanco); outline: none; }
+  .ins__hecho-titulo {
+    font-family: var(--fuente-display);
+    font-size: var(--step-sub);
+    font-weight: 700;
+    line-height: 0.95;
+    text-transform: uppercase;
+    color: var(--amarillo);
+  }
+  .ins__hecho-texto { font-size: var(--step-lead); line-height: 1.3; }
+  .ins__hecho a { overflow-wrap: anywhere; }
+  .ins__otra { justify-self: start; min-height: 44px; padding: 0; border: 0; background: none; color: inherit; cursor: pointer; }
+
+  /* Marco: el Google Form dentro de un recuadro marino */
+  .marco-form { display: grid; gap: 12px; }
+  .marco-form iframe { width: 100%; height: min(1600px, 180svh); border: 0; border-top: 8px solid var(--marino); background: var(--blanco); }
+  .marco-form__fuera { font-size: var(--step-small); }
+
+  @media (max-width: 599px) {
+    .ins { gap: 28px; }
+    .ins__enviar { justify-self: stretch; }
+  }
+</style>

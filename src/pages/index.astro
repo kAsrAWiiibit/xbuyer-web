@@ -2,30 +2,29 @@
 /** Portada: solo los dos caminos, la academia y la Cup, y el pie */
 import LogoCup from '../components/LogoCup.astro';
 import Monograma from '../components/Monograma.astro';
+import TituloChute from '../components/TituloChute.astro';
 import { academy, cup } from '../data/contenido';
 import { t } from '../i18n/ui';
 import Base from '../layouts/Base.astro';
 import { ruta } from '../lib/ruta';
-
-const fraseCup = t('es', 'inicio.cup.frase', { ciudad: cup.edicion.ciudad, fechas: cup.edicion.fechas.toLowerCase() });
 ---
 <Base
   titulo={`${academy.nombre} · ${cup.nombre}`}
-  descripcion={`${t('es', 'academy.frase')} ${fraseCup}`}
+  descripcion={`${academy.frase} ${cup.frase}`}
   colorTema="#FFED00"
 >
   <h1 class="solo-lector">{academy.nombre} y {cup.nombre}</h1>
   <div class="caminos">
     <a class="camino" data-capitulo="amarillo" href={ruta('/academy/')}>
       <Monograma class="camino__xb" />
-      <h2 class="camino__nombre"><span>Xbuyer Team</span> <span>Academy</span></h2>
-      <p class="camino__frase">{t('es', 'academy.frase')}</p>
+      <TituloChute as="h2" class="camino__nombre" lineas={['Xbuyer Team', 'Academy']} />
+      <p class="camino__frase">{academy.frase}</p>
       <span class="boton camino__boton">{t('es', 'inicio.academy.boton')}</span>
     </a>
     <a class="camino" data-capitulo="azul" href={ruta('/cup/')}>
       <LogoCup class="camino__xb camino__xb--cup" />
-      <h2 class="camino__nombre"><span>Xbuyer</span> <span>Cup</span></h2>
-      <p class="camino__frase">{fraseCup}</p>
+      <TituloChute as="h2" class="camino__nombre" lineas={['Xbuyer', 'Cup']} />
+      <p class="camino__frase">{cup.frase}</p>
       <span class="boton camino__boton">{t('es', 'inicio.cup.boton')}</span>
     </a>
   </div>
@@ -54,9 +53,8 @@ const fraseCup = t('es', 'inicio.cup.frase', { ciudad: cup.edicion.ciudad, fecha
     line-height: 0.85;
     text-transform: uppercase;
   }
-  .camino__nombre span { display: block; }
-  .camino__nombre span + span { color: var(--tinta-2); }
-  .camino__frase { max-width: 30ch; font-size: var(--step-lead); line-height: 1.3; }
+  .camino__nombre :global(.linea + .linea) { color: var(--tinta-2); }
+  .camino__frase { max-width: 36ch; font-size: var(--step-lead); line-height: 1.3; }
   .camino__boton { margin-top: 8px; }
   @media (hover: hover) and (pointer: fine) {
     .camino:hover .camino__boton { background: var(--tinta); color: var(--fondo); }

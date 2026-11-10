@@ -7,7 +7,9 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "borradores": "BORRADORES=1 astro build --outDir dist-borradores"
+    "borradores": "BORRADORES=1 astro build --outDir dist-borradores",
+    "vista-previa": "VISTA_PREVIA=1 SITE_URL=https://kasrawiiibit.github.io BASE_PATH=/xbuyer-web-preview/ astro build --outDir dist-vista-previa",
+    "formularios": "node scripts/formularios.mjs"
   },
   "dependencies": {
     "@fontsource/barlow": "^5.2.6",
