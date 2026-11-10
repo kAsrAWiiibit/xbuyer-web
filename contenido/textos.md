@@ -17,7 +17,6 @@
 - Central Cup (Torrent): campeones. 2025, S10.
 - MEDCUP: campeones. 2025, S12.
 - Swit Cup: campeones. 2025, U14.
-- Donosti Cup: participación. [pendiente: año y categoría]
 
 ## Equipación (2026/2027)
 - Nombre: Nueva piel.

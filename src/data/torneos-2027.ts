@@ -142,7 +142,8 @@ export const torneos: Torneo[] = [
     inicio: '2027-06-11',
     fin: '2027-06-13',
     lugar: 'Salou (Tarragona)',
-    logo: null,
+    // Logo de MIC Sports, organizadora de la MIC7 (contenido/torneos-2027/logos/)
+    logo: 'mic7.png',
     descripcion:
       'Xbuyer Team Academy participará en la MIC7 2027, un torneo internacional de fútbol base que se celebrará en Salou del 11 al 13 de junio. Nuestros equipos representarán a la academia en esta competición, compartiendo varios días de fútbol, convivencia y nuevas experiencias junto a equipos de diferentes lugares.',
     formulario: 'https://forms.gle/u7FKX72g4UdtrwXy8',
@@ -187,8 +188,8 @@ export const torneos: Torneo[] = [
     fin: '2027-06-27',
     lugar: 'Vila-real (Castellón)',
     precio: 655,
-    // Su logo lleva el escudo del Villarreal CF: sin escudos de otros clubes, va solo el nombre
-    logo: null,
+    // Lleva el escudo del Villarreal CF: la organización lo autoriza (10 de noviembre de 2026)
+    logo: 'yellow-cup.png',
     incluye: [
       'Inscripción al torneo', 'Seguro médico', 'Entrenadores titulados', '4 partidos garantizados', '4 días y 3 noches en hotel',
       'Régimen de pensión completa', 'Visita al Estadio de la Cerámica', '2 entrenamientos previos', 'Acto inaugural',

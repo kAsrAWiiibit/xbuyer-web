@@ -8,6 +8,7 @@ import Cabecera from '../../components/Cabecera.astro';
 import Campo from '../../components/Campo.astro';
 import Cupon from '../../components/Cupon.astro';
 import Dato from '../../components/Dato.astro';
+import FormularioInscripcion from '../../components/FormularioInscripcion.astro';
 import LogoCup from '../../components/LogoCup.astro';
 import Patrocinador from '../../components/Patrocinador.astro';
 import SiCompleto from '../../components/SiCompleto.astro';
@@ -19,6 +20,7 @@ import { t } from '../../i18n/ui';
 import Base from '../../layouts/Base.astro';
 import { menuEdiciones, rutaEdicion } from '../../lib/ediciones';
 import { rango } from '../../lib/fechas';
+import { formularioDe } from '../../lib/formularios';
 import { completo, esPendiente } from '../../lib/pendiente';
 import { ruta } from '../../lib/ruta';
 import { enlaceInscripcion } from '../../lib/torneos';
@@ -32,7 +34,10 @@ const { edicion: ed } = Astro.props;
 const fechas = rango(ed.inicio, ed.fin);
 const abierta = ed.inscripcion === 'abierta';
 const inscripcion = abierta ? enlaceInscripcion(ed.formulario, t('es', 'edicion.asunto', { ciudad: ed.ciudad }), Astro.url.pathname) : null;
-const externo = inscripcion ? !inscripcion.startsWith('mailto:') : false;
+// Con el enlace del Google Form, el formulario se rellena en la página (bloque #inscripcion); mientras no esté, el
+// botón abre un email a la organización
+const formulario = abierta ? formularioDe(ed.formulario) : null;
+const torneoNombre = `Xbuyer Cup ${ed.ciudad}`;
 const appLista = Boolean(ed.app) && completo(cup.app.appStore) && completo(cup.app.googlePlay);
 const sedes = ed.sedes.filter(completo);
 const sedesPendientes = ed.sedes.filter(esPendiente);
@@ -42,7 +47,7 @@ const otras = ediciones.filter((e) => e.slug !== ed.slug);
 
 const cup_ = (ancla: string) => ruta(`/cup/${ancla}`);
 const enlaces = [
-  { href: cup_('#ediciones'), texto: t('es', 'nav.ediciones'), ...menuEdiciones(ed.slug), todos: { href: cup_('#ediciones'), texto: t('es', 'nav.verTodas') } },
+  { href: cup_('#torneos'), texto: t('es', 'nav.ediciones'), ...menuEdiciones(ed.slug), todos: { href: cup_('#torneos'), texto: t('es', 'nav.verTodos') } },
   { href: cup_('#anteriores'), texto: t('es', 'nav.anteriores') },
   { href: '#patrocinador', texto: t('es', 'nav.patrocinador') },
   { href: '#contacto', texto: t('es', 'nav.contacto') },
@@ -74,7 +79,7 @@ const categoriasTexto = ed.formatos.map((f) => `${f.nombre}: ${f.categorias.filt
   <Cabecera slot="cabecera" marca={cup.nombre} logo="cup" capitulo="azul" enlaces={enlaces} otra={{ href: ruta('/academy/'), texto: academy.nombre }} />
 
   <section class="portada" data-capitulo="azul" aria-labelledby="portada-titulo">
-    <a class="portada__volver enlace" href={cup_('#ediciones')}>
+    <a class="portada__volver enlace" href={cup_('#torneos')}>
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12H5M11 6l-6 6 6 6" /></svg>{t('es', 'nav.ediciones')}
     </a>
     <div class="portada__cuerpo">
@@ -90,7 +95,7 @@ const categoriasTexto = ed.formatos.map((f) => `${f.nombre}: ${f.categorias.filt
       <div class:list={['inscripcion', !abierta && 'inscripcion--cerrada']}>
         <p class="inscripcion__estado">{abierta ? t('es', 'cup.abiertas') : t('es', 'cup.cerradas')}</p>
         {inscripcion ? (
-          <a class="boton inscripcion__boton" href={inscripcion} {...(externo ? { rel: 'noopener', target: '_blank' } : {})}>{t('es', 'edicion.inscribete')}</a>
+          <a class="boton inscripcion__boton" href={formulario ? '#inscripcion' : inscripcion}>{t('es', 'edicion.inscribete')}</a>
         ) : (
           <p class="inscripcion__texto">{t('es', 'edicion.cerradasTexto')}</p>
         )}
@@ -208,6 +213,16 @@ const categoriasTexto = ed.formatos.map((f) => `${f.nombre}: ${f.categorias.filt
     </nav>
   </section>
 
+  {formulario && (
+    <section class="bloque formulario" id="inscripcion" data-capitulo="amarillo" aria-labelledby="formulario-titulo">
+      <div class="formulario__texto">
+        <h2 id="formulario-titulo" class="bloque__titulo">{t('es', 'edicion.inscribete')}</h2>
+        <p class="formulario__intro">{t('es', 'inscripcion.introCup', { torneo: torneoNombre })}</p>
+      </div>
+      <FormularioInscripcion formulario={formulario} torneo={torneoNombre} id={`ins-${ed.slug}`} />
+    </section>
+  )}
+
   <section class="bloque contacto" id="contacto" data-capitulo="azul" aria-labelledby="contacto-titulo">
     <Cupon marca="Xbuyer Cup" tituloId="contacto-titulo" titulo={t('es', 'contacto.tituloCup')} instagram={cup.instagram} />
   </section>
@@ -261,6 +276,16 @@ const categoriasTexto = ed.formatos.map((f) => `${f.nombre}: ${f.categorias.filt
   }
   .portada__sede { font-size: var(--step-lead); font-weight: 500; }
   .portada__cuenta { font-size: var(--step-body); font-weight: 500; min-height: 1.5em; }
+
+  /* Formulario de inscripción integrado: texto a la izquierda (quieto al bajar), formulario a la derecha */
+  .formulario { display: grid; grid-template-columns: repeat(12, 1fr); column-gap: 16px; align-items: start; }
+  .formulario__texto { grid-column: 1 / 5; display: grid; gap: 28px; position: sticky; top: 96px; }
+  .formulario__intro { font-size: var(--step-lead); line-height: 1.35; max-width: 34ch; }
+  .formulario :global(.inscripcion-form) { grid-column: 6 / 13; }
+  @media (max-width: 899px) {
+    .formulario { row-gap: 28px; }
+    .formulario__texto, .formulario :global(.inscripcion-form) { grid-column: 1 / -1; position: static; }
+  }
 
   /* La inscripción, un recuadro aparte: abierta (botón) o cerrada (aviso y la app) */
   .inscripcion {

@@ -3,6 +3,7 @@
  * Xbuyer Cup: presentación corta, qué la hace diferente, las ediciones de esta temporada (cada una con su página,
  * src/data/cup-ediciones.ts), las anteriores, el patrocinador principal y contacto.
  */
+import TituloChute from '../../components/TituloChute.astro';
 import Cabecera from '../../components/Cabecera.astro';
 import Cupon from '../../components/Cupon.astro';
 import Dato from '../../components/Dato.astro';
@@ -23,7 +24,7 @@ import { ruta } from '../../lib/ruta';
 import { menuEdiciones, rutaEdicion } from '../../lib/ediciones';
 
 const enlaces = [
-  { href: '#ediciones', texto: t('es', 'nav.ediciones'), ...menuEdiciones(), todos: { href: '#ediciones', texto: t('es', 'nav.verTodas') } },
+  { href: '#torneos', texto: t('es', 'nav.ediciones'), ...menuEdiciones(), todos: { href: '#torneos', texto: t('es', 'nav.verTodos') } },
   { href: '#anteriores', texto: t('es', 'nav.anteriores') },
   { href: '#patrocinador', texto: t('es', 'nav.patrocinador') },
   { href: '#contacto', texto: t('es', 'nav.contacto') },
@@ -45,9 +46,9 @@ const fotosDe = (ciudad: string, fechas: string) =>
   <section class="portada" data-capitulo="azul" aria-labelledby="portada-titulo">
     <div class="portada__texto">
       <LogoCup class="portada__logo" />
-      <h1 id="portada-titulo" class="portada__titulo"><span>Xbuyer</span> <span>Cup</span></h1>
+      <TituloChute id="portada-titulo" class="portada__titulo" lineas={['Xbuyer', 'Cup']} />
       <p class="portada__frase">{cup.frase}</p>
-      <a class="boton" href="#ediciones">{t('es', 'cup.verTorneos')}</a>
+      <a class="boton" href="#torneos">{t('es', 'cup.verTorneos')}</a>
       {principal && (
         <a class="portada__patrocinador" href={enlaceInstagram(principal.instagram)} rel="noopener">
           <span>{t('es', 'cup.patrocinador')}</span>
@@ -71,7 +72,7 @@ const fotosDe = (ciudad: string, fechas: string) =>
     </ol>
   </section>
 
-  <section class="bloque ediciones" id="ediciones" data-capitulo="marino" aria-labelledby="ediciones-titulo">
+  <section class="bloque ediciones" id="torneos" data-capitulo="marino" aria-labelledby="ediciones-titulo">
     <h2 id="ediciones-titulo" class="bloque__titulo">{t('es', 'cup.ediciones')}</h2>
     <ol role="list" class="ediciones__lista">
       {ediciones.map((e) => (
@@ -141,8 +142,7 @@ const fotosDe = (ciudad: string, fechas: string) =>
     line-height: 0.85;
     text-transform: uppercase;
   }
-  .portada__titulo span { display: block; }
-  .portada__titulo span + span { color: var(--marino); }
+  .portada__titulo :global(.linea + .linea) { color: var(--marino); }
   .portada__frase { max-width: 34ch; font-size: var(--step-lead); line-height: 1.3; }
   .portada__patrocinador {
     display: inline-flex;

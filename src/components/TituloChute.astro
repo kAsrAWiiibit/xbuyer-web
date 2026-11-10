@@ -22,13 +22,15 @@ interface Props {
   lineas: string[];
   id?: string;
   class?: string;
+  /** Etiqueta del título: h1 en las portadas de sección; h2 en los dos caminos de la portada de la web */
+  as?: 'h1' | 'h2';
 }
-const { lineas, id, class: clase } = Astro.props;
+const { lineas, id, class: clase, as: Etiqueta = 'h1' } = Astro.props;
 const texto = lineas.join(' ');
 // Cada línea, en palabras, y cada palabra, en letras
 const partes = lineas.map((l) => l.split(' ').map((p) => [...p]));
 ---
-<h1 id={id} class:list={['titulo-chute', clase]} aria-label={texto}>
+<Etiqueta id={id} class:list={['titulo-chute', clase]} aria-label={texto}>
   {partes.map((palabras, l) => (
     <>{l > 0 && ' '}<span class="linea" aria-hidden="true">
       {palabras.map((letras, j) => (
@@ -36,7 +38,7 @@ const partes = lineas.map((l) => l.split(' ').map((p) => [...p]));
       ))}
     </span></>
   ))}
-</h1>
+</Etiqueta>
 <script is:inline>
 (function () {
   var h = document.currentScript.previousElementSibling;

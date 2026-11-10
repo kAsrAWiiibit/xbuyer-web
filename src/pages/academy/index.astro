@@ -173,18 +173,22 @@ const enlaces = menuAcademia((c) => t('es', c), { enPortada: true });
 
     <div class="extras">
       <p class="extras__incluida">{equipacion.incluida}</p>
-      <div class="extras__opcional">
-        <h3 class="extras__titulo">{t('es', 'academy.equipacion.opcional')}</h3>
+      <details class="extras__opcional">
+        <summary class="extras__resumen">
+          <span class="extras__titulo">{t('es', 'academy.equipacion.opcional')}</span>
+          <span class="extras__precios">{extras.map((e) => `${e.nombre} ${euros(e.precio)}`).join(' · ')}</span>
+          <svg class="extras__flecha" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
+        </summary>
         <ul role="list" class="extras__lista">
           {extras.map((e) => (
             <li class="extra">
-              <div class="extra__imagen"><Image src={imagenExtra(e.imagen)} alt={e.alt} widths={[200, 400]} sizes="160px" loading="lazy" /></div>
+              <div class="extra__imagen"><Image src={imagenExtra(e.imagen)} alt={e.alt} widths={[200, 400]} sizes="(max-width: 599px) 45vw, 220px" loading="lazy" /></div>
               <p class="extra__nombre">{e.nombre}</p>
               <p class="extra__precio">{euros(e.precio)}</p>
             </li>
           ))}
         </ul>
-      </div>
+      </details>
     </div>
     <p class="creditos">{t('es', 'pie.fotos')}: {autores(huecosEquipacion).join(', ')}</p>
   </section>
@@ -444,10 +448,40 @@ const enlaces = menuAcademia((c) => t('es', c), { enPortada: true });
   }
   .extras__incluida { grid-column: 1 / 7; font-size: var(--step-lead); line-height: 1.35; }
   .extras__opcional { grid-column: 8 / 13; }
-  .extras__titulo { font-size: var(--step-sub); text-transform: uppercase; }
-  .extras__lista { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 20px; }
-  .extra__imagen { display: grid; place-items: center; aspect-ratio: 1; padding: 12%; background: var(--blanco); }
-  .extra__imagen img { width: 100%; height: 100%; object-fit: contain; }
+  /* Ropa opcional: desplegable (sin JavaScript, <details>); cerrado se ven los precios */
+  .extras__opcional { border-block: 3px solid var(--marino); }
+  .extras__resumen {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    column-gap: 16px;
+    row-gap: 4px;
+    min-height: 64px;
+    padding-block: 14px;
+    cursor: pointer;
+    list-style: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .extras__resumen::-webkit-details-marker { display: none; }
+  .extras__resumen:focus-visible { outline: 3px solid var(--azul); outline-offset: 4px; }
+  .extras__titulo { font-family: var(--fuente-display); font-size: var(--step-sub); font-weight: 700; line-height: 0.95; text-transform: uppercase; }
+  .extras__precios { grid-column: 1; font-weight: 500; font-variant-numeric: tabular-nums; }
+  .extras__flecha {
+    grid-column: 2;
+    grid-row: 1 / 3;
+    width: 32px;
+    height: 32px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.5;
+    stroke-linecap: square;
+    transition: rotate 200ms var(--ease-out);
+  }
+  .extras__opcional[open] .extras__flecha { rotate: 180deg; }
+  @media (prefers-reduced-motion: reduce) { .extras__flecha { transition: none; } }
+  .extras__lista { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding-bottom: 24px; }
+  .extra__imagen { position: relative; aspect-ratio: 1; background: var(--blanco); }
+  .extra__imagen img { position: absolute; inset: 10%; width: 80%; height: 80%; object-fit: contain; }
   .extra__nombre { margin-top: 12px; font-family: var(--fuente-display); font-size: var(--step-lead); font-weight: 700; line-height: 1; text-transform: uppercase; }
   .extra__precio { margin-top: 2px; font-weight: 500; font-variant-numeric: tabular-nums; color: var(--azul); }
 
