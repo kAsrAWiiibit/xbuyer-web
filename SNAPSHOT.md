@@ -1,4 +1,4 @@
-# SNAPSHOT: arquitectura actual (11 de noviembre de 2026)
+# SNAPSHOT: arquitectura actual (12 de noviembre de 2026)
 
 Web estática en **Astro** publicada en GitHub Pages: **https://xbuyerteamacademy.com** (repositorio público
 `kAsrAWiiibit/xbuyer-web`; cada push a `main` despliega con `.github/workflows/desplegar.yml`). Reglas en
@@ -8,7 +8,7 @@ Web estática en **Astro** publicada en GitHub Pages: **https://xbuyerteamacadem
 
 | Ruta | Qué es | Archivo |
 | --- | --- | --- |
-| `/` | Dos caminos (Academy amarillo, Cup azul), títulos con chute | `src/pages/index.astro` |
+| `/` | Dos caminos (Academy amarillo, Cup azul): logo grande con eco (`LogoEco.astro`) y título con chute | `src/pages/index.astro` |
 | `/academy/` | Portada con chute, quiénes somos, Torneos 2027 (8 tarjetas), palmarés (marcador + vitrina), «Nueva piel» con ropa opcional en desplegable, contacto | `src/pages/academy/index.astro` |
 | `/academy/torneos/<slug>/` | Ficha de cada torneo 2027: precio, qué incluye, categorías, programa y **formulario de inscripción integrado** (`#inscripcion`) | `src/pages/academy/torneos/[torneo].astro` |
 | `/academy/preinscripcion/` | Texto y botón al Google Form de preinscripción (enlace, no integrado) | `src/pages/academy/preinscripcion.astro` |
@@ -21,8 +21,13 @@ Web estática en **Astro** publicada en GitHub Pages: **https://xbuyerteamacadem
 ## Datos (nada escrito en las plantillas)
 
 - Textos: `contenido/textos.md` (lo lee `src/lib/textos.ts`, le da forma `src/data/contenido.ts`). Interfaz: `src/i18n/ui.ts`.
-- Torneos 2027: `src/data/torneos-2027.ts` (de los PDF de `contenido/torneos-2027/`, fuera de git). Logos en
-  `src/fotos/torneos/*.png` (transparentes, recortados con `scripts/recortar-png.mjs`; `LOGOS_OSCUROS` van sobre marino).
+- Torneos 2027: `src/data/torneos-2027.ts` (de los PDF de `contenido/torneos-2027/`, fuera de git).
+- Logos de los torneos: `src/fotos/torneos/<logo>.png`, sin recuadro, directamente sobre el fondo
+  (`LogoTorneo.astro`, prop `fondo: 'oscuro' | 'claro'`). Se recortan de los PDF con `scripts/recortar-png.mjs` y
+  después se pasa `node scripts/logos-torneos.mjs`: limpia el borde (sin halo), ajusta el recorte y crea
+  `<logo>--oscuro.png` (blanco: 1900, Copa UniQ, MIC7, texto de Donosti) y `<logo>--claro.png` (MadCup con lo
+  blanco en marino, MedCup con «MED» relleno). Salen en las tarjetas de Torneos 2027 (azul, `oscuro`) y en la ficha
+  de cada torneo (amarillo, `claro`). El palmarés usa los trofeos y el menú solo texto.
 - Torneos de la Cup: `src/data/cup-ediciones.ts`; normativa común `src/data/normativa.ts` (PDF en `public/normativa/`).
 - Equipación y ropa opcional: `src/data/equipacion.ts` (prendas en `src/fotos/equipacion/*.png`, recortadas de los PDF).
 - Patrocinador: `src/data/patrocinadores.ts`. Fechas: `src/lib/fechas.ts`. Fotos: `src/data/fotos.json`.
@@ -46,7 +51,9 @@ Web estática en **Astro** publicada en GitHub Pages: **https://xbuyerteamacadem
 ## Movimiento
 
 `TituloChute.astro` (títulos de `/`, `/academy/`, `/cup/`; Web Animations API, solo transform, quieto con
-«Reducir movimiento» o sin JS), `Marcador.astro`, `Campo.astro`, vitrina de trofeos (CSS), `Tunel.astro` (prototipo).
+«Reducir movimiento» o sin JS), `LogoEco.astro` (portada: 4 copias del logo en contorno, con `<use>`, desplazadas a
+51° hacia arriba a la derecha; salen del logo de 1,1 s a 1,8 s, cuando el chute ya frena; CSS, solo translate y
+opacity; con «Reducir movimiento», ya colocadas), `Marcador.astro`, `Campo.astro`, vitrina de trofeos (CSS), `Tunel.astro` (prototipo).
 
 ## Publicación
 

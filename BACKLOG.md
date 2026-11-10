@@ -1,14 +1,15 @@
 # BACKLOG
 
-> **RESUME HERE** (11 de noviembre de 2026): los cambios aprobados por los dueños están publicados en
-> https://xbuyerteamacademy.com (rama `cambios-reunion` fusionada en `main`). Falta borrar el repositorio de la vista
-> previa `kAsrAWiiibit/xbuyer-web-preview` (gh necesita `gh auth refresh -h github.com -s delete_repo`). Siguiente:
-> enlaces de los Google Form de la Cup Madrid y Barcelona (pegarlos en `formulario:` de `src/data/cup-ediciones.ts`,
-> `npm run formularios`, build y revisar el bloque `#inscripcion`). Ver «Pendiente de la organización».
+> **RESUME HERE** (12 de noviembre de 2026): publicados los logos de los torneos sin recuadro (versiones por fondo,
+> `scripts/logos-torneos.mjs`) y el logo con eco de la portada (`LogoEco.astro`). Falta borrar el repositorio de la
+> vista previa `kAsrAWiiibit/xbuyer-web-preview` (gh necesita `gh auth refresh -h github.com -s delete_repo`).
+> Siguiente: enlaces de los Google Form de la Cup Madrid y Barcelona (pegarlos en `formulario:` de
+> `src/data/cup-ediciones.ts`, `npm run formularios`, build y revisar el bloque `#inscripcion`).
 
 ## Pendiente de la organización
 
 - Google Form de la Xbuyer Cup **Madrid** y **Barcelona** (mientras, botón de email; el bloque integrado ya está).
+- Logos originales en buena calidad (sobre todo MedCup, Swit Cup, Donosti Cup y Central Cup).
 - Una inscripción real de prueba desde la web en un torneo 2027 (no se hicieron envíos de prueba a los formularios
   reales): comprobar que llega a la hoja de cálculo y borrar esa fila.
 - Fichas de App Store y Google Play con las URL nuevas (privacidad, soporte y eliminación de datos:
@@ -39,8 +40,9 @@
   `npm run formularios -- --comprobar` dice si alguno ha cambiado.
 - Con `no-cors`, la web no puede leer la respuesta de Google: si un formulario se cierra («ya no acepta respuestas»),
   la web seguiría diciendo «enviada». Al cerrar un formulario, quitar su enlace o volver a leerlos.
-- Logos y prendas sacados de los PDF: su resolución máxima es la del PDF (225–1197 px de ancho). Si la organización
-  tiene los originales, sustituirlos con `scripts/recortar-png.mjs`.
+- Logos y prendas sacados de los PDF: su resolución máxima es la del PDF (213–1151 px de ancho). Si la organización
+  tiene los originales: `scripts/recortar-png.mjs` y después `node scripts/logos-torneos.mjs` (revisar si hace falta
+  versión para fondo oscuro o claro y añadirla en VERSIONES).
 
 ## Ideas
 

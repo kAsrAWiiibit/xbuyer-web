@@ -30,8 +30,11 @@ Dirección visual «cartel plano y ruidoso» (`.taste-skill/direction.json`, fue
 - **Formularios de inscripción:** nunca envíos de prueba a los Google Forms reales. Su estructura se lee con
   `npm run formularios` (solo lectura); tras cualquier cambio de un formulario o enlace, vuelve a leerlos.
   Las respuestas tienen que seguir llegando al Google Form y a su hoja de cálculo.
+- **Logos de torneos sin recuadro:** PNG transparente sin halo, legible sobre amarillo y sobre azul o marino. Tras
+  cambiar uno, `node scripts/logos-torneos.mjs` y revisarlo sobre los dos fondos en móvil y escritorio.
 - Movimiento: siempre con alternativa para `prefers-reduced-motion`, sin bloquear el hilo principal ni penalizar el
-  LCP; nada de librerías pesadas en páginas que no las necesitan.
+  LCP; nada de librerías pesadas en páginas que no las necesitan. Las animaciones de una misma pantalla no compiten:
+  van una detrás de otra (en la portada, primero el chute y después el eco del logo). Lighthouse no puede bajar.
 - **Cada push a `main` despliega la web oficial.** Trabaja en ramas; fusiona solo con el visto bueno. La rama
   `mejoras-noche` no se fusiona nunca.
 

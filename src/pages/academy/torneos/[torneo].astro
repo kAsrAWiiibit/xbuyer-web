@@ -17,7 +17,7 @@ import { dia, euros, rango } from '../../../lib/fechas';
 import { formularioDe } from '../../../lib/formularios';
 import { completo, esPendiente } from '../../../lib/pendiente';
 import { ruta } from '../../../lib/ruta';
-import { enlaceInscripcion, fondoLogo, menuAcademia, nombreCompleto } from '../../../lib/torneos';
+import { enlaceInscripcion, menuAcademia, nombreCompleto } from '../../../lib/torneos';
 
 export function getStaticPaths() {
   return torneos.map((torneo) => ({ params: { torneo: torneo.slug }, props: { torneo } }));
@@ -80,7 +80,7 @@ const evento = {
         </dl>
         <a class="boton ficha__boton" {...botonInscripcion}>{t('es', 'torneo.inscribete')}</a>
       </div>
-      {tr.logo && <LogoTorneo logo={tr.logo} nombre={tr.nombre} fondo={fondoLogo(tr.logo)} class="ficha__logo" sizes="(min-width: 900px) 30vw, 60vw" />}
+      {tr.logo && <LogoTorneo logo={tr.logo} nombre={tr.nombre} fondo="claro" class="ficha__logo" sizes="(min-width: 900px) 30vw, 60vw" />}
     </div>
   </section>
 
@@ -290,12 +290,15 @@ const evento = {
   @media (max-width: 899px) {
     .ficha__texto { grid-column: 1 / -1; }
     .ficha__logo { grid-column: 1 / -1; grid-row: 1; width: min(60%, 280px); margin-bottom: 32px; }
+    .ficha__logo :global(img) { inset: 0; width: 100%; height: 100%; object-position: left center; }
     .incluye__lista { grid-template-columns: 1fr 1fr; }
   }
   @media (max-width: 599px) {
     .ficha__nombre { font-size: 15vw; }
     .incluye__lista, .formato__grupos { grid-template-columns: 1fr; }
-    .ficha__logo { width: 44%; margin-bottom: 24px; }
+    .ficha__logo { width: 58%; margin-bottom: 20px; }
+    /* Sin recuadro, el logo se alinea a la izquierda con el texto */
+    .ficha__logo :global(img) { inset: 0; width: 100%; height: 100%; object-position: left center; }
     .ficha__texto { gap: 20px; }
   }
 </style>

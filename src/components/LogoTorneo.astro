@@ -1,7 +1,8 @@
 ---
 /**
- * Logo de un torneo (src/fotos/torneos/) sobre un recuadro plano, o su nombre en letra de cartel si no hay logo.
- * El recuadro es blanco, o marino si el logo tiene partes blancas.
+ * Logo de un torneo (src/fotos/torneos/), sin recuadro: PNG transparente directamente sobre el fondo de la página.
+ * `fondo` dice sobre qué va: si existe `<logo>--oscuro.png` o `<logo>--claro.png` (versiones en blanco, o con las
+ * partes blancas en marino, de scripts/logos-torneos.mjs), se usa esa. Sin logo, el nombre en letra de cartel.
  */
 import type { ImageMetadata } from 'astro';
 import { Image } from 'astro:assets';
@@ -9,18 +10,20 @@ import { Image } from 'astro:assets';
 interface Props {
   logo: string | null;
   nombre: string;
-  fondo?: 'blanco' | 'marino';
+  /** Fondo sobre el que va: oscuro (azul, marino) o claro (amarillo, blanco) */
+  fondo: 'oscuro' | 'claro';
   /** Ancho máximo que ocupa en pantalla, para elegir el tamaño de la imagen */
   sizes?: string;
   class?: string;
 }
-const { logo, nombre, fondo = 'blanco', sizes = '200px', class: clase } = Astro.props;
+const { logo, nombre, fondo, sizes = '200px', class: clase } = Astro.props;
 const archivos = import.meta.glob<ImageMetadata>('/src/fotos/torneos/*.png', { eager: true, import: 'default' });
-const src = logo ? archivos[`/src/fotos/torneos/${logo}`] : undefined;
+const ruta = (archivo: string) => `/src/fotos/torneos/${archivo}`;
+const src = logo ? (archivos[ruta(logo.replace('.png', `--${fondo}.png`))] ?? archivos[ruta(logo)]) : undefined;
 if (logo && !src) throw new Error(`LogoTorneo: no existe src/fotos/torneos/${logo}`);
 ---
-<div class:list={['logo-torneo', `logo-torneo--${fondo}`, !src && 'logo-torneo--nombre', clase]}>
-  {src ? <Image src={src} alt={`Logo de ${nombre}`} widths={[160, 320, 480]} sizes={sizes} loading="lazy" /> : <span aria-hidden="true">{nombre}</span>}
+<div class:list={['logo-torneo', !src && 'logo-torneo--nombre', clase]}>
+  {src ? <Image src={src} alt={`Logo de ${nombre}`} widths={[160, 320, 480, 640]} sizes={sizes} loading="lazy" /> : <span aria-hidden="true">{nombre}</span>}
 </div>
 
 <style>
@@ -30,12 +33,9 @@ if (logo && !src) throw new Error(`LogoTorneo: no existe src/fotos/torneos/${log
     place-items: center;
     aspect-ratio: 3 / 2;
     min-height: 0;
-    overflow: hidden;
-    background: var(--blanco);
-    color: var(--marino);
+    color: var(--tinta);
   }
-  .logo-torneo--marino { background: var(--marino); color: var(--blanco); }
-  .logo-torneo img { position: absolute; inset: 14%; width: 72%; height: 72%; object-fit: contain; }
+  .logo-torneo img { position: absolute; inset: 12%; width: 76%; height: 76%; object-fit: contain; }
   .logo-torneo--nombre { padding: 10%; }
   .logo-torneo--nombre span {
     font-family: var(--fuente-display);

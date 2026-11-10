@@ -24,7 +24,7 @@ import Base from '../../layouts/Base.astro';
 import { euros, rango } from '../../lib/fechas';
 import { autores, fotoDe, type Hueco } from '../../lib/fotos';
 import { ruta } from '../../lib/ruta';
-import { fondoLogo, menuAcademia, nombreCompleto, rutaTorneo } from '../../lib/torneos';
+import { menuAcademia, nombreCompleto, rutaTorneo } from '../../lib/torneos';
 
 const palmares = academy.palmares;
 /** «2025 · B12»; si hay más de un título, solo es uno de ellos */
@@ -96,7 +96,7 @@ const enlaces = menuAcademia((c) => t('es', c), { enPortada: true });
       {torneos.map((tr) => (
         <li>
           <a class="tarjeta" href={rutaTorneo(tr)}>
-            <LogoTorneo logo={tr.logo} nombre={tr.nombre} fondo={fondoLogo(tr.logo)} class="tarjeta__logo" sizes="(min-width: 1100px) 22vw, (min-width: 600px) 45vw, 40vw" />
+            <LogoTorneo logo={tr.logo} nombre={tr.nombre} fondo="oscuro" class="tarjeta__logo" sizes="(min-width: 1100px) 22vw, (min-width: 600px) 45vw, 40vw" />
             <span class="tarjeta__texto">
               <span class="tarjeta__nombre">{tr.nombre}{tr.edicion && <span class="tarjeta__edicion">{tr.edicion}</span>}</span>
               <span class="tarjeta__fechas"><time datetime={tr.inicio}>{rango(tr.inicio, tr.fin)}</time></span>

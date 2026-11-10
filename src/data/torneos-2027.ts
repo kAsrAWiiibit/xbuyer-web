@@ -276,5 +276,3 @@ for (const [i, t] of torneos.entries()) {
   if (torneos.findIndex((o) => o.slug === t.slug) !== i) throw new Error(`torneos-2027: slug repetido ${t.slug}`);
 }
 
-/** Logos con partes blancas: van sobre recuadro marino (también en el palmarés) */
-export const LOGOS_OSCUROS = new Set(['madcup.png']);
