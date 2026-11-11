@@ -22,6 +22,7 @@
           "La app no pide registrarse. Cada móvil tiene una sesión anónima, sin nombre ni email, para contar un voto al MVP por persona y partido y para que veas tus incidencias y lo que has subido.",
           "Fotos y vídeos de los partidos que suben las familias. La organización revisa cada foto y vídeo antes de publicarlo.",
           "Incidencias: tipo, partido o campo, descripción, foto opcional y tu nombre si lo indicas. Las de lesiones solo las ve la organización (no los responsables de campo).",
+          "Las incidencias de lesiones son datos de salud: solo las ve la organización y se usan únicamente para atender al jugador o jugadora.",
           "Avisos, solo si los activas: el identificador de notificaciones del móvil y tus equipos favoritos, para avisarte de sus partidos (inicio, goles y votación del MVP). Se quitan en Más → Avisos o en los ajustes del móvil.",
           "De los jugadores solo se publican el nombre abreviado (nombre e inicial del primer apellido) y el dorsal, que facilitan los clubes, junto con los resultados, goles, tarjetas y MVP.",
           "Los datos de las hojas de inscripción (DNI, fecha de nacimiento, teléfonos y responsables) solo los tiene la organización: no se guardan en la app ni se publican."
@@ -49,7 +50,8 @@
         "title": "Para qué y por qué",
         "paragraphs": [
           "Para organizar y seguir el torneo Xbuyer Cup: calendario, resultados, clasificaciones, incidencias y galería.",
-          "Base legal: el consentimiento (fotos, vídeos, votos y avisos) y el interés legítimo de la organización en el desarrollo del torneo (resultados e incidencias)."
+          "Base legal: el consentimiento (fotos, vídeos, votos y avisos) y el interés legítimo de la organización en el desarrollo del torneo (resultados e incidencias).",
+          "En las incidencias de lesiones, que son datos de salud, la base legal es proteger la salud del jugador o jugadora y atenderle."
         ]
       },
       {
@@ -67,9 +69,29 @@
         ]
       },
       {
+        "title": "Transferencias internacionales",
+        "paragraphs": [
+          "Expo, Apple (avisos en iPhone) y Google (Firebase Cloud Messaging, para los avisos, y Google Forms, para las inscripciones desde la web) pueden tratar datos en Estados Unidos. Lo hacen con las garantías adecuadas que exige el RGPD: el Marco de Privacidad de Datos UE-EE. UU. o las cláusulas contractuales tipo aprobadas por la Comisión Europea."
+        ]
+      },
+      {
+        "title": "Registros técnicos",
+        "paragraphs": [
+          "Los servidores de la app y de la web guardan registros técnicos (por ejemplo, la dirección IP y la hora de cada conexión) por seguridad y para detectar errores o abusos. Se conservan durante un tiempo limitado y después se borran automáticamente."
+        ]
+      },
+      {
         "title": "Tus derechos",
         "paragraphs": [
           "Puedes pedir acceso, rectificación, supresión, oposición, limitación y portabilidad escribiendo a aexbuyer2026@gmail.com. Si no te atendemos bien, puedes reclamar ante la Agencia Española de Protección de Datos (aepd.es)."
+        ]
+      },
+      {
+        "title": "Cómo borrar tus datos",
+        "paragraphs": [
+          "La app no tiene cuentas: lo que se guarda con la sesión anónima de tu móvil son las fotos y vídeos que subas, las incidencias que notifiques y tus votos al MVP.",
+          "Para pedir que se borren, escribe a aexbuyer2026@gmail.com indicando qué quieres eliminar (por ejemplo, el partido y la foto, o la incidencia). Lo borramos en un máximo de 30 días y te lo confirmamos. Una foto o un vídeo en el que sales tú o tu hijo/a se retira al momento desde la app (\"Denunciar\" → \"Salgo yo o mi hijo/a\").",
+          "Tienes todos los pasos en https://xbuyerteamacademy.com/soporte/#eliminar-datos."
         ]
       },
       {
