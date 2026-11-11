@@ -15,13 +15,13 @@ import { ruta } from '../lib/ruta';
   <h1 class="solo-lector">{academy.nombre} y {cup.nombre}</h1>
   <div class="caminos">
     <a class="camino" data-capitulo="amarillo" href={ruta('/academy/')}>
-      <LogoEco marca="academy" class="camino__xb" />
+      <LogoEco marca="academy" class="camino__xb" retraso={1100} />
       <TituloChute as="h2" class="camino__nombre" lineas={['Xbuyer Team', 'Academy']} />
       <p class="camino__frase">{academy.frase}</p>
       <span class="boton camino__boton">{t('es', 'inicio.academy.boton')}</span>
     </a>
     <a class="camino" data-capitulo="azul" href={ruta('/cup/')}>
-      <LogoEco marca="cup" class="camino__xb camino__xb--cup" />
+      <LogoEco marca="cup" class="camino__xb camino__xb--cup" retraso={1100} />
       <TituloChute as="h2" class="camino__nombre" lineas={['Xbuyer', 'Cup']} />
       <p class="camino__frase">{cup.frase}</p>
       <span class="boton camino__boton">{t('es', 'inicio.cup.boton')}</span>

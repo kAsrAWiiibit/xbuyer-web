@@ -7,7 +7,7 @@ const slug = (t: string) => t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').t
 const secciones = legal.support.sections.map((s) => ({ ...s, id: s.id ?? slug(s.title) }));
 const indice = [{ id: 'contacto', titulo: 'Contacto' }, ...secciones.map((s) => ({ id: s.id, titulo: s.title }))];
 ---
-<Legal titulo={`${titulo} de la app`} tituloPagina={legal.support.title} subtitulo={`Preguntas frecuentes sobre la app ${legal.tournament}.`} descripcion={`Ayuda y preguntas frecuentes de la app ${legal.tournament}.`} indice={indice}>
+<Legal titulo={`${titulo} de la app`} tituloPagina={legal.support.title} subtitulo={`Preguntas frecuentes sobre la app ${legal.tournament}.`} descripcion={`Ayuda y preguntas frecuentes de la app ${legal.tournament}.`} indice={indice} app>
   <section class="legal__contacto" id="contacto">
     <h2>Contacto</h2>
     <p>Organiza {legal.contact.controller}. Escríbenos a <a href={`mailto:${legal.contact.email}`}>{legal.contact.email}</a>{legal.contact.phone && ` o llama al ${legal.contact.phone}`}.</p>

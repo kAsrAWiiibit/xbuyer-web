@@ -120,6 +120,8 @@ export const cup = {
     .sort((a, b) => b.orden - a.orden),
   // Fuera de textos.md: lo pide la organización y aún no está
   app: {
+    /** false mientras la app no esté en las tiendas: «En construcción», sin enlaces de descarga (AppEnConstruccion) */
+    publicada: false,
     appStore: pendiente('enlace de App Store') as Dato<string>,
     googlePlay: pendiente('enlace de Google Play') as Dato<string>,
   },

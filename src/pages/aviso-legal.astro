@@ -5,6 +5,7 @@ import SiCompleto from '../components/SiCompleto.astro';
 import { academy, cup, entidad as asociacion } from '../data/contenido';
 import Legal from '../layouts/Legal.astro';
 import { ruta } from '../lib/ruta';
+import { t } from '../i18n/ui';
 
 const indice = [
   { id: 'titular-de-la-web', titulo: 'Titular de la web' },
@@ -43,10 +44,17 @@ const indice = [
   <section id="datos-personales-y-cookies">
     <h2>Datos personales y cookies</h2>
     <p>
-      Esta web no usa cookies, no tiene estadísticas de visitas y no guarda ningún dato. El formulario de contacto no envía
-      nada a ningún servidor: abre tu programa de correo con el mensaje preparado para {asociacion.email}, y eres tú quien lo envía.
+      Esta web no usa cookies ni tiene estadísticas de visitas. El formulario de contacto no envía nada a ningún servidor:
+      abre tu programa de correo con el mensaje preparado para {asociacion.email}, y eres tú quien lo envía.
     </p>
-    <p>El tratamiento de datos de la app del torneo se explica en su <a href={ruta('/privacidad/')}>política de privacidad</a>.</p>
+    <p>
+      Los formularios de inscripción y de preinscripción envían las respuestas a Google Forms; se explica en la
+      <a href={ruta('/privacidad/#inscripciones')}>política de privacidad</a>.
+    </p>
+    <p>
+      El tratamiento de datos de la app del torneo se explica en la misma <a href={ruta('/privacidad/')}>política de privacidad</a>.
+      {!cup.app.publicada && <>La app está en construcción: {t('es', 'app.pronto').replace(/^M/, 'm')}</>}
+    </p>
   </section>
 
   <section id="fotos">
@@ -67,7 +75,7 @@ const indice = [
 
   <section id="enlaces-a-otras-webs">
     <h2>Enlaces a otras webs</h2>
-    <p>Esta web enlaza con servicios de terceros (Instagram, Google Maps, las tiendas de aplicaciones). La asociación no responde de su contenido.</p>
+    <p>Esta web enlaza con servicios de terceros (Instagram, Google Maps, Google Forms y documentos de Google). La asociación no responde de su contenido.</p>
   </section>
 
   <section id="legislacion">

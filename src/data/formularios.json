@@ -142,6 +142,141 @@
       }
     ]
   },
+  "https://forms.gle/EXL2ZsUTgvM42wGa9": {
+    "url": "https://forms.gle/EXL2ZsUTgvM42wGa9",
+    "accion": "https://docs.google.com/forms/d/e/1FAIpQLSfz2ce3Oi2s585YbrVkK8PKP-rRe7gF9KZneO_20MRycr7w2w/formResponse",
+    "marco": "https://docs.google.com/forms/d/e/1FAIpQLSfz2ce3Oi2s585YbrVkK8PKP-rRe7gF9KZneO_20MRycr7w2w/viewform?embedded=true",
+    "titulo": "Preinscripción Xbuyer Team Academy  Temporada 2026/2027",
+    "modo": "propio",
+    "campos": [
+      {
+        "tipo": "texto",
+        "entrada": "entry.1409474395",
+        "titulo": "Correo electronico",
+        "descripcion": null,
+        "obligatorio": true
+      },
+      {
+        "tipo": "texto",
+        "entrada": "entry.1579050996",
+        "titulo": "Nombre completo",
+        "descripcion": null,
+        "obligatorio": true
+      },
+      {
+        "tipo": "fecha",
+        "entrada": "entry.1438903121",
+        "titulo": "Fecha de nacimiento",
+        "descripcion": null,
+        "obligatorio": true
+      },
+      {
+        "tipo": "casillas",
+        "entrada": "entry.1181314297",
+        "titulo": "Categorías masculinas - Temporada 2026/2027",
+        "descripcion": null,
+        "obligatorio": false,
+        "opciones": [
+          "PREBENJAMIN (S7) 2020",
+          "PREBENJAMIN (S8) 2019",
+          "BENJAMIN (S9) 2018",
+          "BENJAMIN (S10) 2017",
+          "ALEVÍN (S11) 2016",
+          "ALEVÍN (S12) 2015",
+          "INFANTIL (S13) 2014",
+          "INFANTIL (S14) 2013",
+          "CADETE (S15) 2012",
+          "CADETE (S16) 2011",
+          "JUVENIL (S19) 2010 / 2009 / 2008"
+        ],
+        "otro": false
+      },
+      {
+        "tipo": "casillas",
+        "entrada": "entry.2062290169",
+        "titulo": "Categorías femeninas - Temporada 2026/2027",
+        "descripcion": null,
+        "obligatorio": false,
+        "opciones": [
+          "DEBUTANTE 2021 / 2022",
+          "PREBENJAMIN 2019 / 2020",
+          "BENJAMIN 2017 / 2018",
+          "ALEVÍN  2015 / 2016",
+          "INFANTIL 2013 / 2014",
+          "CADETE 2011 / 2012",
+          "JUVENIL 2010 / 2009 / 2008"
+        ],
+        "otro": false
+      },
+      {
+        "tipo": "casillas",
+        "entrada": "entry.801309788",
+        "titulo": "Posición / Posiciones",
+        "descripcion": null,
+        "obligatorio": true,
+        "opciones": [
+          "Portero/a",
+          "Lateral Izquierdo",
+          "Lateral Derecho",
+          "Central",
+          "Pivote",
+          "Interior",
+          "Media Punta",
+          "Extremo",
+          "Delantero/a"
+        ],
+        "otro": false
+      },
+      {
+        "tipo": "texto",
+        "entrada": "entry.754632672",
+        "titulo": "Club actual - Temporada 2026/2027",
+        "descripcion": null,
+        "obligatorio": true
+      },
+      {
+        "tipo": "texto",
+        "entrada": "entry.1698846010",
+        "titulo": "División actual - Temporada 2026/2027",
+        "descripcion": null,
+        "obligatorio": true
+      },
+      {
+        "tipo": "casillas",
+        "entrada": "entry.866528794",
+        "titulo": "Indica en qué opciones estás interesado",
+        "descripcion": null,
+        "obligatorio": true,
+        "opciones": [
+          "COSTA DAURADA CUP (Semana Santa 21/03 al 25/03)",
+          "1900 CUP (Semana Santa 25/03 al 28/03)",
+          "ITE FOOTBALL (Semana Santa 25/03 al 28/03)",
+          "MARE NOSTRUM CUP (Semana Santa 25/03 al 28/03)",
+          "COPA UNIQ ANDORRA (Verano 04/06 al 06/06)",
+          "MIC FOOTBALL 7 (Verano 11/06 al 13/06)",
+          "MADCUP (Verano 18/06 al 23/06)",
+          "YELLOW CUP (Verano 24/06 al 27/06)",
+          "COSTA DAURADA CUP (Verano 27/06 al 30/06)",
+          "DONOSTI CUP (Verano 05/07 al 11/07)"
+        ],
+        "otro": false
+      },
+      {
+        "tipo": "texto",
+        "entrada": "entry.1860470065",
+        "titulo": "Teléfono de contacto",
+        "descripcion": null,
+        "obligatorio": true
+      },
+      {
+        "tipo": "parrafo",
+        "entrada": "entry.2102284754",
+        "titulo": "Dudas / Consultas",
+        "descripcion": null,
+        "obligatorio": false
+      }
+    ]
+  },
   "https://forms.gle/KAHMwR89idPfYvzu9": {
     "url": "https://forms.gle/KAHMwR89idPfYvzu9",
     "accion": "https://docs.google.com/forms/d/e/1FAIpQLScwgsmugqsC80fTnyJ0JfIejWF_8-E9kVNVJHzjqnCCnV_k7Q/formResponse",

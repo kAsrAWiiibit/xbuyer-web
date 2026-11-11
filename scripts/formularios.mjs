@@ -1,5 +1,5 @@
 /**
- * Lee los Google Forms de inscripción (los `formulario: '…'` de src/data/torneos-2027.ts y src/data/cup-ediciones.ts)
+ * Lee los Google Forms de inscripción (los `formulario: '…'` de src/data/torneos-2027.ts, src/data/cup-ediciones.ts y src/data/preinscripcion.ts)
  * y guarda su estructura en src/data/formularios.json: preguntas, opciones, obligatorias y a dónde se envía. La web
  * pinta con eso el formulario integrado (src/components/FormularioInscripcion.astro). No envía nada a los formularios:
  * solo abre la página pública de cada uno, como un navegador.
@@ -18,7 +18,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 
 const RAIZ = new URL('../', import.meta.url);
 const SALIDA = new URL('src/data/formularios.json', RAIZ);
-const FUENTES = ['src/data/torneos-2027.ts', 'src/data/cup-ediciones.ts'];
+const FUENTES = ['src/data/torneos-2027.ts', 'src/data/cup-ediciones.ts', 'src/data/preinscripcion.ts'];
 const comprobar = process.argv.includes('--comprobar');
 
 const TIPOS = { 0: 'texto', 1: 'parrafo', 2: 'radio', 3: 'desplegable', 4: 'casillas', 5: 'escala', 6: 'titulo', 7: 'cuadricula', 8: 'seccion', 9: 'fecha', 10: 'hora', 11: 'imagen', 12: 'video', 13: 'archivo' };

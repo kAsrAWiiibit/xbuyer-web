@@ -36,6 +36,8 @@ const categorias = tr.categorias && completo(tr.categorias) ? tr.categorias : []
 const formatos = [...new Set(categorias.map((g) => g.formato))];
 const programa = tr.programa && completo(tr.programa) ? tr.programa : [];
 
+const LOGO_SIZES = '(min-width: 900px) 28vw, 66vw';
+
 const academia = (ancla: string) => ruta(`/academy/${ancla}`);
 const enlaces = menuAcademia((c) => t('es', c), { actual: tr.slug });
 
@@ -80,7 +82,7 @@ const evento = {
         </dl>
         <a class="boton ficha__boton" {...botonInscripcion}>{t('es', 'torneo.inscribete')}</a>
       </div>
-      {tr.logo && <LogoTorneo logo={tr.logo} nombre={tr.nombre} fondo="claro" class="ficha__logo" sizes="(min-width: 900px) 30vw, 60vw" />}
+      {tr.logo && <LogoTorneo logo={tr.logo} nombre={tr.nombre} fondo="claro" class="ficha__logo" sizes={LOGO_SIZES} eco />}
     </div>
   </section>
 
@@ -157,7 +159,7 @@ const evento = {
 </Base>
 
 <style>
-  .ficha { padding: clamp(24px, 4vh, 48px) var(--margen) clamp(56px, 8vw, 112px); }
+  .ficha { overflow: clip; padding: clamp(24px, 4vh, 48px) var(--margen) clamp(56px, 8vw, 112px); }
   .ficha__volver { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font-weight: 500; }
   .ficha__volver svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: square; }
   .ficha__cuerpo {
@@ -194,7 +196,9 @@ const evento = {
     color: var(--azul);
   }
   .ficha__por { font-size: var(--step-body); font-weight: 500; }
-  .ficha__logo { grid-column: 9 / 13; }
+  /* Logo grande, a la izquierda de su columna: el eco sube hacia la derecha sin salirse */
+  .ficha__logo { grid-column: 8 / 13; width: 74%; --logo-pos: left center; }
+  .ficha__logo :global(.logo-torneo__marco) { inset: 0; }
 
   .presentacion:has(+ .incluye) { padding-bottom: 0; }
   .presentacion__texto { max-width: 52ch; font-size: var(--step-lead); line-height: 1.4; }
@@ -289,16 +293,15 @@ const evento = {
 
   @media (max-width: 899px) {
     .ficha__texto { grid-column: 1 / -1; }
-    .ficha__logo { grid-column: 1 / -1; grid-row: 1; width: min(60%, 280px); margin-bottom: 32px; }
-    .ficha__logo :global(img) { inset: 0; width: 100%; height: 100%; object-position: left center; }
+    .ficha__logo { grid-column: 1 / -1; grid-row: 1; width: min(60%, 320px); margin-block: 88px 32px; }
     .incluye__lista { grid-template-columns: 1fr 1fr; }
   }
   @media (max-width: 599px) {
     .ficha__nombre { font-size: 15vw; }
     .incluye__lista, .formato__grupos { grid-template-columns: 1fr; }
-    .ficha__logo { width: 58%; margin-bottom: 20px; }
-    /* Sin recuadro, el logo se alinea a la izquierda con el texto */
-    .ficha__logo :global(img) { inset: 0; width: 100%; height: 100%; object-position: left center; }
+    /* Hueco encima para el eco, que sube a la derecha sin tocar «Todos los torneos 2027». Al 46 %, el texto sigue en
+       la primera pantalla y es el LCP (con el logo más grande, el LCP pasa al logo y Lighthouse móvil baja a 99) */
+    .ficha__logo { width: 46%; margin-block: 64px 16px; }
     .ficha__texto { gap: 20px; }
   }
 </style>

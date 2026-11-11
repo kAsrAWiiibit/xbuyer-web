@@ -1,10 +1,18 @@
 # BACKLOG
 
-> **RESUME HERE** (12 de noviembre de 2026): publicados los logos de los torneos sin recuadro (versiones por fondo,
-> `scripts/logos-torneos.mjs`) y el logo con eco de la portada (`LogoEco.astro`). Falta borrar el repositorio de la
-> vista previa `kAsrAWiiibit/xbuyer-web-preview` (gh necesita `gh auth refresh -h github.com -s delete_repo`).
-> Siguiente: enlaces de los Google Form de la Cup Madrid y Barcelona (pegarlos en `formulario:` de
-> `src/data/cup-ediciones.ts`, `npm run formularios`, build y revisar el bloque `#inscripcion`).
+> **RESUME HERE** (12 de noviembre de 2026, tarde): publicados la preinscripción integrada, el logo con eco en la
+> portada de cada torneo (2027 y Cup) y «En construcción» en todas las menciones de la app. Falta borrar el
+> repositorio de la vista previa `kAsrAWiiibit/xbuyer-web-preview` (gh necesita
+> `gh auth refresh -h github.com -s delete_repo`). Siguiente: enlaces de los Google Form de la Cup Madrid y Barcelona
+> (pegarlos en `formulario:` de `src/data/cup-ediciones.ts`, `npm run formularios`, build y revisar `#inscripcion`).
+
+## Cuando la app esté en las tiendas
+
+- En `src/data/contenido.ts`: `cup.app.publicada: true` y los enlaces reales en `appStore` y `googlePlay`. Así se quita
+  la etiqueta «En construcción» de todas partes («¿Qué hace diferente…?», Valencia, `/soporte/`, `/privacidad/`,
+  aviso legal) y en el bloque de la app de Valencia salen los botones de descarga.
+- Revisar `edicion.cerradasApp` («Podrás seguir el torneo en la app oficial») y el aviso legal, que dice que la app
+  está en construcción.
 
 ## Pendiente de la organización
 
@@ -35,6 +43,10 @@
 
 ## Bugs / riesgos conocidos
 
+- Lighthouse móvil de las fichas de torneo: con el logo por encima del 46 % del ancho, el logo pasa a ser el LCP y
+  baja a 99 (LCP simulado 1,8 s). Decidido (12 de noviembre de 2026): 46 % y 100.
+- La preinscripción ofrece torneos que no están en Torneos 2027 (ITE Football, Mare Nostrum Cup): son opciones del
+  Google Form de la organización y se envían tal cual. Si sobran, quitarlas allí y `npm run formularios`.
 - Formularios propios: si la organización cambia una pregunta de un Google Form, el formulario de la web enviaría
   campos que Google ya no espera. Tras cualquier cambio: `npm run formularios`, revisar el diff y publicar.
   `npm run formularios -- --comprobar` dice si alguno ha cambiado.
@@ -46,7 +58,6 @@
 
 ## Ideas
 
-- Integrar también la preinscripción (`/academy/preinscripcion/`, hoy enlace al Google Form) con el mismo componente.
 - Paso en GitHub Actions que ejecute `npm run formularios -- --comprobar` cada día y avise si un formulario cambia.
 - Túnel 3D/imágenes en `/cup/` (decidir si sustituye a la portada o va debajo) con el crédito «Imagen generada con IA».
 - Traducciones a catalán e inglés cuando la organización las pase.

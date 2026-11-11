@@ -1,0 +1,43 @@
+---
+/**
+ * La app oficial aún no está en las tiendas: etiqueta «En construcción» y «Muy pronto en App Store y Google Play»,
+ * sin botones ni enlaces de descarga. Va en todos los sitios donde se menciona la app. Cuando se publique, se pone
+ * `publicada: true` y los enlaces en `cup.app` (src/data/contenido.ts) y este aviso deja de salir (`appPublicada`).
+ *
+ * - `bloque`: etiqueta y frase en una fila que se parte en el móvil (secciones y páginas).
+ * - `linea`: más pequeño, para debajo de un texto (las razones de la Cup).
+ */
+import { t } from '../i18n/ui';
+
+interface Props {
+  tamano?: 'bloque' | 'linea';
+  class?: string;
+}
+const { tamano = 'bloque', class: clase } = Astro.props;
+---
+<p class:list={['app-obras', `app-obras--${tamano}`, clase]}>
+  <span class="app-obras__etiqueta">{t('es', 'app.enConstruccion')}</span>
+  <span class="app-obras__texto">{t('es', 'app.pronto')}</span>
+</p>
+
+<style>
+  .app-obras { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; line-height: 1.3; }
+  /* Etiqueta plana, como un rótulo: fondo de acento con su tinta, esquinas rectas */
+  .app-obras__etiqueta {
+    padding: 6px 10px 5px;
+    background: var(--acento);
+    color: var(--sobre-acento);
+    font-family: var(--fuente-display);
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    line-height: 1;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .app-obras__texto { font-weight: 500; }
+  .app-obras--bloque .app-obras__texto { font-size: var(--step-lead); }
+  .app-obras--linea { gap: 6px 10px; }
+  .app-obras--linea .app-obras__etiqueta { padding: 5px 8px 4px; font-size: 0.875rem; }
+  .app-obras--linea .app-obras__texto { font-size: var(--step-small); }
+</style>

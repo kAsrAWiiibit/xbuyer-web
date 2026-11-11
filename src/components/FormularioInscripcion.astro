@@ -25,11 +25,22 @@ interface Props {
   torneo: string;
   /** Prefijo de los id de los campos */
   id: string;
+  /** Inscripción a un torneo (por defecto) o preinscripción en la academia: cambian los mensajes */
+  tipo?: 'inscripcion' | 'preinscripcion';
 }
-const { formulario: f, torneo, id } = Astro.props;
+const { formulario: f, torneo, id, tipo = 'inscripcion' } = Astro.props;
+/** Los mensajes que dicen «inscripción», en su versión de preinscripción si toca */
+type Mensaje = 'enviar' | 'repetida' | 'errorEnvio' | 'hecho' | 'hechoTexto' | 'hechoTextoSinNombre' | 'otra';
+const tx = (m: Mensaje, valores?: Record<string, string>) => t('es', `${tipo}.${m}` as Parameters<typeof t>[1], { torneo, ...valores });
+// Pistas para el teclado del móvil según la pregunta (no validan más que el Google Form, que acepta texto libre)
+const pistas = (titulo: string | null) =>
+  /correo|e-?mail/i.test(titulo ?? '') ? { inputmode: 'email', autocomplete: 'email', spellcheck: 'false' }
+  : /tel[eé]fono|m[oó]vil/i.test(titulo ?? '') ? { inputmode: 'tel', autocomplete: 'tel' }
+  : /nombre completo/i.test(titulo ?? '') ? { autocomplete: 'name' }
+  : { autocomplete: 'off' };
 
 /** Erratas del Google Form que se corrigen solo al mostrarlas (se envía el valor original) */
-const CORRECCIONES: Record<string, string> = { 'Lateral izquiero': 'Lateral izquierdo' };
+const CORRECCIONES: Record<string, string> = { 'Lateral izquiero': 'Lateral izquierdo', 'Correo electronico': 'Correo electrónico' };
 const ver = (texto: string) => CORRECCIONES[texto] ?? texto;
 /** «B12 - ALEVÍN nacido en 2015» → código destacado y el resto */
 const partes = (texto: string) => {
@@ -44,7 +55,15 @@ const esNombre = (c: Campo) => c.tipo === 'texto' && /nombre/i.test(c.titulo ?? 
 const hayObligatorias = campos.some((c) => 'obligatorio' in c && c.obligatorio);
 const privacidad = ruta('/privacidad/#inscripciones');
 ---
-<div class="inscripcion-form" data-inscripcion data-accion={f.accion} data-torneo={torneo} data-email={entidad.email}>
+<div
+  class="inscripcion-form"
+  data-inscripcion
+  data-accion={f.accion}
+  data-repetida={tx('repetida', { fecha: '{fecha}' })}
+  data-error-envio={tx('errorEnvio', { email: entidad.email })}
+  data-hecho-con={tx('hechoTexto', { nombre: '{nombre}', fecha: '{fecha}' })}
+  data-hecho-sin={tx('hechoTextoSinNombre')}
+>
   {f.modo === 'marco' ? (
     <div class="marco-form">
       <iframe src={f.marco} title={t('es', 'inscripcion.marco', { torneo })} loading="lazy"></iframe>
@@ -117,7 +136,7 @@ const privacidad = ruta('/privacidad/#inscripciones');
                   type={{ texto: 'text', fecha: 'date', hora: 'time', email: 'email' }[c.tipo]}
                   required={c.obligatorio}
                   aria-describedby={describe}
-                  autocomplete={c.tipo === 'email' ? 'email' : 'off'}
+                  {...(c.tipo === 'email' ? { autocomplete: 'email' } : c.tipo === 'texto' ? pistas(c.titulo) : { autocomplete: 'off' })}
                   max={c.tipo === 'fecha' ? hoy : undefined}
                   data-fecha={c.tipo === 'fecha' ? '' : undefined}
                   data-clave={clave(c) ? '' : undefined}
@@ -136,14 +155,14 @@ const privacidad = ruta('/privacidad/#inscripciones');
 
         <p class="ins__privacidad">{t('es', 'inscripcion.privacidad')} <a class="enlace" href={privacidad}>{t('es', 'pie.privacidad')}</a>.</p>
         <p class="ins__aviso" role="alert" hidden data-aviso></p>
-        <button class="boton ins__enviar" type="submit" data-enviar data-enviando={t('es', 'inscripcion.enviando')}>{t('es', 'inscripcion.enviar')}</button>
+        <button class="boton ins__enviar" type="submit" data-enviar data-enviando={t('es', 'inscripcion.enviando')}>{tx('enviar')}</button>
       </form>
 
       <div class="ins__hecho" hidden tabindex="-1" data-hecho>
-        <p class="ins__hecho-titulo">{t('es', 'inscripcion.hecho')}</p>
+        <p class="ins__hecho-titulo">{tx('hecho')}</p>
         <p class="ins__hecho-texto" data-hecho-texto></p>
         <p>{t('es', 'inscripcion.hechoDudas')} <a class="enlace" href={`mailto:${entidad.email}?subject=${encodeURIComponent(torneo)}`}>{entidad.email}</a>.</p>
-        <button type="button" class="enlace ins__otra" data-otra>{t('es', 'inscripcion.otra')}</button>
+        <button type="button" class="enlace ins__otra" data-otra>{tx('otra')}</button>
       </div>
     </>
   )}
@@ -170,7 +189,7 @@ const privacidad = ruta('/privacidad/#inscripciones');
   for (const caja of document.querySelectorAll<HTMLElement>('[data-inscripcion]')) {
     const form = caja.querySelector<HTMLFormElement>('[data-form]');
     if (!form) continue;
-    const { accion = '', torneo = '' } = caja.dataset;
+    const { accion = '', repetida = '', errorEnvio = '', hechoCon = '', hechoSin = '' } = caja.dataset;
     const hecho = caja.querySelector<HTMLElement>('[data-hecho]')!;
     const aviso = form.querySelector<HTMLElement>('[data-aviso]')!;
     const boton = form.querySelector<HTMLButtonElement>('[data-enviar]')!;
@@ -249,7 +268,7 @@ const privacidad = ruta('/privacidad/#inscripciones');
       const antes = huella ? leerEnvios()[huella] : undefined;
       if (antes && !confirmado) {
         confirmado = true;
-        avisar(t('es', 'inscripcion.repetida', { fecha: new Date(antes).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' }) }));
+        avisar(repetida.replace('{fecha}', new Date(antes).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })));
         boton.focus();
         return;
       }
@@ -286,7 +305,7 @@ const privacidad = ruta('/privacidad/#inscripciones');
         const nombre = form.querySelector<HTMLInputElement>('[data-nombre]')?.value.trim() ?? '';
         terminar(nombre);
       } catch {
-        avisar(t('es', 'inscripcion.errorEnvio', { email: caja.dataset.email ?? '' }));
+        avisar(errorEnvio);
       } finally {
         clearTimeout(reloj);
         enviando = false;
@@ -298,7 +317,7 @@ const privacidad = ruta('/privacidad/#inscripciones');
 
     function terminar(nombre: string) {
       const texto = hecho.querySelector<HTMLElement>('[data-hecho-texto]')!;
-      texto.textContent = nombre ? t('es', 'inscripcion.hechoTexto', { nombre, torneo }) : t('es', 'inscripcion.hechoTextoSinNombre', { torneo });
+      texto.textContent = nombre ? hechoCon.replace('{nombre}', nombre) : hechoSin;
       form!.hidden = true;
       hecho.hidden = false;
       hecho.focus({ preventScroll: true });

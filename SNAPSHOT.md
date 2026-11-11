@@ -1,4 +1,4 @@
-# SNAPSHOT: arquitectura actual (12 de noviembre de 2026)
+# SNAPSHOT: arquitectura actual (12 de noviembre de 2026, tarde)
 
 Web estática en **Astro** publicada en GitHub Pages: **https://xbuyerteamacademy.com** (repositorio público
 `kAsrAWiiibit/xbuyer-web`; cada push a `main` despliega con `.github/workflows/desplegar.yml`). Reglas en
@@ -10,11 +10,11 @@ Web estática en **Astro** publicada en GitHub Pages: **https://xbuyerteamacadem
 | --- | --- | --- |
 | `/` | Dos caminos (Academy amarillo, Cup azul): logo grande con eco (`LogoEco.astro`) y título con chute | `src/pages/index.astro` |
 | `/academy/` | Portada con chute, quiénes somos, Torneos 2027 (8 tarjetas), palmarés (marcador + vitrina), «Nueva piel» con ropa opcional en desplegable, contacto | `src/pages/academy/index.astro` |
-| `/academy/torneos/<slug>/` | Ficha de cada torneo 2027: precio, qué incluye, categorías, programa y **formulario de inscripción integrado** (`#inscripcion`) | `src/pages/academy/torneos/[torneo].astro` |
-| `/academy/preinscripcion/` | Texto y botón al Google Form de preinscripción (enlace, no integrado) | `src/pages/academy/preinscripcion.astro` |
+| `/academy/torneos/<slug>/` | Ficha de cada torneo 2027: logo con eco, precio, qué incluye, categorías, programa y **formulario de inscripción integrado** (`#inscripcion`) | `src/pages/academy/torneos/[torneo].astro` |
+| `/academy/preinscripcion/` | Texto de la organización y **formulario de preinscripción integrado** (`#formulario`) | `src/pages/academy/preinscripcion.astro` |
 | `/cup/` | Portada con chute, qué la hace diferente, Torneos (Valencia, Madrid, Barcelona), ediciones anteriores, patrocinador, contacto | `src/pages/cup/index.astro` |
-| `/cup/<ciudad>/` | Cada torneo de la Cup: inscripción (formulario integrado cuando haya enlace; si no, email), app, qué incluye, categorías, normativa, sede | `src/pages/cup/[edicion].astro` |
-| `/privacidad/`, `/soporte/` | Textos de la app (`src/data/legal/legal.json`, los sube la app) + sección web «Inscripciones desde la web» | `src/pages/privacidad.astro`, `src/data/privacidad-web.ts` |
+| `/cup/<ciudad>/` | Cada torneo de la Cup: logo de la Cup con eco, inscripción (formulario integrado cuando haya enlace; si no, email), app («En construcción»), qué incluye, categorías, normativa, sede | `src/pages/cup/[edicion].astro` |
+| `/privacidad/`, `/soporte/` | Textos de la app (`src/data/legal/legal.json`, los sube la app), con «En construcción» bajo el título mientras la app no esté publicada; privacidad + sección web «Inscripciones y preinscripción desde la web» | `src/pages/privacidad.astro`, `src/data/privacidad-web.ts` |
 | `/aviso-legal/`, `/404` | Legal de la web y «Fuera de juego» | |
 | `/prototipos/tunel/` | Prototipo del túnel; solo en desarrollo y borradores | `src/pages/prototipos/[nombre].astro` |
 
@@ -27,7 +27,12 @@ Web estática en **Astro** publicada en GitHub Pages: **https://xbuyerteamacadem
   después se pasa `node scripts/logos-torneos.mjs`: limpia el borde (sin halo), ajusta el recorte y crea
   `<logo>--oscuro.png` (blanco: 1900, Copa UniQ, MIC7, texto de Donosti) y `<logo>--claro.png` (MadCup con lo
   blanco en marino, MedCup con «MED» relleno). Salen en las tarjetas de Torneos 2027 (azul, `oscuro`) y en la ficha
-  de cada torneo (amarillo, `claro`). El palmarés usa los trofeos y el menú solo texto.
+  de cada torneo (amarillo, `claro`). El palmarés usa los trofeos y el menú solo texto. El script crea también
+  `<logo>--contorno.png` (borde de la silueta, 1/220 del lado mayor): la máscara de las copias del eco.
+- App oficial: `cup.app` en `src/data/contenido.ts` (`publicada: false`, enlaces de tiendas pendientes). Mientras no
+  esté publicada, `AppEnConstruccion.astro` («En construcción» + «Muy pronto en App Store y Google Play», sin enlaces)
+  sale en «¿Qué hace diferente…?» (razones que mencionan la app), en el bloque `#app` de Valencia, bajo el título de
+  `/soporte/` y `/privacidad/` (`Legal.astro` con `app`) y en el aviso legal.
 - Torneos de la Cup: `src/data/cup-ediciones.ts`; normativa común `src/data/normativa.ts` (PDF en `public/normativa/`).
 - Equipación y ropa opcional: `src/data/equipacion.ts` (prendas en `src/fotos/equipacion/*.png`, recortadas de los PDF).
 - Patrocinador: `src/data/patrocinadores.ts`. Fechas: `src/lib/fechas.ts`. Fotos: `src/data/fotos.json`.
@@ -46,14 +51,20 @@ Web estática en **Astro** publicada en GitHub Pages: **https://xbuyerteamacadem
   campo trampa para robots y aviso si el mismo dispositivo ya envió el mismo DNI/nombre a ese torneo (huella SHA-256
   en `localStorage`). Sin JavaScript, el form se envía directamente al Google Form en otra pestaña.
 - `src/lib/formularios.ts`: `formularioDe(url)`; si hay enlace y el JSON no lo trae, la build falla.
-- Estado: los 8 torneos 2027 en modo propio. Cup Madrid y Barcelona: bloque preparado; sin enlace todavía (email).
+- Prop `tipo: 'preinscripcion'`: los mensajes dicen «preinscripción». Pistas de teclado (email, teléfono, nombre) por
+  el título de la pregunta, sin validar más que Google. Erratas del Google Form corregidas solo al mostrarlas
+  (`CORRECCIONES`: «Lateral izquiero», «Correo electronico»).
+- Estado: los 8 torneos 2027 y la preinscripción, en modo propio. Cup Madrid y Barcelona: bloque preparado; sin
+  enlace todavía (email).
 
 ## Movimiento
 
 `TituloChute.astro` (títulos de `/`, `/academy/`, `/cup/`; Web Animations API, solo transform, quieto con
-«Reducir movimiento» o sin JS), `LogoEco.astro` (portada: 4 copias del logo en contorno, con `<use>`, desplazadas a
-51° hacia arriba a la derecha; salen del logo de 1,1 s a 1,8 s, cuando el chute ya frena; CSS, solo translate y
-opacity; con «Reducir movimiento», ya colocadas), `Marcador.astro`, `Campo.astro`, vitrina de trofeos (CSS), `Tunel.astro` (prototipo).
+«Reducir movimiento» o sin JS), eco de los logos (`src/lib/eco.ts`: 4 copias en contorno desplazadas a 51° hacia arriba a la derecha, más
+transparentes cuanto más lejos; CSS, solo translate y opacity; con «Reducir movimiento», ya colocadas):
+`LogoEco.astro` para los SVG (portada de la web con `retraso` 1100 ms tras el chute; portada de cada torneo de la
+Cup, 150 ms) y `LogoTorneo.astro` con `eco` para los PNG de los torneos 2027 (máscara `--contorno`, 150 ms; en el
+móvil al 46 % del ancho para que el texto siga siendo el LCP), `Marcador.astro`, `Campo.astro`, vitrina de trofeos (CSS), `Tunel.astro` (prototipo).
 
 ## Publicación
 

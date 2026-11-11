@@ -1,18 +1,23 @@
 ---
 /**
- * Preinscripción en la academia para la temporada: el texto de la organización y un botón grande al Google Form
- * (src/data/preinscripcion.ts).
+ * Preinscripción en la academia para la temporada: el texto de la organización (src/data/preinscripcion.ts) y el
+ * formulario integrado (#formulario), que envía al Google Form de la preinscripción (FormularioInscripcion.astro).
  */
 import Cabecera from '../../components/Cabecera.astro';
+import FormularioInscripcion from '../../components/FormularioInscripcion.astro';
 import Monograma from '../../components/Monograma.astro';
 import { academy, cup } from '../../data/contenido';
 import { preinscripcion as pre } from '../../data/preinscripcion';
 import { t } from '../../i18n/ui';
 import Base from '../../layouts/Base.astro';
+import { formularioDe } from '../../lib/formularios';
 import { ruta } from '../../lib/ruta';
 import { menuAcademia } from '../../lib/torneos';
 
 const enlaces = menuAcademia((c) => t('es', c), { actual: 'preinscripcion' });
+const formulario = formularioDe(pre.formulario);
+// Con el formulario integrado, el botón baja hasta él; si no estuviera, abre el Google Form
+const boton = formulario ? { href: '#formulario' } : { href: pre.formulario, rel: 'noopener', target: '_blank' };
 ---
 <Base titulo={`${pre.titulo} · ${pre.temporada} · ${academy.nombre}`} descripcion={`${pre.parrafos[0]} ${pre.parrafos[1]}`} colorTema="#FFED00" compartir="academy">
   <Cabecera slot="cabecera" marca={academy.nombre} capitulo="amarillo" enlaces={enlaces} otra={{ href: ruta('/cup/'), texto: cup.nombre }} />
@@ -22,17 +27,27 @@ const enlaces = menuAcademia((c) => t('es', c), { actual: 'preinscripcion' });
       <h1 id="pre-titulo" class="pre__titulo"><span>{pre.titulo}</span> <span class="pre__temporada">{pre.temporada}</span></h1>
       <p class="pre__bienvenida">{pre.bienvenida}</p>
       {pre.parrafos.map((p) => <p class="pre__parrafo">{p}</p>)}
-      <a class="boton pre__boton" href={pre.formulario} rel="noopener" target="_blank">
+      <a class="boton pre__boton" {...boton}>
         {pre.boton}<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6" /></svg>
       </a>
     </div>
     <Monograma class="pre__xb" />
   </section>
 
+  {formulario ? (
+    <section class="bloque formulario" id="formulario" data-capitulo="blanco" aria-labelledby="formulario-titulo">
+      <div class="formulario__texto">
+        <h2 id="formulario-titulo" class="bloque__titulo">{t('es', 'preinscripcion.formulario')}</h2>
+        <p class="formulario__intro">{pre.parrafos[2]}</p>
+      </div>
+      <FormularioInscripcion formulario={formulario} torneo={`${pre.titulo} ${pre.temporada}`} id="pre" tipo="preinscripcion" />
+    </section>
+  ) : null}
+
   <section class="bloque cierre" data-capitulo="marino" aria-label={pre.lema}>
     <p class="cierre__lema">{pre.lema}</p>
     <p class="cierre__texto">{pre.cierre}</p>
-    <a class="boton" href={pre.formulario} rel="noopener" target="_blank">{pre.boton}</a>
+    {!formulario && <a class="boton" {...boton}>{pre.boton}</a>}
   </section>
 </Base>
 
@@ -66,6 +81,12 @@ const enlaces = menuAcademia((c) => t('es', c), { actual: 'preinscripcion' });
   }
   .pre__xb { grid-column: 10 / 13; width: 100%; color: var(--azul); }
 
+  /* Formulario: título y texto a la izquierda (quietos al bajar), el formulario a la derecha */
+  .formulario { display: grid; grid-template-columns: repeat(12, 1fr); column-gap: 16px; align-items: start; }
+  .formulario__texto { grid-column: 1 / 5; display: grid; gap: 24px; position: sticky; top: 96px; }
+  .formulario__intro { max-width: 34ch; font-size: var(--step-lead); line-height: 1.35; }
+  .formulario :global(.inscripcion-form) { grid-column: 6 / 13; }
+
   .cierre { display: grid; justify-items: start; gap: 20px; }
   .cierre__lema { max-width: 22ch; font-family: var(--fuente-display); font-size: var(--step-head); font-weight: 700; line-height: 0.9; text-transform: uppercase; }
   .cierre__texto { font-size: var(--step-lead); color: var(--amarillo); }
@@ -74,6 +95,8 @@ const enlaces = menuAcademia((c) => t('es', c), { actual: 'preinscripcion' });
     .pre { min-height: 0; }
     .pre__texto { grid-column: 1 / -1; }
     .pre__xb { display: none; }
+    .formulario { row-gap: 28px; }
+    .formulario__texto, .formulario :global(.inscripcion-form) { grid-column: 1 / -1; position: static; }
   }
   @media (max-width: 599px) {
     .pre__boton { width: 100%; }

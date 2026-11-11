@@ -4,12 +4,13 @@
  * (el formulario, o «Inscripciones cerradas» con la app destacada); debajo, el patrocinador principal, qué incluye,
  * categorías y formato, la sede con quién apoya la edición, y contacto.
  */
+import AppEnConstruccion from '../../components/AppEnConstruccion.astro';
 import Cabecera from '../../components/Cabecera.astro';
 import Campo from '../../components/Campo.astro';
 import Cupon from '../../components/Cupon.astro';
 import Dato from '../../components/Dato.astro';
 import FormularioInscripcion from '../../components/FormularioInscripcion.astro';
-import LogoCup from '../../components/LogoCup.astro';
+import LogoEco from '../../components/LogoEco.astro';
 import Patrocinador from '../../components/Patrocinador.astro';
 import SiCompleto from '../../components/SiCompleto.astro';
 import { academy, cup } from '../../data/contenido';
@@ -84,8 +85,9 @@ const categoriasTexto = ed.formatos.map((f) => `${f.nombre}: ${f.categorias.filt
     </a>
     <div class="portada__cuerpo">
       <div class="portada__texto">
+        <LogoEco marca="cup" class="portada__eco" />
         <h1 id="portada-titulo" class="portada__titulo">
-          <span class="portada__marca"><LogoCup class="portada__logo" />{cup.nombre}</span>
+          <span class="portada__marca">{cup.nombre}</span>
           <span class="portada__ciudad">{ed.ciudad}</span>
         </h1>
         <p class="portada__fecha"><time datetime={ed.inicio}>{fechas}</time></p>
@@ -97,7 +99,7 @@ const categoriasTexto = ed.formatos.map((f) => `${f.nombre}: ${f.categorias.filt
         {inscripcion ? (
           <a class="boton inscripcion__boton" href={formulario ? '#inscripcion' : inscripcion}>{t('es', 'edicion.inscribete')}</a>
         ) : (
-          <p class="inscripcion__texto">{t('es', 'edicion.cerradasTexto')}</p>
+          <p class="inscripcion__texto">{t('es', ed.app ? 'edicion.cerradasApp' : 'edicion.cerradasTexto')}</p>
         )}
         {!abierta && ed.app && <a class="enlace inscripcion__app" href="#app">{t('es', 'edicion.app')}</a>}
       </div>
@@ -108,12 +110,14 @@ const categoriasTexto = ed.formatos.map((f) => `${f.nombre}: ${f.categorias.filt
     <section class="bloque app" id="app" data-capitulo="amarillo" aria-labelledby="app-titulo">
       <h2 id="app-titulo" class="bloque__titulo">{t('es', 'edicion.app')}</h2>
       <p class="app__texto">{t('es', 'edicion.appTexto')}</p>
-      <SiCompleto datos={[cup.app.appStore, cup.app.googlePlay]} donde={`${ed.slug}: enlaces de la app`}>
-        <ul role="list" class="app__tiendas">
-          <li>{completo(cup.app.appStore) ? <a class="boton" href={cup.app.appStore}>App Store</a> : <Dato v={cup.app.appStore} donde={`${ed.slug}: App Store`} />}</li>
-          <li>{completo(cup.app.googlePlay) ? <a class="boton" href={cup.app.googlePlay}>Google Play</a> : <Dato v={cup.app.googlePlay} donde={`${ed.slug}: Google Play`} />}</li>
-        </ul>
-      </SiCompleto>
+      {cup.app.publicada ? (
+        <SiCompleto datos={[cup.app.appStore, cup.app.googlePlay]} donde={`${ed.slug}: enlaces de la app`}>
+          <ul role="list" class="app__tiendas">
+            <li>{completo(cup.app.appStore) ? <a class="boton" href={cup.app.appStore}>App Store</a> : <Dato v={cup.app.appStore} donde={`${ed.slug}: App Store`} />}</li>
+            <li>{completo(cup.app.googlePlay) ? <a class="boton" href={cup.app.googlePlay}>Google Play</a> : <Dato v={cup.app.googlePlay} donde={`${ed.slug}: Google Play`} />}</li>
+          </ul>
+        </SiCompleto>
+      ) : <AppEnConstruccion />}
     </section>
   )}
 
@@ -244,7 +248,7 @@ const categoriasTexto = ed.formatos.map((f) => `${f.nombre}: ${f.categorias.filt
 </script>
 
 <style>
-  .portada { padding: clamp(24px, 4vh, 48px) var(--margen) clamp(56px, 8vw, 112px); }
+  .portada { overflow: clip; padding: clamp(24px, 4vh, 48px) var(--margen) clamp(56px, 8vw, 112px); }
   .portada__volver { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font-weight: 500; }
   .portada__volver svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: square; }
   .portada__cuerpo {
@@ -264,7 +268,8 @@ const categoriasTexto = ed.formatos.map((f) => `${f.nombre}: ${f.categorias.filt
     line-height: 1;
     color: var(--marino);
   }
-  .portada__logo { width: 44px; height: auto; }
+  /* Logo de la Cup con eco (LogoEco): las copias suben hacia la derecha, al hueco de encima */
+  .portada__eco { width: clamp(104px, 11vw, 168px); margin: clamp(48px, 5vw, 80px) 0 12px; color: var(--marino); }
   .portada__ciudad { font-size: min(var(--step-display), 22vh); line-height: 0.85; }
   .portada__fecha {
     font-family: var(--fuente-display);

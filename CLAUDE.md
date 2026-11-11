@@ -32,6 +32,8 @@ Dirección visual «cartel plano y ruidoso» (`.taste-skill/direction.json`, fue
   Las respuestas tienen que seguir llegando al Google Form y a su hoja de cálculo.
 - **Logos de torneos sin recuadro:** PNG transparente sin halo, legible sobre amarillo y sobre azul o marino. Tras
   cambiar uno, `node scripts/logos-torneos.mjs` y revisarlo sobre los dos fondos en móvil y escritorio.
+- **App oficial:** mientras no esté en las tiendas (`cup.app.publicada: false`), cada mención lleva «En construcción»
+  y «Muy pronto en App Store y Google Play», sin botones ni enlaces de descarga (`AppEnConstruccion.astro`).
 - Movimiento: siempre con alternativa para `prefers-reduced-motion`, sin bloquear el hilo principal ni penalizar el
   LCP; nada de librerías pesadas en páginas que no las necesitan. Las animaciones de una misma pantalla no compiten:
   van una detrás de otra (en la portada, primero el chute y después el eco del logo). Lighthouse no puede bajar.
