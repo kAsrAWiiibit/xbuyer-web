@@ -34,6 +34,9 @@ Dirección visual «cartel plano y ruidoso» (`.taste-skill/direction.json`, fue
   cambiar uno, `node scripts/logos-torneos.mjs` y revisarlo sobre los dos fondos en móvil y escritorio.
 - **App oficial:** mientras no esté en las tiendas (`cup.app.publicada: false`), cada mención lleva «En construcción»
   y «Muy pronto en App Store y Google Play», sin botones ni enlaces de descarga (`AppEnConstruccion.astro`).
+  **Excepto las páginas legales** (`/privacidad/`, `/aviso-legal/`, `/soporte/`): ahí no va la etiqueta.
+- **Alergias o intolerancias (datos de salud):** solo se envían al Google Form con la casilla de consentimiento
+  marcada (`FormularioInscripcion.astro`). No quitar esa comprobación: la política de privacidad la promete.
 - Movimiento: siempre con alternativa para `prefers-reduced-motion`, sin bloquear el hilo principal ni penalizar el
   LCP; nada de librerías pesadas en páginas que no las necesitan. Las animaciones de una misma pantalla no compiten:
   van una detrás de otra. Lighthouse no puede bajar.

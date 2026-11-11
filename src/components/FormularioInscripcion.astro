@@ -11,6 +11,11 @@
  *   Sin JavaScript, el formulario se envía directamente al Google Form en otra pestaña.
  * - Modo «marco»: el Google Form dentro de un marco (cuando pide iniciar sesión, subir archivos, tiene secciones…).
  *
+ * Alergias o intolerancias (datos de salud): solo se envían con el consentimiento expreso. Al escribirlas aparece la
+ * casilla «Consiento…»; si no se marca, el primer envío lo avisa y el segundo manda el resto sin ese campo. Si el
+ * Google Form trae su propia casilla de consentimiento de salud (tras `npm run formularios`), esta casilla la usa y
+ * se envía también al formulario; si no, solo decide si se envía el campo. Sin JavaScript no se puede comprobar.
+ *
  * Los textos de las preguntas y opciones son los del Google Form. Lo que se envía es exactamente su valor; solo se
  * corrige al mostrarlo alguna errata (CORRECCIONES).
  */
@@ -53,6 +58,13 @@ const campos = (f.campos ?? []) as Campo[];
 const clave = (c: Campo) => c.tipo === 'texto' && /dni|nie|pasaporte|nombre/i.test(c.titulo ?? '');
 const esNombre = (c: Campo) => c.tipo === 'texto' && /nombre/i.test(c.titulo ?? '');
 const hayObligatorias = campos.some((c) => 'obligatorio' in c && c.obligatorio);
+// Datos de salud: solo se envían con la casilla de consentimiento marcada
+const esSalud = (c: Campo) => (c.tipo === 'texto' || c.tipo === 'parrafo') && /alergia|intoleranc/i.test(c.titulo ?? '');
+type Casillas = Extract<Campo, { tipo: 'casillas' }>;
+// La casilla de consentimiento de salud del propio Google Form, cuando la organización la añada: no se pinta aparte
+const consentimientoForm = campos.find(
+  (c): c is Casillas => c.tipo === 'casillas' && c.opciones.length === 1 && /consiento|consentimiento/i.test(`${c.titulo} ${c.opciones[0]}`) && /salud|alergia/i.test(`${c.titulo} ${c.opciones[0]}`),
+);
 const privacidad = ruta('/privacidad/#inscripciones');
 ---
 <div
@@ -86,6 +98,7 @@ const privacidad = ruta('/privacidad/#inscripciones');
           const describe = [ayuda && `${cid}-ayuda`, err].filter(Boolean).join(' ');
           const error = <p class="campo__error" id={err} hidden data-error></p>;
 
+          if (c === consentimientoForm) return null;
           if (c.tipo === 'titulo') return <div class="ins__titulo"><h3>{c.titulo}</h3>{ayuda}</div>;
 
           if (c.tipo === 'radio' || c.tipo === 'casillas' || c.tipo === 'escala') {
@@ -123,7 +136,7 @@ const privacidad = ruta('/privacidad/#inscripciones');
               <label class="campo__titulo" for={cid}>{titulo}</label>
               {ayuda}
               {c.tipo === 'parrafo' ? (
-                <textarea id={cid} name={c.entrada} rows="3" required={c.obligatorio} aria-describedby={describe}></textarea>
+                <textarea id={cid} name={c.entrada} rows="3" required={c.obligatorio} aria-describedby={describe} data-salud={esSalud(c) ? '' : undefined}></textarea>
               ) : c.tipo === 'desplegable' ? (
                 <select id={cid} name={c.entrada} required={c.obligatorio} aria-describedby={describe}>
                   <option value="">{t('es', 'inscripcion.elige')}</option>
@@ -141,7 +154,14 @@ const privacidad = ruta('/privacidad/#inscripciones');
                   data-fecha={c.tipo === 'fecha' ? '' : undefined}
                   data-clave={clave(c) ? '' : undefined}
                   data-nombre={esNombre(c) ? '' : undefined}
+                  data-salud={esSalud(c) ? '' : undefined}
                 />
+              )}
+              {esSalud(c) && (
+                <label class="opcion campo__consentimiento" data-consentimiento>
+                  <input type="checkbox" name={consentimientoForm?.entrada} value={consentimientoForm?.opciones[0]} data-consentimiento-casilla />
+                  <span class="opcion__texto">{t('es', 'inscripcion.consentimientoSalud')}</span>
+                </label>
               )}
               {error}
             </div>
@@ -200,6 +220,14 @@ const privacidad = ruta('/privacidad/#inscripciones');
     form.removeAttribute('target');
     let enviando = false;
     let confirmado = false;
+    // Alergias o intolerancias sin consentimiento: se avisa una vez y el siguiente envío va sin ellas
+    let avisadoSalud = false;
+    const salud = form.querySelector<HTMLInputElement | HTMLTextAreaElement>('[data-salud]');
+    const consentimiento = form.querySelector<HTMLElement>('[data-consentimiento]');
+    const casilla = form.querySelector<HTMLInputElement>('[data-consentimiento-casilla]');
+    const verConsentimiento = () => { if (consentimiento) consentimiento.hidden = !salud?.value.trim(); };
+    verConsentimiento();
+    salud?.addEventListener('input', verConsentimiento);
 
     const marcar = (campo: HTMLElement, mensaje: string | null) => {
       const error = campo.querySelector<HTMLElement>('[data-error]')!;
@@ -231,10 +259,12 @@ const privacidad = ruta('/privacidad/#inscripciones');
     // Al corregir, el error se va
     form.addEventListener('input', (e) => {
       confirmado = false;
+      avisadoSalud = false;
       const campo = (e.target as HTMLElement).closest<HTMLElement>('[data-campo]');
       if (campo?.hasAttribute('data-mal')) marcar(campo, fallo(campo));
     });
     form.addEventListener('change', (e) => {
+      if (e.target === casilla) avisadoSalud = false;
       const campo = (e.target as HTMLElement).closest<HTMLElement>('[data-campo]');
       if (campo?.hasAttribute('data-mal')) marcar(campo, fallo(campo));
       // Escribir en «Otro» marca su opción
@@ -262,6 +292,17 @@ const privacidad = ruta('/privacidad/#inscripciones');
         return;
       }
 
+      const sinConsentimiento = Boolean(salud?.value.trim() && casilla && !casilla.checked);
+      if (sinConsentimiento && !avisadoSalud) {
+        avisadoSalud = true;
+        const campo = salud!.closest<HTMLElement>('[data-campo]');
+        if (campo) marcar(campo, t('es', 'inscripcion.faltaConsentimiento'));
+        avisar(t('es', 'inscripcion.avisoConsentimiento', { enviar: textoBoton.trim() }));
+        casilla!.focus({ preventScroll: true });
+        casilla!.scrollIntoView({ block: 'center', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+        return;
+      }
+
       // ¿Ya se envió desde este dispositivo una inscripción del mismo jugador para este torneo?
       const claves = [...form.querySelectorAll<HTMLInputElement>('[data-clave]')].map((i) => normal(i.value)).filter(Boolean);
       const huella = claves.length ? await huellaDe(`${accion}|${claves.join('|')}`) : null;
@@ -276,6 +317,8 @@ const privacidad = ruta('/privacidad/#inscripciones');
       const datos = new URLSearchParams();
       for (const [nombre, valor] of new FormData(form)) {
         if (typeof valor !== 'string') continue;
+        // Sin consentimiento, las alergias o intolerancias no salen del navegador
+        if (sinConsentimiento && salud && nombre === salud.name) continue;
         const control = form.querySelector<HTMLInputElement>(`[name="${CSS.escape(nombre)}"]`);
         if (control?.hasAttribute('data-fecha') && valor) {
           // Las fechas, como las manda el Google Form: año, mes y día por separado
@@ -326,6 +369,8 @@ const privacidad = ruta('/privacidad/#inscripciones');
 
     hecho.querySelector('[data-otra]')?.addEventListener('click', () => {
       form.reset();
+      verConsentimiento();
+      avisadoSalud = false;
       for (const c of campos) marcar(c, null);
       avisar(null);
       hecho.hidden = true;
@@ -432,6 +477,7 @@ const privacidad = ruta('/privacidad/#inscripciones');
   .opcion input:focus-visible { outline: none; }
   .opcion__texto strong { font-family: var(--fuente-display); font-size: 1.2em; font-weight: 700; margin-right: 2px; }
   .opcion--otro { flex-wrap: wrap; }
+  .campo__consentimiento[hidden] { display: none; }
   .opcion--otro .opcion__otro { flex: 1 1 140px; min-height: 44px; }
   @media (hover: hover) and (pointer: fine) {
     .opcion:hover:not(:has(input:checked)) { background: var(--amarillo-claro); }

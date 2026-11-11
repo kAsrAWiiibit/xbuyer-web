@@ -1,6 +1,8 @@
 # BACKLOG
 
-> **RESUME HERE** (12 de noviembre de 2026, noche): logos de las fichas de torneo grandes y centrados; quitados todos los sombreados (eco de los logos en la portada
+> **RESUME HERE** (11 de noviembre de 2026): política de privacidad definitiva (revisada por la organización): apartado
+> de inscripciones con base legal y plazos, casilla de consentimiento de salud en los formularios y sin «En construcción»
+> en las páginas legales. Antes: (12 de noviembre de 2026, noche): logos de las fichas de torneo grandes y centrados; quitados todos los sombreados (eco de los logos en la portada
 > y en las páginas de torneo, sombra bajo los trofeos) y el fondo blanco de la sudadera y la mochila. Falta borrar el
 > repositorio de la vista previa `kAsrAWiiibit/xbuyer-web-preview` (gh necesita
 > `gh auth refresh -h github.com -s delete_repo`). Siguiente: enlaces de los Google Form de la Cup Madrid y Barcelona
@@ -9,13 +11,15 @@
 ## Cuando la app esté en las tiendas
 
 - En `src/data/contenido.ts`: `cup.app.publicada: true` y los enlaces reales en `appStore` y `googlePlay`. Así se quita
-  la etiqueta «En construcción» de todas partes («¿Qué hace diferente…?», Valencia, `/soporte/`, `/privacidad/`,
-  aviso legal) y en el bloque de la app de Valencia salen los botones de descarga.
-- Revisar `edicion.cerradasApp` («Podrás seguir el torneo en la app oficial») y el aviso legal, que dice que la app
-  está en construcción.
+  la etiqueta «En construcción» de todas partes («¿Qué hace diferente…?», Valencia; las páginas legales ya no la
+  llevan) y en el bloque de la app de Valencia salen los botones de descarga.
+- Revisar `edicion.cerradasApp` («Podrás seguir el torneo en la app oficial»).
 
 ## Pendiente de la organización
 
+- Casilla de consentimiento de salud en los Google Forms de los torneos (la pide la organización). Que **no sea
+  obligatoria** en Google (si no, se rechazan las inscripciones sin alergias). Cuando esté: `npm run formularios`,
+  comprobar que la casilla deja de pintarse aparte y que su `entry.*` va en el envío.
 - Google Form de la Xbuyer Cup **Madrid** y **Barcelona** (mientras, botón de email; el bloque integrado ya está).
 - Logos originales en buena calidad (sobre todo MedCup, Swit Cup, Donosti Cup y Central Cup).
 - Una inscripción real de prueba desde la web en un torneo 2027 (no se hicieron envíos de prueba a los formularios

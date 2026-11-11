@@ -14,7 +14,7 @@ Web estática en **Astro** publicada en GitHub Pages: **https://xbuyerteamacadem
 | `/academy/preinscripcion/` | Texto de la organización y **formulario de preinscripción integrado** (`#formulario`) | `src/pages/academy/preinscripcion.astro` |
 | `/cup/` | Portada con chute, qué la hace diferente, Torneos (Valencia, Madrid, Barcelona), ediciones anteriores, patrocinador, contacto | `src/pages/cup/index.astro` |
 | `/cup/<ciudad>/` | Cada torneo de la Cup: logo de la Cup grande, inscripción (formulario integrado cuando haya enlace; si no, email), app («En construcción»), qué incluye, categorías, normativa, sede | `src/pages/cup/[edicion].astro` |
-| `/privacidad/`, `/soporte/` | Textos de la app (`src/data/legal/legal.json`, los sube la app), con «En construcción» bajo el título mientras la app no esté publicada; privacidad + sección web «Inscripciones y preinscripción desde la web» | `src/pages/privacidad.astro`, `src/data/privacidad-web.ts` |
+| `/privacidad/`, `/soporte/` | Textos de la app (`src/data/legal/legal.json`, los sube la app; política definitiva, sin marca de borrador), sin la etiqueta «En construcción»; privacidad + sección web «Inscripciones y preinscripción desde la web» (base legal, consentimiento de salud y plazos) | `src/pages/privacidad.astro`, `src/data/privacidad-web.ts` |
 | `/aviso-legal/`, `/404` | Legal de la web y «Fuera de juego» | |
 | `/prototipos/tunel/` | Prototipo del túnel; solo en desarrollo y borradores | `src/pages/prototipos/[nombre].astro` |
 
@@ -33,8 +33,8 @@ Web estática en **Astro** publicada en GitHub Pages: **https://xbuyerteamacadem
 - Ropa opcional (desplegable en `/academy/#equipacion`): las prendas sin fondo, directamente sobre el amarillo.
 - App oficial: `cup.app` en `src/data/contenido.ts` (`publicada: false`, enlaces de tiendas pendientes). Mientras no
   esté publicada, `AppEnConstruccion.astro` («En construcción» + «Muy pronto en App Store y Google Play», sin enlaces)
-  sale en «¿Qué hace diferente…?» (razones que mencionan la app), en el bloque `#app` de Valencia, bajo el título de
-  `/soporte/` y `/privacidad/` (`Legal.astro` con `app`) y en el aviso legal.
+  sale en «¿Qué hace diferente…?» (razones que mencionan la app) y en el bloque `#app` de Valencia. Las páginas
+  legales (`/privacidad/`, `/aviso-legal/`, `/soporte/`) no la llevan.
 - Torneos de la Cup: `src/data/cup-ediciones.ts`; normativa común `src/data/normativa.ts` (PDF en `public/normativa/`).
 - Equipación y ropa opcional: `src/data/equipacion.ts` (prendas en `src/fotos/equipacion/*.png`, recortadas de los PDF).
 - Patrocinador: `src/data/patrocinadores.ts`. Fechas: `src/lib/fechas.ts`. Fotos: `src/data/fotos.json`.
@@ -52,6 +52,11 @@ Web estática en **Astro** publicada en GitHub Pages: **https://xbuyerteamacadem
   `formResponse` (fechas como `_year/_month/_day`), muestra «Inscripción enviada» o error, bloquea el botón al enviar,
   campo trampa para robots y aviso si el mismo dispositivo ya envió el mismo DNI/nombre a ese torneo (huella SHA-256
   en `localStorage`). Sin JavaScript, el form se envía directamente al Google Form en otra pestaña.
+- Alergias o intolerancias (campo de texto cuyo título las menciona): al escribirlas aparece la casilla «Consiento que
+  la organización trate estos datos de salud…». Sin marcarla, el primer envío avisa y el segundo manda el resto sin ese
+  campo. Si el Google Form trae su propia casilla de consentimiento de salud (una opción con «consiento/consentimiento»
+  y «salud/alergia»), no se pinta aparte: nuestra casilla usa su `entry.*` y se envía también. Sin JavaScript no se
+  comprueba.
 - `src/lib/formularios.ts`: `formularioDe(url)`; si hay enlace y el JSON no lo trae, la build falla.
 - Prop `tipo: 'preinscripcion'`: los mensajes dicen «preinscripción». Pistas de teclado (email, teléfono, nombre) por
   el título de la pregunta, sin validar más que Google. Erratas del Google Form corregidas solo al mostrarlas
