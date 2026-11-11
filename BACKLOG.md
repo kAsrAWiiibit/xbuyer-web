@@ -1,6 +1,6 @@
 # BACKLOG
 
-> **RESUME HERE** (12 de noviembre de 2026, noche): quitados todos los sombreados (eco de los logos en la portada
+> **RESUME HERE** (12 de noviembre de 2026, noche): logos de las fichas de torneo grandes y centrados; quitados todos los sombreados (eco de los logos en la portada
 > y en las páginas de torneo, sombra bajo los trofeos) y el fondo blanco de la sudadera y la mochila. Falta borrar el
 > repositorio de la vista previa `kAsrAWiiibit/xbuyer-web-preview` (gh necesita
 > `gh auth refresh -h github.com -s delete_repo`). Siguiente: enlaces de los Google Form de la Cup Madrid y Barcelona
@@ -45,9 +45,9 @@
 
 ## Bugs / riesgos conocidos
 
-- Lighthouse móvil de las fichas de torneo: con el logo por encima del 46 % del ancho, el logo pasa a ser el LCP y
-  baja a 99 (LCP simulado 1,8 s). Decidido (12 de noviembre de 2026): 46 % y 100. Ojo: la simulación varía entre
-  pasadas (el mismo párrafo como LCP da 1,2 o 1,8 s); repetir antes de sacar conclusiones.
+- Lighthouse móvil de las fichas de torneo: el logo, grande y centrado, es el LCP y da 99 (LCP simulado 1,8 s,
+  dentro de «bueno»). Decidido (12 de noviembre de 2026, noche): logo grande antes que el 100; con el logo al 46 %
+  daba 100, pero se veía pequeño y descentrado. Escritorio: 100.
 - La preinscripción ofrece torneos que no están en Torneos 2027 (ITE Football, Mare Nostrum Cup): son opciones del
   Google Form de la organización y se envían tal cual. Si sobran, quitarlas allí y `npm run formularios`.
 - Formularios propios: si la organización cambia una pregunta de un Google Form, el formulario de la web enviaría

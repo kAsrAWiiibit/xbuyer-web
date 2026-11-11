@@ -27,7 +27,8 @@ Web estática en **Astro** publicada en GitHub Pages: **https://xbuyerteamacadem
   después se pasa `node scripts/logos-torneos.mjs`: limpia el borde (sin halo), ajusta el recorte y crea
   `<logo>--oscuro.png` (blanco: 1900, Copa UniQ, MIC7, texto de Donosti) y `<logo>--claro.png` (MadCup con lo
   blanco en marino, MedCup con «MED» relleno). Salen en las tarjetas de Torneos 2027 (azul, `oscuro`) y en la ficha
-  de cada torneo (amarillo, `claro`; en el móvil al 46 % del ancho para que el texto siga siendo el LCP). El palmarés
+  de cada torneo (amarillo, `claro`; grande y centrado: caja 4:3 en su columna en escritorio, 84 % del ancho en el
+  móvil; es el LCP de la ficha). El palmarés
   usa los trofeos y el menú solo texto.
 - Ropa opcional (desplegable en `/academy/#equipacion`): las prendas sin fondo, directamente sobre el amarillo.
 - App oficial: `cup.app` en `src/data/contenido.ts` (`publicada: false`, enlaces de tiendas pendientes). Mientras no

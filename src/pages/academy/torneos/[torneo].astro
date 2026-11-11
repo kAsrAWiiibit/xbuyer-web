@@ -36,7 +36,7 @@ const categorias = tr.categorias && completo(tr.categorias) ? tr.categorias : []
 const formatos = [...new Set(categorias.map((g) => g.formato))];
 const programa = tr.programa && completo(tr.programa) ? tr.programa : [];
 
-const LOGO_SIZES = '(min-width: 900px) 28vw, 66vw';
+const LOGO_SIZES = '(min-width: 900px) 38vw, 80vw';
 
 const academia = (ancla: string) => ruta(`/academy/${ancla}`);
 const enlaces = menuAcademia((c) => t('es', c), { actual: tr.slug });
@@ -196,8 +196,8 @@ const evento = {
     color: var(--azul);
   }
   .ficha__por { font-size: var(--step-body); font-weight: 500; }
-  /* Logo grande, a la izquierda de su columna */
-  .ficha__logo { grid-column: 8 / 13; width: 74%; --logo-pos: left center; }
+  /* Logo grande y centrado en su columna; caja 4:3 para que los cuadrados (Costa Daurada, Yellow Cup) también crezcan */
+  .ficha__logo { grid-column: 8 / 13; justify-self: center; width: 100%; aspect-ratio: 4 / 3; }
   .ficha__logo :global(.logo-torneo__marco) { inset: 0; }
 
   .presentacion:has(+ .incluye) { padding-bottom: 0; }
@@ -293,14 +293,13 @@ const evento = {
 
   @media (max-width: 899px) {
     .ficha__texto { grid-column: 1 / -1; }
-    .ficha__logo { grid-column: 1 / -1; grid-row: 1; width: min(60%, 320px); margin-bottom: 32px; }
+    .ficha__logo { grid-column: 1 / -1; grid-row: 1; width: min(70%, 440px); margin-bottom: 32px; }
     .incluye__lista { grid-template-columns: 1fr 1fr; }
   }
   @media (max-width: 599px) {
     .ficha__nombre { font-size: 15vw; }
     .incluye__lista, .formato__grupos { grid-template-columns: 1fr; }
-    /* Al 46 %, el texto sigue en la primera pantalla y es el LCP (más grande, el logo pasa a serlo y Lighthouse baja a 99) */
-    .ficha__logo { width: 46%; margin-bottom: 20px; }
+    .ficha__logo { width: 84%; margin-bottom: 24px; }
     .ficha__texto { gap: 20px; }
   }
 </style>
