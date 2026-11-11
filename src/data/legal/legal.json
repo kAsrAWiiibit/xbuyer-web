@@ -31,8 +31,18 @@
         "title": "Menores",
         "paragraphs": [
           "Muchos participantes son menores. No se publican fotos de los jugadores en sus fichas, solo el nombre abreviado (nombre e inicial del primer apellido) y el dorsal.",
+          "La app es para mayores de 13 años: familias, jugadores, clubes y organización. No está pensada para menores de 13. Si tienes menos de 14 años, pide a tu padre, madre o tutor que suba las fotos o active los avisos por ti.",
           "Antes de subir una foto o un vídeo confirmas que tienes permiso de los padres o tutores de los menores que aparecen.",
           "Si sales tú o tu hijo/a en una foto o un vídeo y quieres que se retire, ábrelo y pulsa \"Denunciar\" → \"Salgo yo o mi hijo/a\" (deja de verse al momento y la organización lo borra), o escribe a aexbuyer2026@gmail.com."
+        ]
+      },
+      {
+        "title": "Normas de las fotos y vídeos",
+        "paragraphs": [
+          "Solo fotos y vídeos de los partidos y del torneo. Prohibido: desnudos o contenido sexual; violencia, insultos, acoso o burlas; imágenes que humillen o pongan en riesgo a un menor (vestuarios, lesiones, momentos íntimos); datos personales de otros (nombres completos, teléfonos, matrículas…); publicidad, spam o contenido que no sea tuyo.",
+          "La organización revisa todo antes de publicarlo y puede rechazarlo o borrarlo en cualquier momento.",
+          "Cualquiera puede denunciar una foto o vídeo: deja de verse hasta que la organización lo revise.",
+          "Si incumples las normas, la organización puede bloquear este móvil: no podrá subir fotos ni vídeos ni votar."
         ]
       },
       {
@@ -52,7 +62,8 @@
         "title": "Quién más los trata",
         "paragraphs": [
           "Los datos se guardan en Supabase (servidores en la Unión Europea), que actúa como encargado del tratamiento. No se venden ni se ceden a terceros.",
-          "Para enviarte los avisos, el identificador de notificaciones y el texto del aviso pasan por Expo (servicio de envío de notificaciones, con sede en Estados Unidos) y por Apple o Google, según tu móvil."
+          "Para enviarte los avisos, el identificador de notificaciones y el texto del aviso pasan por Expo (servicio de envío de notificaciones, con sede en Estados Unidos) y por Apple o Google (Firebase Cloud Messaging), según tu móvil.",
+          "Las actualizaciones de la app se descargan de Expo, que recibe la versión de la app, el sistema del móvil y un identificador aleatorio de la instalación (sin nombre ni datos del móvil) para saber qué actualización enviar."
         ]
       },
       {
