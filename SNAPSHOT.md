@@ -61,7 +61,7 @@ Web estática en **Astro** publicada en GitHub Pages: **https://xbuyerteamacadem
 ## Movimiento
 
 `TituloChute.astro` (títulos de `/`, `/academy/`, `/cup/`; Web Animations API, solo transform, quieto con
-«Reducir movimiento» o sin JS), vitrina de trofeos (flotan y giran, sin sombra), `Marcador.astro`, `Campo.astro`, vitrina de trofeos (CSS), `Tunel.astro` (prototipo).
+«Reducir movimiento» o sin JS), `Marcador.astro`, `Campo.astro`, vitrina de trofeos (CSS: flotan y giran, sin sombra), `Tunel.astro` (prototipo).
 
 ## Publicación
 
