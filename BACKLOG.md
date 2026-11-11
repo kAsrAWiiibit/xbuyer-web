@@ -1,7 +1,7 @@
 # BACKLOG
 
-> **RESUME HERE** (12 de noviembre de 2026, tarde): publicados la preinscripción integrada, el logo con eco en la
-> portada de cada torneo (2027 y Cup) y «En construcción» en todas las menciones de la app. Falta borrar el
+> **RESUME HERE** (12 de noviembre de 2026, noche): quitados todos los sombreados (eco de los logos en la portada
+> y en las páginas de torneo, sombra bajo los trofeos) y el fondo blanco de la sudadera y la mochila. Falta borrar el
 > repositorio de la vista previa `kAsrAWiiibit/xbuyer-web-preview` (gh necesita
 > `gh auth refresh -h github.com -s delete_repo`). Siguiente: enlaces de los Google Form de la Cup Madrid y Barcelona
 > (pegarlos en `formulario:` de `src/data/cup-ediciones.ts`, `npm run formularios`, build y revisar `#inscripcion`).
@@ -35,6 +35,8 @@
 
 ## Decisiones tomadas (no reabrir)
 
+- Sin sombreados en ningún sitio: ni eco detrás de los logos, ni sombras bajo los trofeos (12 de noviembre de 2026).
+
 - El teléfono de los PDF no se publica en ningún sitio de la web.
 - La rama `mejoras-noche` no se fusiona.
 - Yellow Cup con su logo (lleva el escudo del Villarreal CF; autorizado el 10 de noviembre de 2026).
@@ -44,7 +46,8 @@
 ## Bugs / riesgos conocidos
 
 - Lighthouse móvil de las fichas de torneo: con el logo por encima del 46 % del ancho, el logo pasa a ser el LCP y
-  baja a 99 (LCP simulado 1,8 s). Decidido (12 de noviembre de 2026): 46 % y 100.
+  baja a 99 (LCP simulado 1,8 s). Decidido (12 de noviembre de 2026): 46 % y 100. Ojo: la simulación varía entre
+  pasadas (el mismo párrafo como LCP da 1,2 o 1,8 s); repetir antes de sacar conclusiones.
 - La preinscripción ofrece torneos que no están en Torneos 2027 (ITE Football, Mare Nostrum Cup): son opciones del
   Google Form de la organización y se envían tal cual. Si sobran, quitarlas allí y `npm run formularios`.
 - Formularios propios: si la organización cambia una pregunta de un Google Form, el formulario de la web enviaría

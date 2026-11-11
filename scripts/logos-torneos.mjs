@@ -9,9 +9,6 @@
  * 2. Recorta lo transparente que sobra alrededor.
  * 3. Versiones (archivo `<logo>--oscuro.png` para tarjetas azules o marino; `<logo>--claro.png` para el amarillo).
  *    Se usan solo si existen (src/components/LogoTorneo.astro). Las reglas están en VERSIONES, abajo.
- * 4. Contorno (`<logo>--contorno.png`): solo el borde de la silueta del logo, en blanco sobre transparente, con un
- *    grosor de 1/220 del lado mayor. Es la máscara de las copias del eco (LogoTorneo con `eco`): toman el color del
- *    texto, como las del SVG de la portada.
  *
  * Se puede repetir: las bases ya limpias no cambian y las versiones se rehacen desde la base.
  */
@@ -109,39 +106,16 @@ function version(base, { color, cambia, rellenaHuecos }) {
   return img;
 }
 
-/** Borde interior de la silueta (alfa > 128): lo que está dentro y a menos de `r` px de fuera */
-function contorno({ data, w, h }) {
-  const r = Math.max(2, Math.round(Math.max(w, h) / 220));
-  const dentro = new Uint8Array(w * h);
-  for (let i = 0; i < w * h; i++) dentro[i] = data[i * 4 + 3] > 128 ? 1 : 0;
-  // Erosión cuadrada de radio r (filas y después columnas); lo de fuera de la imagen cuenta como fuera
-  const filas = new Uint8Array(w * h), erosion = new Uint8Array(w * h);
-  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
-    let ok = 1;
-    for (let d = -r; d <= r && ok; d++) { const xx = x + d; if (xx < 0 || xx >= w || !dentro[y * w + xx]) ok = 0; }
-    filas[y * w + x] = ok;
-  }
-  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
-    let ok = 1;
-    for (let d = -r; d <= r && ok; d++) { const yy = y + d; if (yy < 0 || yy >= h || !filas[yy * w + x]) ok = 0; }
-    erosion[y * w + x] = ok;
-  }
-  const out = Buffer.alloc(w * h * 4, 255);
-  for (let i = 0; i < w * h; i++) out[i * 4 + 3] = dentro[i] && !erosion[i] ? 255 : 0;
-  return { data: out, w, h };
-}
-
 const archivos = (await readdir(DIR)).filter((f) => f.endsWith('.png') && !f.includes('--'));
 for (const archivo of archivos) {
   let base = await leer(archivo);
   limpiaBorde(base);
   base = recorta(base);
   await guardar(base, archivo);
-  await guardar(contorno(base), archivo.replace('.png', '--contorno.png'));
   const v = VERSIONES[archivo] ?? {};
   for (const fondo of ['oscuro', 'claro']) {
     if (!v[fondo]) continue;
     await guardar(version(base, v[fondo]), archivo.replace('.png', `--${fondo}.png`));
   }
-  console.log(`${archivo.padEnd(24)} ${base.w}×${base.h}${Object.keys(v).map((f) => ` + --${f}`).join('')} + --contorno`);
+  console.log(`${archivo.padEnd(24)} ${base.w}×${base.h}${Object.keys(v).map((f) => ` + --${f}`).join('')}`);
 }

@@ -10,7 +10,7 @@ import Campo from '../../components/Campo.astro';
 import Cupon from '../../components/Cupon.astro';
 import Dato from '../../components/Dato.astro';
 import FormularioInscripcion from '../../components/FormularioInscripcion.astro';
-import LogoEco from '../../components/LogoEco.astro';
+import LogoCup from '../../components/LogoCup.astro';
 import Patrocinador from '../../components/Patrocinador.astro';
 import SiCompleto from '../../components/SiCompleto.astro';
 import { academy, cup } from '../../data/contenido';
@@ -85,7 +85,7 @@ const categoriasTexto = ed.formatos.map((f) => `${f.nombre}: ${f.categorias.filt
     </a>
     <div class="portada__cuerpo">
       <div class="portada__texto">
-        <LogoEco marca="cup" class="portada__eco" />
+        <LogoCup class="portada__logo" />
         <h1 id="portada-titulo" class="portada__titulo">
           <span class="portada__marca">{cup.nombre}</span>
           <span class="portada__ciudad">{ed.ciudad}</span>
@@ -248,7 +248,7 @@ const categoriasTexto = ed.formatos.map((f) => `${f.nombre}: ${f.categorias.filt
 </script>
 
 <style>
-  .portada { overflow: clip; padding: clamp(24px, 4vh, 48px) var(--margen) clamp(56px, 8vw, 112px); }
+  .portada { padding: clamp(24px, 4vh, 48px) var(--margen) clamp(56px, 8vw, 112px); }
   .portada__volver { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font-weight: 500; }
   .portada__volver svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: square; }
   .portada__cuerpo {
@@ -268,8 +268,7 @@ const categoriasTexto = ed.formatos.map((f) => `${f.nombre}: ${f.categorias.filt
     line-height: 1;
     color: var(--marino);
   }
-  /* Logo de la Cup con eco (LogoEco): las copias suben hacia la derecha, al hueco de encima */
-  .portada__eco { width: clamp(104px, 11vw, 168px); margin: clamp(48px, 5vw, 80px) 0 12px; color: var(--marino); }
+  .portada__logo { width: clamp(104px, 11vw, 168px); height: auto; margin: clamp(16px, 2vw, 32px) 0 12px; color: var(--marino); }
   .portada__ciudad { font-size: min(var(--step-display), 22vh); line-height: 0.85; }
   .portada__fecha {
     font-family: var(--fuente-display);

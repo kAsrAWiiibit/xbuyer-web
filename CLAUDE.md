@@ -36,7 +36,9 @@ Dirección visual «cartel plano y ruidoso» (`.taste-skill/direction.json`, fue
   y «Muy pronto en App Store y Google Play», sin botones ni enlaces de descarga (`AppEnConstruccion.astro`).
 - Movimiento: siempre con alternativa para `prefers-reduced-motion`, sin bloquear el hilo principal ni penalizar el
   LCP; nada de librerías pesadas en páginas que no las necesitan. Las animaciones de una misma pantalla no compiten:
-  van una detrás de otra (en la portada, primero el chute y después el eco del logo). Lighthouse no puede bajar.
+  van una detrás de otra. Lighthouse no puede bajar.
+- **Sin sombreados:** ni sombras, ni copias o ecos detrás de los logos, ni fondos blancos detrás de PNG transparentes.
+  Estética plana.
 - **Cada push a `main` despliega la web oficial.** Trabaja en ramas; fusiona solo con el visto bueno. La rama
   `mejoras-noche` no se fusiona nunca.
 
