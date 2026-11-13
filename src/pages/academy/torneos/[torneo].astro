@@ -14,6 +14,7 @@ import { torneos, type Torneo } from '../../../data/torneos-2027';
 import { t } from '../../../i18n/ui';
 import Base from '../../../layouts/Base.astro';
 import { dia, euros, rango } from '../../../lib/fechas';
+import { mostrarPrecios } from '../../../data/precios';
 import { formularioDe } from '../../../lib/formularios';
 import { completo, esPendiente } from '../../../lib/pendiente';
 import { ruta } from '../../../lib/ruta';
@@ -42,6 +43,8 @@ const academia = (ancla: string) => ruta(`/academy/${ancla}`);
 const enlaces = menuAcademia((c) => t('es', c), { actual: tr.slug });
 
 // Datos estructurados del torneo para los buscadores
+// Precios ocultos mientras la organización no los publique (src/data/precios.ts)
+const precio = mostrarPrecios ? tr.precio : undefined;
 const evento = {
   '@context': 'https://schema.org',
   '@type': 'SportsEvent',
@@ -53,12 +56,12 @@ const evento = {
   eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
   location: { '@type': 'Place', name: tr.lugar, address: { '@type': 'PostalAddress', addressLocality: tr.lugar } },
   description: tr.descripcion,
-  offers: tr.precio ? { '@type': 'Offer', price: tr.precio, priceCurrency: 'EUR', url: Astro.site ? new URL(Astro.url.pathname, Astro.site).href : undefined } : undefined,
+  offers: precio ? { '@type': 'Offer', price: precio, priceCurrency: 'EUR', url: Astro.site ? new URL(Astro.url.pathname, Astro.site).href : undefined } : undefined,
 };
 ---
 <Base
   titulo={`${nombre} 2027 · ${academy.nombre}`}
-  descripcion={`${nombre}: ${fechas}, ${tr.lugar}.${tr.precio ? ` ${euros(tr.precio)}${tr.precioNota ? ` (${tr.precioNota.toLowerCase()})` : ''}.` : ''} ${tr.descripcion.split('. ')[0]}.`}
+  descripcion={`${nombre}: ${fechas}, ${tr.lugar}.${precio ? ` ${euros(precio)}${tr.precioNota ? ` (${tr.precioNota.toLowerCase()})` : ''}.` : ''} ${tr.descripcion.split('. ')[0]}.`}
   colorTema="#FFED00"
   compartir="academy"
 >
@@ -75,9 +78,9 @@ const evento = {
         <dl class="ficha__datos">
           <div><dt class="solo-lector">Fechas</dt><dd class="ficha__fechas"><time datetime={tr.inicio}>{fechas}</time></dd></div>
           <div><dt class="solo-lector">Lugar</dt><dd class="ficha__lugar">{tr.lugar}</dd></div>
-          {tr.precio && <div class="ficha__precio">
+          {precio && <div class="ficha__precio">
             <dt class="solo-lector">Precio</dt>
-            <dd><span class="ficha__euros">{euros(tr.precio)}</span> <span class="ficha__por">{t('es', 'torneo.porJugador')}{tr.precioNota && <>. {tr.precioNota}</>}</span></dd>
+            <dd><span class="ficha__euros">{euros(precio)}</span> <span class="ficha__por">{t('es', 'torneo.porJugador')}{tr.precioNota && <>. {tr.precioNota}</>}</span></dd>
           </div>}
         </dl>
         <a class="boton ficha__boton" {...botonInscripcion}>{t('es', 'torneo.inscribete')}</a>

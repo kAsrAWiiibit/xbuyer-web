@@ -75,3 +75,7 @@ Web estática en **Astro** publicada en GitHub Pages: **https://xbuyerteamacadem
 - DNS en Namecheap; `www`, `http` y github.io redirigen a `https://xbuyerteamacademy.com`.
 - Las URL antiguas `kasrawiiibit.github.io/xbuyer-cup-privacidad/` y `/soporte/` redirigen (repositorio
   `xbuyer-cup-privacidad`). La app usa `/privacidad/` y `/soporte/`.
+
+- **13/11/2026 — Sin precios.** `src/data/precios.ts` (`mostrarPrecios = false`) oculta el precio de los torneos 2027
+  (ficha, descripción y `offers` de los datos estructurados) y de la ropa opcional (solo nombres). Build sin «€».
+

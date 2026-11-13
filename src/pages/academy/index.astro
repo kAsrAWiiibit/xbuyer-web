@@ -22,6 +22,7 @@ import { torneos } from '../../data/torneos-2027';
 import { t } from '../../i18n/ui';
 import Base from '../../layouts/Base.astro';
 import { euros, rango } from '../../lib/fechas';
+import { mostrarPrecios } from '../../data/precios';
 import { autores, fotoDe, type Hueco } from '../../lib/fotos';
 import { ruta } from '../../lib/ruta';
 import { menuAcademia, nombreCompleto, rutaTorneo } from '../../lib/torneos';
@@ -175,7 +176,7 @@ const enlaces = menuAcademia((c) => t('es', c), { enPortada: true });
       <details class="extras__opcional">
         <summary class="extras__resumen">
           <span class="extras__titulo">{t('es', 'academy.equipacion.opcional')}</span>
-          <span class="extras__precios">{extras.map((e) => `${e.nombre} ${euros(e.precio)}`).join(' · ')}</span>
+          <span class="extras__precios">{extras.map((e) => (mostrarPrecios ? `${e.nombre} ${euros(e.precio)}` : e.nombre)).join(' · ')}</span>
           <svg class="extras__flecha" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
         </summary>
         <ul role="list" class="extras__lista">
@@ -183,7 +184,7 @@ const enlaces = menuAcademia((c) => t('es', c), { enPortada: true });
             <li class="extra">
               <div class="extra__imagen"><Image src={imagenExtra(e.imagen)} alt={e.alt} widths={[200, 400]} sizes="(max-width: 599px) 45vw, 220px" loading="lazy" /></div>
               <p class="extra__nombre">{e.nombre}</p>
-              <p class="extra__precio">{euros(e.precio)}</p>
+              {mostrarPrecios && <p class="extra__precio">{euros(e.precio)}</p>}
             </li>
           ))}
         </ul>
@@ -430,7 +431,7 @@ const enlaces = menuAcademia((c) => t('es', c), { enPortada: true });
   }
   .extras__incluida { grid-column: 1 / 7; font-size: var(--step-lead); line-height: 1.35; }
   .extras__opcional { grid-column: 8 / 13; }
-  /* Ropa opcional: desplegable (sin JavaScript, <details>); cerrado se ven los precios */
+  /* Ropa opcional: desplegable (sin JavaScript, <details>); cerrado se ven las piezas (y los precios, si se publican) */
   .extras__opcional { border-block: 3px solid var(--marino); }
   .extras__resumen {
     display: grid;

@@ -1,6 +1,8 @@
 # BACKLOG
 
-> **RESUME HERE** (11 de noviembre de 2026): política de privacidad definitiva (revisada por la organización): apartado
+> **RESUME HERE** (13 de noviembre de 2026): **sin precios** en toda la web (`src/data/precios.ts`, importes guardados
+> en `src/data/`; build sin ningún «€»). La preinscripción ya estaba integrada como los torneos (formulario propio;
+> `npm run formularios -- --comprobar` sin cambios): comprobada en la build. Publicado. Antes (11 de noviembre de 2026): política de privacidad definitiva (revisada por la organización): apartado
 > de inscripciones con base legal y plazos, casilla de consentimiento de salud en los formularios y sin «En construcción»
 > en las páginas legales. Antes: (12 de noviembre de 2026, noche): logos de las fichas de torneo grandes y centrados; quitados todos los sombreados (eco de los logos en la portada
 > y en las páginas de torneo, sombra bajo los trofeos) y el fondo blanco de la sudadera y la mochila. Falta borrar el

@@ -25,6 +25,9 @@ Dirección visual «cartel plano y ruidoso» (`.taste-skill/direction.json`, fue
 - **Solo castellano.** `/ca/` y `/en/` están declarados, pero no se publica ninguna traducción hasta que la
   organización la pase.
 - **El teléfono de los PDF no se publica** en ningún sitio de la web.
+- **Sin precios en la web** (decisión de la organización, 13/11/2026): `mostrarPrecios = false` en `src/data/precios.ts`.
+  Los importes se quedan en `src/data/` (torneos 2027 y ropa opcional) pero no sale ningún «€» en la build (ni en la
+  descripción ni en los datos estructurados). Tras cada build: `grep -rl "€" dist` sin resultados.
 - **`/privacidad/` y `/soporte/` los usa la app.** Sus textos vienen de `src/data/legal/legal.json`, que sube el
   proyecto de la app: no se editan a mano. Lo propio de la web va en `src/data/privacidad-web.ts`.
 - **Formularios de inscripción:** nunca envíos de prueba a los Google Forms reales. Su estructura se lee con
