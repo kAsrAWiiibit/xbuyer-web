@@ -31,7 +31,9 @@ Dirección visual «cartel plano y ruidoso» (`.taste-skill/direction.json`, fue
 - **`/privacidad/` y `/soporte/` los usa la app.** Sus textos vienen de `src/data/legal/legal.json`, que sube el
   proyecto de la app: no se editan a mano. Lo propio de la web va en `src/data/privacidad-web.ts`.
 - **Formularios de inscripción:** nunca envíos de prueba a los Google Forms reales. Su estructura se lee con
-  `npm run formularios` (solo lectura); tras cualquier cambio de un formulario o enlace, vuelve a leerlos.
+  `npm run formularios` (solo lectura); tras cualquier cambio de un formulario o enlace, vuelve a leerlos. Vale para
+  todos: torneos 2027, preinscripción y Xbuyer Cup (Madrid y Barcelona). Para probar el envío, intercepta `fetch` en
+  el navegador (sin red hacia Google) y revisa los `entry.*`.
   Las respuestas tienen que seguir llegando al Google Form y a su hoja de cálculo.
 - **Logos de torneos sin recuadro:** PNG transparente sin halo, legible sobre amarillo y sobre azul o marino. Tras
   cambiar uno, `node scripts/logos-torneos.mjs` y revisarlo sobre los dos fondos en móvil y escritorio.

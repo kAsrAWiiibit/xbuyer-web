@@ -4,8 +4,8 @@
  * lista. Para cambiar un dato, cámbialo aquí.
  *
  * - `inscripcion`: 'abierta' (botón de inscripción arriba) o 'cerrada' (aviso y, si tiene app, la app destacada).
- * - `formulario`: el enlace del Google Form de la edición. Mientras sea pendiente(), el botón abre un email a la
- *   organización con la edición en el asunto.
+ * - `formulario`: el enlace del Google Form de la edición. Con enlace, la página pinta el formulario integrado
+ *   (`npm run formularios` tras cambiarlo); mientras sea pendiente(), el botón abre un email a la organización.
  * - Lo marcado con pendiente() no se muestra en producción (Infantil femenino, hasta que la organización lo confirme).
  *   Contradicciones entre cartel y reglamento, sin publicar: Madrid (el reglamento no trae Infantil femenino) y
  *   Barcelona (el reglamento trae Cadete, que el cartel no lleva).
@@ -71,7 +71,7 @@ export const ediciones: Edicion[] = [
     inicio: '2027-01-02',
     fin: '2027-01-04',
     inscripcion: 'abierta',
-    formulario: pendiente('enlace del formulario de inscripción de Madrid'),
+    formulario: 'https://forms.gle/VXRzMdfqVtffkPj48',
     formatos: [
       { nombre: 'Fútbol 7', categorias: ['Benjamín', 'Alevín', infantilFemenino] },
       { nombre: 'Fútbol 11', categorias: ['Infantil', 'Cadete'] },
@@ -94,7 +94,7 @@ export const ediciones: Edicion[] = [
     inicio: '2027-02-06',
     fin: '2027-02-07',
     inscripcion: 'abierta',
-    formulario: pendiente('enlace del formulario de inscripción de Barcelona'),
+    formulario: 'https://forms.gle/6HALiZRfiLyPgb6M7',
     formatos: [
       { nombre: 'Fútbol 7', categorias: ['Benjamín sub-9', 'Benjamín sub-10', 'Alevín sub-11', 'Alevín sub-12', infantilFemenino] },
       { nombre: 'Fútbol 11', categorias: ['Infantil sub-13', 'Infantil sub-14'] },

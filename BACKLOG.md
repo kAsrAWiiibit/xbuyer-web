@@ -1,14 +1,17 @@
 # BACKLOG
 
-> **RESUME HERE** (13 de noviembre de 2026): **sin precios** en toda la web (`src/data/precios.ts`, importes guardados
+> **RESUME HERE** (16 de noviembre de 2026): **formularios de la Xbuyer Cup Madrid y Barcelona integrados** (modo
+> propio, como los torneos 2027): enlaces en `src/data/cup-ediciones.ts`, `npm run formularios`, sin botón de email.
+> Comprobados en móvil y escritorio con envíos simulados (fetch interceptado; ningún envío real). Publicado. Falta que
+> la organización confirme Infantil femenino (el formulario de Madrid y el de Barcelona ya lo ofrecen; la web lo sigue
+> ocultando en «Categorías»). Antes (13 de noviembre de 2026): **sin precios** en toda la web (`src/data/precios.ts`, importes guardados
 > en `src/data/`; build sin ningún «€»). La preinscripción ya estaba integrada como los torneos (formulario propio;
 > `npm run formularios -- --comprobar` sin cambios): comprobada en la build. Publicado. Antes (11 de noviembre de 2026): política de privacidad definitiva (revisada por la organización): apartado
 > de inscripciones con base legal y plazos, casilla de consentimiento de salud en los formularios y sin «En construcción»
 > en las páginas legales. Antes: (12 de noviembre de 2026, noche): logos de las fichas de torneo grandes y centrados; quitados todos los sombreados (eco de los logos en la portada
 > y en las páginas de torneo, sombra bajo los trofeos) y el fondo blanco de la sudadera y la mochila. Falta borrar el
 > repositorio de la vista previa `kAsrAWiiibit/xbuyer-web-preview` (gh necesita
-> `gh auth refresh -h github.com -s delete_repo`). Siguiente: enlaces de los Google Form de la Cup Madrid y Barcelona
-> (pegarlos en `formulario:` de `src/data/cup-ediciones.ts`, `npm run formularios`, build y revisar `#inscripcion`).
+> `gh auth refresh -h github.com -s delete_repo`). Siguiente: Infantil femenino de la Cup y una inscripción real de prueba (ver abajo).
 
 ## Cuando la app esté en las tiendas
 
@@ -22,17 +25,20 @@
 - Casilla de consentimiento de salud en los Google Forms de los torneos (la pide la organización). Que **no sea
   obligatoria** en Google (si no, se rechazan las inscripciones sin alergias). Cuando esté: `npm run formularios`,
   comprobar que la casilla deja de pintarse aparte y que su `entry.*` va en el envío.
-- Google Form de la Xbuyer Cup **Madrid** y **Barcelona** (mientras, botón de email; el bloque integrado ya está).
+- Infantil femenino en la Cup: los Google Forms de Madrid («Infantil Femenino (F-7)») y Barcelona («Infantil
+  Femenino») lo ofrecen, pero la web lo oculta en «Categorías» (`infantilFemenino = pendiente(…)` en
+  `src/data/cup-ediciones.ts`). Si la organización lo confirma, cambiarlo por el texto y quitar el pendiente.
 - Logos originales en buena calidad (sobre todo MedCup, Swit Cup, Donosti Cup y Central Cup).
-- Una inscripción real de prueba desde la web en un torneo 2027 (no se hicieron envíos de prueba a los formularios
-  reales): comprobar que llega a la hoja de cálculo y borrar esa fila.
+- Una inscripción real de prueba desde la web en un torneo 2027 y en la Cup Madrid o Barcelona (no se hicieron envíos
+  de prueba a los formularios reales): comprobar que llega a la hoja de cálculo y borrar esa fila.
 - Fichas de App Store y Google Play con las URL nuevas (privacidad, soporte y eliminación de datos:
   `https://xbuyerteamacademy.com/soporte/#eliminar-datos`) y enlaces de la app en las tiendas.
 - Palmarés: año y categoría de los demás títulos de Costa Daurada y Copa UniQ; categoría de la MadCup.
 - Autoría de las imágenes de equipación (se acreditan a Xbuyer Team Academy).
 - Sedes de Madrid y Barcelona 2027; campo de la edición de Barcelona; cifras de ediciones anteriores.
 - Yellow Cup: programa con fechas correctas, lugar del acto inaugural y años de la G13.
-- Si hay Infantil femenino en Valencia, Madrid y Barcelona; Cadete en Barcelona.
+- Si hay Infantil femenino en Valencia (en Madrid y Barcelona, ver arriba); Cadete en Barcelona (el Google Form de
+  Barcelona no lo trae, como el cartel).
 - Número del registro de asociaciones.
 - Fotos de los torneos de la academia (L8 Sport Murcia).
 - Si la equipación de `IMG_2696` («New technical partner») es de la academia (hasta entonces no se usa).

@@ -142,6 +142,53 @@
       }
     ]
   },
+  "https://forms.gle/6HALiZRfiLyPgb6M7": {
+    "url": "https://forms.gle/6HALiZRfiLyPgb6M7",
+    "accion": "https://docs.google.com/forms/d/e/1FAIpQLSfxs3a5MebhyKiD1h2SJp3wQXZTn8M11jIorWuEKVwUff65pw/formResponse",
+    "marco": "https://docs.google.com/forms/d/e/1FAIpQLSfxs3a5MebhyKiD1h2SJp3wQXZTn8M11jIorWuEKVwUff65pw/viewform?embedded=true",
+    "titulo": "XBUYER CUP - BARCELONA",
+    "modo": "propio",
+    "campos": [
+      {
+        "tipo": "texto",
+        "entrada": "entry.65777427",
+        "titulo": "Nombre Completo",
+        "descripcion": null,
+        "obligatorio": true
+      },
+      {
+        "tipo": "texto",
+        "entrada": "entry.532417071",
+        "titulo": "Correo electrónico",
+        "descripcion": null,
+        "obligatorio": true
+      },
+      {
+        "tipo": "texto",
+        "entrada": "entry.1161937784",
+        "titulo": "Número de teléfono",
+        "descripcion": null,
+        "obligatorio": true
+      },
+      {
+        "tipo": "casillas",
+        "entrada": "entry.974048465",
+        "titulo": "Selecciona la categoría/as",
+        "descripcion": null,
+        "obligatorio": true,
+        "opciones": [
+          "Benjamín SUB-9",
+          "Benjamín SUB-10",
+          "Alevín SUB-11",
+          "Alevín SUB-12",
+          "Infantil Femenino",
+          "Infantil SUB-13",
+          "Infantil SUB-14"
+        ],
+        "otro": false
+      }
+    ]
+  },
   "https://forms.gle/EXL2ZsUTgvM42wGa9": {
     "url": "https://forms.gle/EXL2ZsUTgvM42wGa9",
     "accion": "https://docs.google.com/forms/d/e/1FAIpQLSfz2ce3Oi2s585YbrVkK8PKP-rRe7gF9KZneO_20MRycr7w2w/formResponse",
@@ -692,6 +739,51 @@
         ],
         "opciones": [
           "He leído y acepto la Política de Cancelación y Devoluciones de XBuyer Team Academy."
+        ],
+        "otro": false
+      }
+    ]
+  },
+  "https://forms.gle/VXRzMdfqVtffkPj48": {
+    "url": "https://forms.gle/VXRzMdfqVtffkPj48",
+    "accion": "https://docs.google.com/forms/d/e/1FAIpQLSeJUy12ADkahqQP4O-ad0LJ2lr1ah7Vn9D9t1XywcJLQC7-1g/formResponse",
+    "marco": "https://docs.google.com/forms/d/e/1FAIpQLSeJUy12ADkahqQP4O-ad0LJ2lr1ah7Vn9D9t1XywcJLQC7-1g/viewform?embedded=true",
+    "titulo": "XBUYER CUP - MADRID",
+    "modo": "propio",
+    "campos": [
+      {
+        "tipo": "texto",
+        "entrada": "entry.65777427",
+        "titulo": "Nombre Completo",
+        "descripcion": null,
+        "obligatorio": true
+      },
+      {
+        "tipo": "texto",
+        "entrada": "entry.532417071",
+        "titulo": "Correo electrónico",
+        "descripcion": null,
+        "obligatorio": true
+      },
+      {
+        "tipo": "texto",
+        "entrada": "entry.1161937784",
+        "titulo": "Número de teléfono",
+        "descripcion": null,
+        "obligatorio": true
+      },
+      {
+        "tipo": "radio",
+        "entrada": "entry.974048465",
+        "titulo": "Selecciona la categoría",
+        "descripcion": null,
+        "obligatorio": true,
+        "opciones": [
+          "Benjamín (F-7)",
+          "Alevín (F-7)",
+          "Infantil Femenino (F-7)",
+          "Infantil (F-11)",
+          "Cadete (F-11)"
         ],
         "otro": false
       }

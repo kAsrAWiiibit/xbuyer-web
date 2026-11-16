@@ -1,4 +1,4 @@
-# SNAPSHOT: arquitectura actual (12 de noviembre de 2026, noche)
+# SNAPSHOT: arquitectura actual (16 de noviembre de 2026)
 
 Web estática en **Astro** publicada en GitHub Pages: **https://xbuyerteamacademy.com** (repositorio público
 `kAsrAWiiibit/xbuyer-web`; cada push a `main` despliega con `.github/workflows/desplegar.yml`). Reglas en
@@ -13,7 +13,7 @@ Web estática en **Astro** publicada en GitHub Pages: **https://xbuyerteamacadem
 | `/academy/torneos/<slug>/` | Ficha de cada torneo 2027: logo grande, precio, qué incluye, categorías, programa y **formulario de inscripción integrado** (`#inscripcion`) | `src/pages/academy/torneos/[torneo].astro` |
 | `/academy/preinscripcion/` | Texto de la organización y **formulario de preinscripción integrado** (`#formulario`) | `src/pages/academy/preinscripcion.astro` |
 | `/cup/` | Portada con chute, qué la hace diferente, Torneos (Valencia, Madrid, Barcelona), ediciones anteriores, patrocinador, contacto | `src/pages/cup/index.astro` |
-| `/cup/<ciudad>/` | Cada torneo de la Cup: logo de la Cup grande, inscripción (formulario integrado cuando haya enlace; si no, email), app («En construcción»), qué incluye, categorías, normativa, sede | `src/pages/cup/[edicion].astro` |
+| `/cup/<ciudad>/` | Cada torneo de la Cup: logo de la Cup grande, inscripción (formulario integrado en `#inscripcion` en Madrid y Barcelona; Valencia, cerrada), app («En construcción»), qué incluye, categorías, normativa, sede | `src/pages/cup/[edicion].astro` |
 | `/privacidad/`, `/soporte/` | Textos de la app (`src/data/legal/legal.json`, los sube la app; política definitiva, sin marca de borrador), sin la etiqueta «En construcción»; privacidad + sección web «Inscripciones y preinscripción desde la web» (base legal, consentimiento de salud y plazos) | `src/pages/privacidad.astro`, `src/data/privacidad-web.ts` |
 | `/aviso-legal/`, `/404` | Legal de la web y «Fuera de juego» | |
 | `/prototipos/tunel/` | Prototipo del túnel; solo en desarrollo y borradores | `src/pages/prototipos/[nombre].astro` |
@@ -61,8 +61,10 @@ Web estática en **Astro** publicada en GitHub Pages: **https://xbuyerteamacadem
 - Prop `tipo: 'preinscripcion'`: los mensajes dicen «preinscripción». Pistas de teclado (email, teléfono, nombre) por
   el título de la pregunta, sin validar más que Google. Erratas del Google Form corregidas solo al mostrarlas
   (`CORRECCIONES`: «Lateral izquiero», «Correo electronico»).
-- Estado: los 8 torneos 2027 y la preinscripción, en modo propio. Cup Madrid y Barcelona: bloque preparado; sin
-  enlace todavía (email).
+- Estado: los 8 torneos 2027, la preinscripción y la Xbuyer Cup Madrid y Barcelona, todos en modo propio. Los de la
+  Cup son de equipo (4 preguntas: nombre completo, correo, teléfono y categoría; Madrid una sola categoría, Barcelona
+  varias), sin alergias, así que no llevan casilla de consentimiento de salud. El aviso de envío repetido se basa en
+  el nombre (no hay DNI).
 
 ## Movimiento
 
