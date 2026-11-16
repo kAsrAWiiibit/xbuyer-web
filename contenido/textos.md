@@ -33,7 +33,7 @@
 
 ## Qué la hace diferente
 - Los hermanos Buyer: la presencia de Javi y Eric, creadores de contenido y referentes del proyecto.
-- Retransmisiones en directo: todos los partidos retransmitidos a través de la app oficial del torneo.
+- Retransmisiones en directo: los partidos se emiten en nuestro canal de YouTube.
 - App oficial: consulta de calendarios, horarios, resultados y seguimiento de todos los partidos desde una misma plataforma.
 - Premios especiales: trofeos, reconocimientos y experiencias únicas para los equipos participantes.
 - Experiencia para todos: un ambiente único con actividades y propuestas para que jugadores y familias disfruten al máximo.

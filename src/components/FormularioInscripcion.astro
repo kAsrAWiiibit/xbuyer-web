@@ -17,7 +17,9 @@
  * se envía también al formulario; si no, solo decide si se envía el campo. Sin JavaScript no se puede comprobar.
  *
  * Los textos de las preguntas y opciones son los del Google Form. Lo que se envía es exactamente su valor; solo se
- * corrige al mostrarlo alguna errata (CORRECCIONES).
+ * corrige al mostrarlo alguna errata (CORRECCIONES). `retiradas`: opciones del Google Form que la organización ha
+ * descartado y no se muestran (enviar menos opciones de las que admite Google es válido); quitarlas cuando dejen de
+ * estar en el Google Form.
  */
 import { entidad } from '../data/entidad';
 import { t } from '../i18n/ui';
@@ -32,8 +34,10 @@ interface Props {
   id: string;
   /** Inscripción a un torneo (por defecto) o preinscripción en la academia: cambian los mensajes */
   tipo?: 'inscripcion' | 'preinscripcion';
+  /** Opciones del Google Form que no se muestran (valores exactos) */
+  retiradas?: string[];
 }
-const { formulario: f, torneo, id, tipo = 'inscripcion' } = Astro.props;
+const { formulario: f, torneo, id, tipo = 'inscripcion', retiradas = [] } = Astro.props;
 /** Los mensajes que dicen «inscripción», en su versión de preinscripción si toca */
 type Mensaje = 'enviar' | 'repetida' | 'errorEnvio' | 'hecho' | 'hechoTexto' | 'hechoTextoSinNombre' | 'otra';
 const tx = (m: Mensaje, valores?: Record<string, string>) => t('es', `${tipo}.${m}` as Parameters<typeof t>[1], { torneo, ...valores });
@@ -53,7 +57,7 @@ const partes = (texto: string) => {
   return m ? { codigo: m[1], resto: m[2] } : { codigo: null, resto: ver(texto) };
 };
 const hoy = new Date().toISOString().slice(0, 10);
-const campos = (f.campos ?? []) as Campo[];
+const campos = ((f.campos ?? []) as Campo[]).map((c) => ('opciones' in c && c.tipo !== 'escala' ? { ...c, opciones: c.opciones.filter((o) => !retiradas.includes(o)) } : c)) as Campo[];
 // Lo que identifica a un jugador para avisar de un envío repetido: el documento y, si no hay, el nombre
 const clave = (c: Campo) => c.tipo === 'texto' && /dni|nie|pasaporte|nombre/i.test(c.titulo ?? '');
 const esNombre = (c: Campo) => c.tipo === 'texto' && /nombre/i.test(c.titulo ?? '');

@@ -6,9 +6,9 @@
  * - `inscripcion`: 'abierta' (botón de inscripción arriba) o 'cerrada' (aviso y, si tiene app, la app destacada).
  * - `formulario`: el enlace del Google Form de la edición. Con enlace, la página pinta el formulario integrado
  *   (`npm run formularios` tras cambiarlo); mientras sea pendiente(), el botón abre un email a la organización.
- * - Lo marcado con pendiente() no se muestra en producción (Infantil femenino, hasta que la organización lo confirme).
- *   Contradicciones entre cartel y reglamento, sin publicar: Madrid (el reglamento no trae Infantil femenino) y
- *   Barcelona (el reglamento trae Cadete, que el cartel no lleva).
+ * - Lo marcado con pendiente() no se muestra en producción.
+ * - Categorías confirmadas por la organización (16 de noviembre de 2026): no hay Infantil femenino en ninguna edición
+ *   (aunque los carteles, los reglamentos y los Google Forms lo traigan) y Barcelona sí tiene Cadete (fútbol 11).
  */
 import { pendiente, type Dato } from '../lib/pendiente';
 
@@ -23,6 +23,8 @@ export interface Edicion {
   fin: string;
   inscripcion: 'abierta' | 'cerrada';
   formulario: Dato<string>;
+  /** Opciones de su Google Form que la organización ha descartado: no se muestran en el formulario de la web */
+  opcionesRetiradas?: string[];
   formatos: Formato[];
   /** Equipos inscritos, si se sabe */
   equipos?: number;
@@ -35,8 +37,6 @@ export interface Edicion {
   colaboradores: string[];
 }
 
-const infantilFemenino = pendiente('Infantil femenino (sin confirmar)');
-
 export const ediciones: Edicion[] = [
   {
     slug: 'valencia',
@@ -48,7 +48,7 @@ export const ediciones: Edicion[] = [
     inscripcion: 'cerrada',
     formulario: pendiente('formulario de Valencia (inscripciones cerradas)'),
     formatos: [
-      { nombre: 'Fútbol 8', categorias: ['Benjamín', 'Alevín', infantilFemenino] },
+      { nombre: 'Fútbol 8', categorias: ['Benjamín', 'Alevín'] },
       { nombre: 'Fútbol 11', categorias: ['Infantil', 'Cadete'] },
     ],
     equipos: 60,
@@ -72,8 +72,9 @@ export const ediciones: Edicion[] = [
     fin: '2027-01-04',
     inscripcion: 'abierta',
     formulario: 'https://forms.gle/VXRzMdfqVtffkPj48',
+    opcionesRetiradas: ['Infantil Femenino (F-7)'],
     formatos: [
-      { nombre: 'Fútbol 7', categorias: ['Benjamín', 'Alevín', infantilFemenino] },
+      { nombre: 'Fútbol 7', categorias: ['Benjamín', 'Alevín'] },
       { nombre: 'Fútbol 11', categorias: ['Infantil', 'Cadete'] },
     ],
     normativa: {
@@ -95,15 +96,16 @@ export const ediciones: Edicion[] = [
     fin: '2027-02-07',
     inscripcion: 'abierta',
     formulario: 'https://forms.gle/6HALiZRfiLyPgb6M7',
+    opcionesRetiradas: ['Infantil Femenino'],
     formatos: [
-      { nombre: 'Fútbol 7', categorias: ['Benjamín sub-9', 'Benjamín sub-10', 'Alevín sub-11', 'Alevín sub-12', infantilFemenino] },
-      { nombre: 'Fútbol 11', categorias: ['Infantil sub-13', 'Infantil sub-14'] },
+      { nombre: 'Fútbol 7', categorias: ['Benjamín sub-9', 'Benjamín sub-10', 'Alevín sub-11', 'Alevín sub-12'] },
+      { nombre: 'Fútbol 11', categorias: ['Infantil sub-13', 'Infantil sub-14', 'Cadete'] },
     ],
     normativa: {
       pdf: 'normativa-barcelona.pdf',
       duracion: [
         { categorias: 'Benjamín y Alevín (fútbol 7)', partes: 'Dos partes de 15 minutos' },
-        { categorias: 'Infantil (fútbol 11)', partes: 'Dos partes de 20 minutos' },
+        { categorias: 'Infantil y Cadete (fútbol 11)', partes: 'Dos partes de 20 minutos' },
       ],
     },
     apoyo: ["Ajuntament de Sant Vicenç dels Horts"],

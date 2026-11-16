@@ -223,7 +223,7 @@ const categoriasTexto = ed.formatos.map((f) => `${f.nombre}: ${f.categorias.filt
         <h2 id="formulario-titulo" class="bloque__titulo">{t('es', 'edicion.inscribete')}</h2>
         <p class="formulario__intro">{t('es', 'inscripcion.introCup', { torneo: torneoNombre })}</p>
       </div>
-      <FormularioInscripcion formulario={formulario} torneo={torneoNombre} id={`ins-${ed.slug}`} />
+      <FormularioInscripcion formulario={formulario} torneo={torneoNombre} id={`ins-${ed.slug}`} retiradas={ed.opcionesRetiradas} />
     </section>
   )}
 

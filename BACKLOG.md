@@ -1,10 +1,13 @@
 # BACKLOG
 
-> **RESUME HERE** (16 de noviembre de 2026): **formularios de la Xbuyer Cup Madrid y Barcelona integrados** (modo
+> **RESUME HERE** (16 de noviembre de 2026, tarde): confirmado por la organización y publicado: retransmisiones por
+> **YouTube** (no por la app; sin enlace hasta tener la URL del canal), **sin Infantil femenino** en las tres ediciones
+> (también retirado del formulario de la web: `opcionesRetiradas` en `src/data/cup-ediciones.ts`) y **Cadete en
+> Barcelona** (fútbol 11, dos partes de 20 minutos). Siguen ocultos el campo de Barcelona y la G13 de la Yellow Cup.
+> Siguiente: que la organización corrija sus Google Forms de la Cup (ver «Pendiente de la organización»).
+> Antes (16 de noviembre de 2026, mañana): **formularios de la Xbuyer Cup Madrid y Barcelona integrados** (modo
 > propio, como los torneos 2027): enlaces en `src/data/cup-ediciones.ts`, `npm run formularios`, sin botón de email.
-> Comprobados en móvil y escritorio con envíos simulados (fetch interceptado; ningún envío real). Publicado. Falta que
-> la organización confirme Infantil femenino (el formulario de Madrid y el de Barcelona ya lo ofrecen; la web lo sigue
-> ocultando en «Categorías»). Antes (13 de noviembre de 2026): **sin precios** en toda la web (`src/data/precios.ts`, importes guardados
+> Comprobados en móvil y escritorio con envíos simulados (fetch interceptado; ningún envío real). Publicado. Antes (13 de noviembre de 2026): **sin precios** en toda la web (`src/data/precios.ts`, importes guardados
 > en `src/data/`; build sin ningún «€»). La preinscripción ya estaba integrada como los torneos (formulario propio;
 > `npm run formularios -- --comprobar` sin cambios): comprobada en la build. Publicado. Antes (11 de noviembre de 2026): política de privacidad definitiva (revisada por la organización): apartado
 > de inscripciones con base legal y plazos, casilla de consentimiento de salud en los formularios y sin «En construcción»
@@ -25,9 +28,12 @@
 - Casilla de consentimiento de salud en los Google Forms de los torneos (la pide la organización). Que **no sea
   obligatoria** en Google (si no, se rechazan las inscripciones sin alergias). Cuando esté: `npm run formularios`,
   comprobar que la casilla deja de pintarse aparte y que su `entry.*` va en el envío.
-- Infantil femenino en la Cup: los Google Forms de Madrid («Infantil Femenino (F-7)») y Barcelona («Infantil
-  Femenino») lo ofrecen, pero la web lo oculta en «Categorías» (`infantilFemenino = pendiente(…)` en
-  `src/data/cup-ediciones.ts`). Si la organización lo confirma, cambiarlo por el texto y quitar el pendiente.
+- **Google Forms de la Cup:** el de **Barcelona no tiene Cadete**, así que desde la web no se puede inscribir un
+  equipo Cadete (la web no puede añadir opciones que Google no acepta). Añadir «Cadete» en su pregunta de categoría.
+  Y quitar «Infantil Femenino» de los de Madrid y Barcelona (la web ya no lo enseña). Después: `npm run formularios`,
+  revisar el diff y vaciar `opcionesRetiradas` en `src/data/cup-ediciones.ts`.
+- URL del canal de YouTube de la Cup, para enlazarlo en «Retransmisiones en directo» (`contenido/textos.md`).
+- Los PDF de normativa de la Cup (Valencia, Madrid, Barcelona) aún listan Infantil femenino (corregir en el original).
 - Logos originales en buena calidad (sobre todo MedCup, Swit Cup, Donosti Cup y Central Cup).
 - Una inscripción real de prueba desde la web en un torneo 2027 y en la Cup Madrid o Barcelona (no se hicieron envíos
   de prueba a los formularios reales): comprobar que llega a la hoja de cálculo y borrar esa fila.
@@ -37,8 +43,6 @@
 - Autoría de las imágenes de equipación (se acreditan a Xbuyer Team Academy).
 - Sedes de Madrid y Barcelona 2027; campo de la edición de Barcelona; cifras de ediciones anteriores.
 - Yellow Cup: programa con fechas correctas, lugar del acto inaugural y años de la G13.
-- Si hay Infantil femenino en Valencia (en Madrid y Barcelona, ver arriba); Cadete en Barcelona (el Google Form de
-  Barcelona no lo trae, como el cartel).
 - Número del registro de asociaciones.
 - Fotos de los torneos de la academia (L8 Sport Murcia).
 - Si la equipación de `IMG_2696` («New technical partner») es de la academia (hasta entonces no se usa).
@@ -47,6 +51,8 @@
 
 ## Decisiones tomadas (no reabrir)
 
+- Xbuyer Cup (16 de noviembre de 2026): sin Infantil femenino en ninguna edición; Barcelona con Cadete; las
+  retransmisiones son por YouTube, no por la app.
 - Sin sombreados en ningún sitio: ni eco detrás de los logos, ni sombras bajo los trofeos (12 de noviembre de 2026).
 
 - El teléfono de los PDF no se publica en ningún sitio de la web.

@@ -81,7 +81,7 @@ const es = {
   'edicion.apoyo': 'Con el apoyo de',
   'edicion.colaboradores': 'Colaboradores',
   'edicion.app': 'La app oficial del torneo',
-  'edicion.appTexto': 'Calendarios, horarios, resultados y todos los partidos en directo, desde una misma plataforma.',
+  'edicion.appTexto': 'Calendarios, horarios, resultados y seguimiento de todos los partidos, desde una misma plataforma.',
   'edicion.cerradasTexto': 'Ya no se admiten equipos.',
   'edicion.cerradasApp': 'Ya no se admiten equipos. Podrás seguir el torneo en la app oficial.',
   'edicion.otras': 'Otros torneos',

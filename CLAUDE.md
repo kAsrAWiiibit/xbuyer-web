@@ -34,6 +34,8 @@ Dirección visual «cartel plano y ruidoso» (`.taste-skill/direction.json`, fue
   `npm run formularios` (solo lectura); tras cualquier cambio de un formulario o enlace, vuelve a leerlos. Vale para
   todos: torneos 2027, preinscripción y Xbuyer Cup (Madrid y Barcelona). Para probar el envío, intercepta `fetch` en
   el navegador (sin red hacia Google) y revisa los `entry.*`.
+- **Xbuyer Cup (confirmado por la organización):** sin Infantil femenino en ninguna edición y con Cadete en Barcelona.
+  Las retransmisiones son por YouTube, nunca «a través de la app»; sin enlace al canal hasta tener su URL.
   Las respuestas tienen que seguir llegando al Google Form y a su hoja de cálculo.
 - **Logos de torneos sin recuadro:** PNG transparente sin halo, legible sobre amarillo y sobre azul o marino. Tras
   cambiar uno, `node scripts/logos-torneos.mjs` y revisarlo sobre los dos fondos en móvil y escritorio.

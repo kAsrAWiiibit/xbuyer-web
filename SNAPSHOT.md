@@ -1,4 +1,4 @@
-# SNAPSHOT: arquitectura actual (16 de noviembre de 2026)
+# SNAPSHOT: arquitectura actual (16 de noviembre de 2026, tarde)
 
 Web estática en **Astro** publicada en GitHub Pages: **https://xbuyerteamacademy.com** (repositorio público
 `kAsrAWiiibit/xbuyer-web`; cada push a `main` despliega con `.github/workflows/desplegar.yml`). Reglas en
@@ -64,7 +64,8 @@ Web estática en **Astro** publicada en GitHub Pages: **https://xbuyerteamacadem
 - Estado: los 8 torneos 2027, la preinscripción y la Xbuyer Cup Madrid y Barcelona, todos en modo propio. Los de la
   Cup son de equipo (4 preguntas: nombre completo, correo, teléfono y categoría; Madrid una sola categoría, Barcelona
   varias), sin alergias, así que no llevan casilla de consentimiento de salud. El aviso de envío repetido se basa en
-  el nombre (no hay DNI).
+  el nombre (no hay DNI). Prop `retiradas` (de `opcionesRetiradas` de cada edición): opciones del Google Form que la
+  organización ha descartado y no se muestran (hoy, «Infantil Femenino» en Madrid y Barcelona).
 
 ## Movimiento
 
