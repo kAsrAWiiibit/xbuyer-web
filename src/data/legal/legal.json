@@ -120,16 +120,16 @@
         ]
       },
       {
-        "title": "¿Cómo subo fotos o vídeos?",
+        "title": "¿Cómo subo fotos?",
         "paragraphs": [
-          "En el partido, pulsa \"Subir\" (hasta 10 a la vez; vídeos de hasta 60 segundos). La primera vez hay que confirmar que tienes permiso de los padres o tutores de los menores que aparecen.",
-          "La organización revisa cada foto y vídeo antes de publicarlo: mientras tanto, solo lo ves tú."
+          "Si la organización ha abierto la galería, en el partido pulsa \"Subir\" (hasta 10 a la vez). La primera vez hay que confirmar que tienes permiso de los padres o tutores de los menores que aparecen. Si no ves \"Subir\", la galería no está abierta a las familias.",
+          "La organización revisa cada foto antes de publicarla: mientras tanto, solo la ves tú."
         ]
       },
       {
         "title": "Salgo yo o mi hijo/a en una foto y quiero que se retire",
         "paragraphs": [
-          "Abre la foto o el vídeo y pulsa \"Denunciar\" → \"Salgo yo o mi hijo/a\": deja de verse al momento y la organización lo borra. También puedes escribirnos."
+          "Abre la foto y pulsa \"Denunciar\" → \"Salgo yo o mi hijo/a\": deja de verse al momento y la organización la borra. También puedes escribirnos."
         ]
       },
       {
@@ -149,6 +149,7 @@
           "5. Juego limpio: pasa el que tenga menos puntos de tarjetas (amarilla 1 punto, roja 3 puntos; una doble amarilla cuenta como roja: 3 puntos).",
           "6. Sorteo: si sigue el empate, lo hace la organización; hasta entonces la app pone \"Pendiente de sorteo\".",
           "Para elegir a los mejores clasificados de distintos grupos (p. ej. los mejores terceros): puntos, diferencia de goles, goles a favor, menos goles en contra, juego limpio y sorteo.",
+          "Un mejor clasificado nunca juega la primera eliminatoria contra un equipo de su grupo: si le toca, se cambia con otro mejor clasificado y, solo si así no se puede, con un 2º de otro cruce.",
           "En las eliminatorias, si hay empate al final del partido, tanda de 3 penaltis por equipo y, si sigue el empate, muerte súbita (uno por equipo hasta que uno marque y el otro falle)."
         ]
       },
