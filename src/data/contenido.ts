@@ -118,12 +118,12 @@ export const cup = {
       return { ...lugar(etiqueta), fechas: mayuscula(f.texto), detalle, fotografo: fotos ? sinPunto(fotos) : null, orden: f.orden };
     })
     .sort((a, b) => b.orden - a.orden),
-  // Fuera de textos.md: lo pide la organización y aún no está
+  // Fuera de textos.md: la app oficial, publicada en las dos tiendas (27/11/2026)
   app: {
     /** false mientras la app no esté en las tiendas: «En construcción», sin enlaces de descarga (AppEnConstruccion) */
-    publicada: false,
-    appStore: pendiente('enlace de App Store') as Dato<string>,
-    googlePlay: pendiente('enlace de Google Play') as Dato<string>,
+    publicada: true,
+    appStore: 'https://apps.apple.com/es/app/xbuyer-cup/id6839187825' as Dato<string>,
+    googlePlay: 'https://play.google.com/store/apps/details?id=com.xbuyer.cup' as Dato<string>,
   },
 };
 

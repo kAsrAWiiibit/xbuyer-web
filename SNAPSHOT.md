@@ -31,10 +31,10 @@ Web estática en **Astro** publicada en GitHub Pages: **https://xbuyerteamacadem
   móvil; es el LCP de la ficha). El palmarés
   usa los trofeos y el menú solo texto.
 - Ropa opcional (desplegable en `/academy/#equipacion`): las prendas sin fondo, directamente sobre el amarillo.
-- App oficial: `cup.app` en `src/data/contenido.ts` (`publicada: false`, enlaces de tiendas pendientes). Mientras no
-  esté publicada, `AppEnConstruccion.astro` («En construcción» + «Muy pronto en App Store y Google Play», sin enlaces)
-  sale en «¿Qué hace diferente…?» (razones que mencionan la app) y en el bloque `#app` de Valencia. Las páginas
-  legales (`/privacidad/`, `/aviso-legal/`, `/soporte/`) no la llevan.
+- App oficial: `cup.app` en `src/data/contenido.ts` (`publicada: true` desde el 27/11/2026, con los enlaces de App Store
+  y Google Play). Botones de descarga en «¿Qué hace diferente…?» (razones que mencionan la app, `.razon__tiendas`) y en
+  el bloque `#app` de Valencia. Con `publicada: false` volvería `AppEnConstruccion.astro` («En construcción», sin
+  enlaces). Las páginas legales (`/privacidad/`, `/aviso-legal/`, `/soporte/`) no llevan ninguna de las dos cosas.
 - Torneos de la Cup: `src/data/cup-ediciones.ts`; normativa común `src/data/normativa.ts` (PDF en `public/normativa/`).
 - Equipación y ropa opcional: `src/data/equipacion.ts` (prendas en `src/fotos/equipacion/*.png`, recortadas de los PDF).
 - Patrocinador: `src/data/patrocinadores.ts`. Fechas: `src/lib/fechas.ts`. Fotos: `src/data/fotos.json`.
@@ -79,6 +79,8 @@ Web estática en **Astro** publicada en GitHub Pages: **https://xbuyerteamacadem
 - Las URL antiguas `kasrawiiibit.github.io/xbuyer-cup-privacidad/` y `/soporte/` redirigen (repositorio
   `xbuyer-cup-privacidad`). La app usa `/privacidad/` y `/soporte/`.
 
+- **27/11/2026 — App en las tiendas.** `cup.app.publicada: true` con los enlaces de las dos tiendas; botones de
+  descarga en `/cup/` y `/cup/valencia/` en lugar de «En construcción».
 - **13/11/2026 — Sin precios.** `src/data/precios.ts` (`mostrarPrecios = false`) oculta el precio de los torneos 2027
   (ficha, descripción y `offers` de los datos estructurados) y de la ropa opcional (solo nombres). Build sin «€».
 

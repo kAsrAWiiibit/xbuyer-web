@@ -39,9 +39,10 @@ Dirección visual «cartel plano y ruidoso» (`.taste-skill/direction.json`, fue
   Las respuestas tienen que seguir llegando al Google Form y a su hoja de cálculo.
 - **Logos de torneos sin recuadro:** PNG transparente sin halo, legible sobre amarillo y sobre azul o marino. Tras
   cambiar uno, `node scripts/logos-torneos.mjs` y revisarlo sobre los dos fondos en móvil y escritorio.
-- **App oficial:** mientras no esté en las tiendas (`cup.app.publicada: false`), cada mención lleva «En construcción»
-  y «Muy pronto en App Store y Google Play», sin botones ni enlaces de descarga (`AppEnConstruccion.astro`).
-  **Excepto las páginas legales** (`/privacidad/`, `/aviso-legal/`, `/soporte/`): ahí no va la etiqueta.
+- **App oficial (en las tiendas desde el 27/11/2026, `cup.app.publicada: true`):** cada mención de la app lleva los
+  botones de App Store y Google Play con los enlaces de `cup.app`; comprobar que responden antes de cambiarlos. Con
+  `publicada: false` vuelve «En construcción» sin enlaces (`AppEnConstruccion.astro`). **Excepto las páginas legales**
+  (`/privacidad/`, `/aviso-legal/`, `/soporte/`): ahí no va ni lo uno ni lo otro.
 - **Alergias o intolerancias (datos de salud):** solo se envían al Google Form con la casilla de consentimiento
   marcada (`FormularioInscripcion.astro`). No quitar esa comprobación: la política de privacidad la promete.
 - Movimiento: siempre con alternativa para `prefers-reduced-motion`, sin bloquear el hilo principal ni penalizar el

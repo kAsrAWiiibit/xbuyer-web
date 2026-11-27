@@ -1,6 +1,11 @@
 # BACKLOG
 
-> **RESUME HERE** (16 de noviembre de 2026, tarde): confirmado por la organización y publicado: retransmisiones por
+> **RESUME HERE** (27 de noviembre de 2026): **la app está en las dos tiendas.** `cup.app.publicada: true` con los
+> enlaces de App Store y Google Play (comprobados: 200 y la ficha de Xbuyer Cup). Botones de descarga en lugar de «En
+> construcción» en «¿Qué hace diferente…?» (`/cup/`) y en el bloque de la app de Valencia. Build de 19 páginas, sin «En
+> construcción» y sin «€».
+>
+> Antes (16 de noviembre de 2026, tarde): confirmado por la organización y publicado: retransmisiones por
 > **YouTube** (no por la app; sin enlace hasta tener la URL del canal), **sin Infantil femenino** en las tres ediciones
 > (también retirado del formulario de la web: `opcionesRetiradas` en `src/data/cup-ediciones.ts`) y **Cadete en
 > Barcelona** (fútbol 11, dos partes de 20 minutos). Siguen ocultos el campo de Barcelona y la G13 de la Yellow Cup.
@@ -15,13 +20,6 @@
 > y en las páginas de torneo, sombra bajo los trofeos) y el fondo blanco de la sudadera y la mochila. Falta borrar el
 > repositorio de la vista previa `kAsrAWiiibit/xbuyer-web-preview` (gh necesita
 > `gh auth refresh -h github.com -s delete_repo`). Siguiente: Infantil femenino de la Cup y una inscripción real de prueba (ver abajo).
-
-## Cuando la app esté en las tiendas
-
-- En `src/data/contenido.ts`: `cup.app.publicada: true` y los enlaces reales en `appStore` y `googlePlay`. Así se quita
-  la etiqueta «En construcción» de todas partes («¿Qué hace diferente…?», Valencia; las páginas legales ya no la
-  llevan) y en el bloque de la app de Valencia salen los botones de descarga.
-- Revisar `edicion.cerradasApp` («Podrás seguir el torneo en la app oficial»).
 
 ## Pendiente de la organización
 

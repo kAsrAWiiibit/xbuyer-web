@@ -68,7 +68,12 @@ const fotosDe = (ciudad: string, fechas: string) =>
           <p class="razon__numero" aria-hidden="true">{String(i + 1).padStart(2, '0')}</p>
           <h3 class="razon__titulo">{d.titulo}</h3>
           <p class="razon__texto">{d.texto}</p>
-          {!cup.app.publicada && /\bapp\b/i.test(`${d.titulo} ${d.texto}`) && <AppEnConstruccion tamano="linea" class="razon__app" />}
+          {/\bapp\b/i.test(`${d.titulo} ${d.texto}`) && (cup.app.publicada && completo(cup.app.appStore) && completo(cup.app.googlePlay) ? (
+            <ul role="list" class="razon__app razon__tiendas">
+              <li><a class="boton boton--app" href={cup.app.appStore}>App Store</a></li>
+              <li><a class="boton boton--app" href={cup.app.googlePlay}>Google Play</a></li>
+            </ul>
+          ) : !cup.app.publicada && <AppEnConstruccion tamano="linea" class="razon__app" />)}
         </li>
       ))}
     </ol>
@@ -182,6 +187,8 @@ const fotosDe = (ciudad: string, fechas: string) =>
   .razon__titulo { font-size: clamp(1.75rem, 1.2rem + 1.4vw, 2.75rem); text-transform: uppercase; }
   .razon__texto { max-width: 36ch; font-size: var(--step-body); line-height: 1.45; }
   .razon__app { margin-top: 14px; }
+  .razon__tiendas { display: flex; flex-wrap: wrap; gap: 10px; }
+  .razon__tiendas .boton--app { min-height: 44px; padding: 0 18px; font-size: 1rem; }
 
   /* Ediciones: una tarjeta por edición, que lleva a su página */
   .ediciones__lista { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 48px; }
