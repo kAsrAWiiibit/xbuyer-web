@@ -79,6 +79,7 @@ Web estática en **Astro** publicada en GitHub Pages: **https://xbuyerteamacadem
 - Las URL antiguas `kasrawiiibit.github.io/xbuyer-cup-privacidad/` y `/soporte/` redirigen (repositorio
   `xbuyer-cup-privacidad`). La app usa `/privacidad/` y `/soporte/`.
 
+- **27/11/2026 — Sede «Sant Gregorio».** El nombre de la sede de Valencia en `cup-ediciones.ts` (antes «Sant Gregori»).
 - **27/11/2026 — App en las tiendas.** `cup.app.publicada: true` con los enlaces de las dos tiendas; botones de
   descarga en `/cup/` y `/cup/valencia/` en lugar de «En construcción».
 - **13/11/2026 — Sin precios.** `src/data/precios.ts` (`mostrarPrecios = false`) oculta el precio de los torneos 2027

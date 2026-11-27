@@ -1,6 +1,9 @@
 # BACKLOG
 
-> **RESUME HERE** (27 de noviembre de 2026): **la app está en las dos tiendas.** `cup.app.publicada: true` con los
+> **RESUME HERE** (27 de noviembre de 2026, tarde): la sede de Valencia es **«Campo de Fútbol Sant Gregorio»** (no «Sant
+> Gregori»; `src/data/cup-ediciones.ts`), corregida en `/cup/` y `/cup/valencia/` (también el enlace de «Cómo llegar»).
+>
+> Antes (27 de noviembre de 2026): **la app está en las dos tiendas.** `cup.app.publicada: true` con los
 > enlaces de App Store y Google Play (comprobados: 200 y la ficha de Xbuyer Cup). Botones de descarga en lugar de «En
 > construcción» en «¿Qué hace diferente…?» (`/cup/`) y en el bloque de la app de Valencia. Build de 19 páginas, sin «En
 > construcción» y sin «€».

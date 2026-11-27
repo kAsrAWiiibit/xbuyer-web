@@ -42,7 +42,7 @@ export const ediciones: Edicion[] = [
     slug: 'valencia',
     ciudad: 'Valencia',
     localidad: 'Torrent',
-    sedes: ['Campo de Fútbol Sant Gregori', 'Parc Central'],
+    sedes: ['Campo de Fútbol Sant Gregorio', 'Parc Central'],
     inicio: '2026-12-05',
     fin: '2026-12-07',
     inscripcion: 'cerrada',
